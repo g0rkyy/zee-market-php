@@ -1,0 +1,65 @@
+/* formatação geral */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    border: 0;
+    margin: 0;
+    background-color: #2d2d2d;
+}
+
+#container-principal {
+    width: 80%; /* Defina a largura desejada */
+    max-width: 1200px; /* Defina um valor máximo para a largura */
+    margin: 0 auto; /* Centraliza horizontalmente */
+    border: 1px solid black;
+    border-radius: 7px;
+    background-color: #fff;
+    padding: 20px; /* Adicione padding se necessário */
+    margin-top: 40px; /* Adicione margem superior conforme necessário */
+    position: relative; /* Necessário para posicionamento absoluto dos botões */
+}
+
+#button-container {
+    position: absolute; /* Posiciona os botões dentro do contêiner */
+    top: 20px; /* Ajuste conforme necessário */
+    right: 20px; /* Ajuste conforme necessário */
+    display: flex; /* Alinha os botões horizontalmente */
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+#logoutBtn, #homeBtn {
+    padding: 7px;
+}
+
+/* imagem */
+img {
+    width: 120px;
+    height: 120px;
+    padding: 0;
+}
+
+/* contêiner de boas-vindas */
+#welcome-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+#welcome-container img {
+    margin-right: 20px;
+}
+
+#welcome-container h1 {
+    margin: 0;
+}
+
+#footer>p{
+    color: white;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background-color: #2d2d2d;
+}

@@ -1,0 +1,121 @@
+.nav {
+    height: 200px !important; 
+}
+/* Remove o margin-top do #pagination-area */
+#pagination-area {
+    margin: 0; /* Remove o espaço extra */
+    padding-top: 10px; /* Adiciona um pequeno espaçamento interno, se necessário */
+    display: block;
+}
+
+/* Ajusta a posição da #side-bar */
+#side-bar {
+    margin-top: 0; /* Remove qualquer margem superior */
+    position: relative; /* Garante que a barra lateral esteja posicionada corretamente */
+    top: 0; /* Coloca a barra lateral no topo */
+}
+
+/* Ajusta o nav para garantir que não interfira na #side-bar */
+.navbar {
+    margin-bottom: 0; /* Remove qualquer margem inferior do navbar */
+}
+/* ALERTA */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    width: 920px; /* Ocupa toda a largura da viewport */
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    margin: 0 auto;
+    gap: 10px;
+  }
+  
+  /* Remove todos os espaçamentos internos/externos dos alertas */
+  .alert-overlay .alert {
+    margin: 0;
+    border-radius: 10px !important;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+  
+  /* Remove o padding do body se tiver sido adicionado anteriormente */
+  body {
+    padding-top: 0 !important;
+  }
+
+/*formatação de letras-comuns*/
+h1.position-header {
+  align-items: left center;
+  text-align: left center;
+}
+
+h1.title {
+    color: #fff;
+    font-size: 1.5em;
+    letter-spacing: 0.1em;
+}
+.sub-title {
+    color: #fff;
+    font-size: 0.7em;
+
+}
+h2 {
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+}
+/*conteudo-principal-barra-de-nav-lat*/
+
+.zee_icon {
+    height: 75px;
+    width: 75px;
+    color: #fff;
+    margin-right: 5px;
+}
+#side-bar {
+    width: 250px;
+    background: black;
+    flex-direction: column;
+    display: flex;
+    padding: 10px;
+    height: 120vh;
+    color: white;
+    float: left;
+}
+#side-bar .nav-item, #side-bar .nav-perfil {
+    text-align: center;
+    background: #222;
+    padding: 15px;
+    border-radius: 7px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: block; /* Certifique-se de que os itens sejam exibidos como blocos */
+}
+#side-bar .nav-perfil {
+    background: rgb(44, 189, 233);
+}
+#side-bar .nav-perfil:hover {
+    background: rgb(33, 109, 133);
+}
+
+#side-bar .nav-item:hover {
+    background: #444;
+}
+#side-bar .nav-item a, #side-bar .nav-perfil a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+}
+
+#no_results {
+    display: none;
+    text-align: center;
+}
+
+

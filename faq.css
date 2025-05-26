@@ -1,0 +1,33 @@
+/* formatação geral*/
+body {
+    background: #2d2d2d !important;
+}
+/*conteudo principal*/
+#container-faq {
+    margin: 0 auto;
+    width: 920px;
+}
+legend {
+    color: #ffdfa1;
+    text-transform: uppercase;
+    font-size: 1.5em;
+    letter-spacing: 0.1em;
+}
+/*formatação de texto*/
+h2 {
+    color: #ffdfa1;
+    font-size: 1.2em;
+    margin: 0.5em 0;
+    font-size: 1em;
+}
+p {
+    color: #ffdfa1;
+}
+/* formatação de Links */
+a:visited, a:link {
+    color: #fff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}

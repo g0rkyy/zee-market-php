@@ -1,0 +1,153 @@
+/*formatação geral*/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: #2d2d2d !important; ;
+    height: 100vh; /* Garante que o body ocupe toda a altura da janela */
+}
+#signupContainer {
+    border-radius: 7px;
+    background-color: #262626;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 20px;
+    border: 1px solid #ffdfa1;
+    width: fit-content;
+    color: #ffdfa1;
+}
+/*formatação do menu*/
+#menu {
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+#menu a {
+    color: #ffdfa1;
+    padding: 10px;
+    text-decoration: none;    
+}
+#menu a:hover {
+    color: #d3bd93;
+    
+}
+
+/*letras*/
+legend {
+    letter-spacing: 0.1em;
+    color: #ffdfa1;
+}
+
+.align {
+    width: 110px;
+}
+#loginContainer {
+    border-radius: 7px;
+    background-color: #262626;
+    margin: 0 auto;
+    display: flex;
+    margin-top: 20px;
+    border: 1px solid #ffdfa1;
+    width: fit-content;
+    color: #ffdfa1;
+}
+.container-login {
+    width: 400px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 40px;
+    border-radius: 10px;   
+    padding: 15px;
+    text-align: center;
+}
+.container-login img {
+    width: 120px;
+    height: 120px;
+    margin-top: -60px;
+    margin-bottom: -35px;
+}
+/* bloco principal */
+#registro-bloco {
+    width: 400px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 40px;
+    border-radius: 10px;
+    
+    padding: 15px;
+    text-align: center;
+}
+fieldset {
+    text-align: center;
+}
+input.user, input.text, input.mail, input.password {
+    width: 80%px;
+    padding-left: 40px;
+    margin-bottom: 10px;
+    height: 40px;
+    font-size: 18px;
+    background-color: #fff;
+    border: none;
+    background-repeat: no-repeat;
+    background-position: 10px;
+}
+
+input.text {
+    background-image: url(../images/icone-usuario.png) ;
+}
+input.mail {
+    background-image: url(../images/icone-usuario.png) ;
+}
+input.password {
+    background-image: url(../images/icone-cadeado.png) ;
+}
+
+
+/*img*/
+#registro-bloco img {
+    width: 120px;
+    height: 120px;
+    margin-top: -60px;
+    margin-bottom: -35px;
+}
+/* Adicione no final do arquivo */
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+
+
+
+
+
+input.form-control.input-btn {
+    background-color: #333 !important; /* Cor de fundo */
+    color: #ffffff !important; /* Cor do texto */
+    border: none;
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 10px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho da fonte */
+}
+input {
+    color: #ffffff !important;
+}
+input.form-control.input-btn:focus {
+    color: #ffffff;
+    background-color: #333; /* Cor de fundo ao focar */
+    border-color: #ffdfa1; /* Cor da borda ao focar */
+    outline: none; /* Remove o contorno padrão */
+    box-shadow: 0 0 5px rgba(60, 62, 65, 0.5); /* Adiciona um efeito de sombra */
+}
+input.form-control.input-btn {
+    color: #ffffff; /* Define explicitamente a cor do texto */
+}
+
+.btn-sub:hover {
+    transform: scale(1.02); /* Aumenta o tamanho do botão ao passar o mouse */
+}

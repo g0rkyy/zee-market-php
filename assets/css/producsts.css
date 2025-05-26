@@ -1,0 +1,130 @@
+#cardContainer {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: #f4f4f4;
+    min-height: 200px;
+    overflow-y: scroll;
+}
+
+.item {
+    background: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.item h3 {
+    margin: 5px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.item .descricao {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0;
+    min-height: 40px;
+}
+
+.item .preco {
+    font-size: 16px;
+    color: #2e7d32;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.no-products {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 18px;
+}
+
+/* AREA DE PESQUISA */
+#search-bar {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    gap: 10px; /* Espaçamento entre os elementos */
+    width: 400px;
+}
+
+#search {
+    flex: 1;
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none; /* Remove a borda ao clicar */
+    transition: border-color 0.3s;
+}
+
+/* Efeito de foco */
+#search:focus {
+    border-color: #4CAF50;
+}
+
+#search-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s; /* Efeito de transição */
+}
+
+#search-button:hover {
+    background-color: #45a049;
+}
+
+/* Mensagens */
+#search-message {
+    padding: 15px;
+    margin: 0 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#search-message.info {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+#search-message.error {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+#search-message.success {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.hidden {
+    display: none;
+}

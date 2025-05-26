@@ -1,0 +1,55 @@
+body{
+    background-color: #2d2d2d !important;
+}
+#feedback-container, #lista-feedbacks{
+    padding: 100px;
+}
+#button-submit {
+    width: 220px;
+    height: 50px;
+}
+#nav-container .nav-link:hover {
+    color: #dfbc78; /* Cor azul ao passar o mouse */
+    background-color: transparent; /* Remove o fundo */
+}
+#nav-container{
+    border-radius: 5px;
+    background-color: #333a42;
+}
+#nav-container .nav-link {
+    color: #ffdfa1; /* Cor branca */
+    font-weight: 600; /* Negrito */
+   
+}
+.color-title {
+    color: #ffdfa1;
+
+}
+.form-name-color{
+    color: #ffdfa1;
+}
+/* Estilização dos inputs */
+.form-control.form-bg-color,
+.form-select.form-bg-color {
+    background-color: #363636 !important;
+    color: #ffffff !important;
+    border-color: #555 !important;
+}
+
+/* Placeholder branco */
+.form-control::placeholder {
+    color: #ccc !important;
+    opacity: 1;
+}
+
+/* Foco nos inputs */
+.form-control:focus, .form-select:focus {
+    background-color: #464646 !important;
+    color: #fff !important;
+    border-color: #dfbc78 !important;
+    box-shadow: 0 0 0 0.25rem rgba(223, 188, 120, 0.25) !important;
+}
+
+label{
+    text-transform: uppercase;
+}
