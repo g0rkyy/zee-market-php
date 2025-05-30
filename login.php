@@ -9,8 +9,10 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+$erro = ""; // Inicializa a variável de erro
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']); // Corrigido para email
+    $email = trim($_POST['email']);
     $senha = trim($_POST['senha']);
     
     $resultado = login($email, $senha);
@@ -19,11 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: dashboard.php");
         exit();
     } else {
-        $erro = $resultado;
+        $erro = "Email ou senha incorretos, ou email não cadastrado.";
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -44,11 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container-login">
             <img src="assets/images/perfil.png" alt="Imagem de perfil">
             <h1>Login</h1>
-            <form id="loginForm" method="post"> <!-- Removi action e method -->
+            <form id="loginForm" method="post">
                 <div>
-                    
-                    <input class="form-control input-btn" type="text" name="email" id="user" placeholder="Nickname" required><br>
-    
+                    <input class="form-control input-btn" type="text" name="email" id="user" placeholder="Email" required><br>
                     <input class="form-control input-btn" type="password" name="senha" id="password" placeholder="Digite sua senha" required><br>
                     
                     <div class="form-check text-start my-3">
@@ -59,7 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input class="submit btn btn-primary w-100" type="submit" value="Enviar">
                 </div>
             </form>
-            <div id="errorContainer" style="color: red;"></div>
+            <!-- Exibe a mensagem de erro, se houver -->
+            <?php if (!empty($erro)): ?>
+                <div id="errorContainer" style="color: red; margin-top: 10px;">
+                    <?= htmlspecialchars($erro) ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </body>

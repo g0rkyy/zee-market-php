@@ -200,7 +200,8 @@ try {
              <!-- Área de Produtos Dinâmicos -->
              <div id="cardContainer" class="items">
                 <?php if ($produtos->num_rows > 0): ?>
-                    <?php while ($produto = $produtos->fetch_assoc()): ?>
+                    <?php while ($produto = $produtos->fetch_assoc()): ?> 
+                        <a href="comprar.php?id=<?= $produto['id'] ?>" class="item-link">
                         <div class="item">
                             <img src="assets/uploads/<?= htmlspecialchars($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
                             <h3 class="item-title"><?= htmlspecialchars($produto['nome']) ?></h3>
