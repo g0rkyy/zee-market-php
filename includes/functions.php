@@ -92,4 +92,38 @@ function getReputacao($user_id) {
     elseif ($avg >= 3.5) return ["level" => "Prata", "icon" => "★★☆☆"];
     else return ["level" => "Bronze", "icon" => "★★★☆"];
 }
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+require_once 'config.php';
+
+// ====== FUNÇÕES DE AUTENTICAÇÃO (ANTIGO auth.php) ====== //
+function verificarAutenticacao() {
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: login.php");
+        exit();
+    }
+}
+
+function isVendedor($user_id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT is_vendor FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    return $result['is_vendor'] == 1;
+}
+
+function redirecionarSeNaoVendedor() {
+    verificarAutenticacao();
+    if (!isVendedor($_SESSION['user_id'])) {
+        header("Location: acesso_negado.php");
+        exit();
+    }
+}
+
+// ====== FUNÇÕES EXISTENTES (LOGIN/CADASTRO) ====== //
+// ... (mantenha as funções login(), cadastrarUsuario(), etc. que já estão) ...
 ?>

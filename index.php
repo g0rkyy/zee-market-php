@@ -1,3 +1,47 @@
+<?php
+require_once 'includes/config.php';
+require_once 'includes/functions.php';
+
+// Inicializa variáveis para evitar erros
+$produtos = null;
+$total_paginas = 1;
+$erro_bd = false;
+
+try {
+    // Configuração da paginação
+    $pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $produtos_por_pagina = 6;
+    $offset = ($pagina_atual - 1) * $produtos_por_pagina;
+
+    // Verifica se a conexão existe e está válida
+    if (!$conn || $conn->connect_error) {
+        throw new Exception("Erro na conexão com o banco de dados");
+    }
+
+    // Busca produtos no banco de dados
+    $stmt = $conn->prepare("SELECT * FROM produtos LIMIT ? OFFSET ?");
+    if (!$stmt) {
+        throw new Exception("Erro ao preparar consulta: " . $conn->error);
+    }
+    
+    $stmt->bind_param("ii", $produtos_por_pagina, $offset);
+    if (!$stmt->execute()) {
+        throw new Exception("Erro ao executar consulta: " . $stmt->error);
+    }
+    
+    $produtos = $stmt->get_result();
+
+    // Calcula total de páginas
+    $total_produtos = $conn->query("SELECT COUNT(*) FROM produtos");
+    if ($total_produtos) {
+        $total_paginas = ceil($total_produtos->fetch_row()[0] / $produtos_por_pagina);
+    }
+
+} catch (Exception $e) {
+    $erro_bd = true;
+    error_log("Erro no sistema: " . $e->getMessage());
+}
+?>
 <!DOCTYPE html>
     <head>
         <title>ZeeMarket</title>
@@ -61,6 +105,9 @@
                         <span class="bi bi-shield-lock"></span>
                         <span>Segurança</span>
                     </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vendedores.php">
+                            <span>Vender</span>
              </ul>
              <div class="dropdown">
                 <button class="btn btn-secondary btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -150,74 +197,54 @@
         <!-- AREA DE PAGINAÇÃO -->
         <div id="paginationProducts">
             <h2>Bem-Vindo ao Zee-Market, seu site libertário predileto!</h2>
-            <nav id="pagination-area">
-                 <ul class="pagination justify-content-center">
-                     <li class="page-item">
-                         <a class="page-link" href="#">Anterior</a>
-                     </li>
-                     <li class="page-item">
-                         <a class="page-link" href="#">1</a>
-                     </li>
-                     <li class="page-item">
-                         <a class="page-link" href="#">2</a>
-                     </li>
-                     <li class="page-item">
-                         <a class="page-link" href="#">3</a>
-                     </li>
-                     <li class="page-item">
-                         <a class="page-link" href="#">4</a>
-                     </li>
-                     <li class="page-item">
-                         <a class="page-link" href="#">5</a>
-                     </li>
-                     <li class="page-item">
-                         <a class="page-link" href="#">Próximo</a>
-                     </li>
-                 </ul>
-              </nav>
-                 
-             <!--  AREA DE PRODUTOS -->
+             <!-- Área de Produtos Dinâmicos -->
              <div id="cardContainer" class="items">
-                 <div onclick="esgotado()" class="item">
-                     <img src="assets/images/MDMA.jpg" alt="Produto 1">
-                     <h3 class="item-title">Produto 1</h3>
-                     <p class="preco">R$ 100,00</p>
-                 </div>
-                 <div class="item">
-                     <img src="assets/images/PILLmd.jpg" alt="Produto 2">
-                     <h3 class="item-title">Produto 2</h3>
-                     <p class="preco">R$ 150,00</p>
-                 </div>
-                 <div class="item">
-                     <img src="assets/images/PILLS.jpg" alt="Produto 3">
-                     <h3 class="item-title">Produto 3</h3>
-                     <p class="preco">R$ 200,00</p>
-                 </div>
-                 <div class="item">
-                     <img src="assets/images/MDMA.jpg" alt="Produto 4">
-                     <h3 class="item-title">Produto 1</h3>
-                     <p class="preco">R$ 100,00</p>
-                 </div>
-                 <div class="item">
-                     <img src="assets/images/PILLmd.jpg" alt="Produto 5">
-                     <h3 class="item-title">Produto 2</h3>
-                     <p class="preco">R$ 150,00</p>
-                 </div>
-                 <div class="item">
-                     <img src="assets/images/PILLS.jpg" alt="Produto 6">
-                     <h3 class="item-title">Produto 3</h3>
-                     <p class="preco">R$ 200,00</p>
-                 </div> 
-                 <div id="no_results">
-                    <p>Nenhum resultado encontrado</p>
-                 </div>
-         </div>
-         <div>
-             <a href="">Apoie a nossa causa</a>
-         </div>
-        </div>
-        <!-- JS do Bootstrap -->
-        <script src="assets/bootstrap5/js/bootstrap.bundle.js"></script>
-    </body>
+                <?php if ($produtos->num_rows > 0): ?>
+                    <?php while ($produto = $produtos->fetch_assoc()): ?>
+                        <div class="item">
+                            <img src="assets/uploads/<?= htmlspecialchars($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                            <h3 class="item-title"><?= htmlspecialchars($produto['nome']) ?></h3>
+                            <p class="preco">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                        </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <div id="no_results">
+                        <p>Nenhum produto encontrado</p>
+                    </div>
+                <?php endif; ?>
+            </div>
 
+            <!-- Paginação Dinâmica -->
+            <?php if ($total_paginas > 1): ?>
+                <nav id="pagination-area">
+                    <ul class="pagination justify-content-center">
+                        <?php if ($pagina_atual > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?pagina=<?= $pagina_atual - 1 ?>">Anterior</a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                            <li class="page-item <?= $i == $pagina_atual ? 'active' : '' ?>">
+                                <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php if ($pagina_atual < $total_paginas): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="?pagina=<?= $pagina_atual + 1 ?>">Próximo</a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            <?php endif; ?>
+            
+            <div>
+                <a href="">Apoie a nossa causa</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/bootstrap5/js/bootstrap.bundle.js"></script>
+</body>
 </html>
