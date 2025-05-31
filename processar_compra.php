@@ -7,30 +7,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $endereco = trim($_POST['endereco']);
     $btc_wallet = trim($_POST['btc_wallet']);
 
-    // Busca o vendedor associado ao produto
-    $stmt = $conn->prepare("SELECT vendedor_id FROM produtos WHERE id = ?");
+    // Busca o produto e vendedor
+    $stmt = $conn->prepare("SELECT p.*, v.id as vendedor_id 
+                           FROM produtos p 
+                           JOIN vendedores v ON p.vendedor_id = v.id 
+                           WHERE p.id = ?");
     $stmt->bind_param("i", $produto_id);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $produto = $result->fetch_assoc();
-    $vendedor_id = $produto['vendedor_id'];
+    $produto = $stmt->get_result()->fetch_assoc();
 
-    // Validações básicas
-    if (empty($nome) || empty($endereco) || empty($btc_wallet)) {
-        die("Preencha todos os campos!");
-    }
+    if (!$produto) die("Produto não encontrado!");
 
-    // Salvar a compra no banco de dados
-    $stmt = $conn->prepare("INSERT INTO compras (produto_id, vendedor_id, nome, endereco, btc_wallet) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("iisss", $produto_id, $vendedor_id, $nome, $endereco, $btc_wallet);
+    // Configuração da taxa (3% para Wasabi)
+    $wasabi_wallet = "bc1qaecjks06lyrfqzqm8dhn5c98ltd9zmlstg36f2"; // SEU ENDEREÇO
+    $taxa_plataforma = $produto['preco_btc'] * 0.03;
+    $valor_vendedor = $produto['preco_btc'] - $taxa_plataforma;
+
+    // Insere a compra no banco
+    $stmt = $conn->prepare("INSERT INTO compras 
+                          (produto_id, vendedor_id, nome, endereco, btc_wallet, 
+                           valor_btc, taxa_plataforma, wallet_plataforma) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iisssdds", 
+                     $produto_id, 
+                     $produto['vendedor_id'], 
+                     $nome, 
+                     $endereco, 
+                     $btc_wallet,
+                     $produto['preco_btc'],
+                     $taxa_plataforma,
+                     $wasabi_wallet);
 
     if ($stmt->execute()) {
-        echo "Compra realizada com sucesso!";
-        // Redirecionar para uma página de confirmação (opcional)
-        // header("Location: confirmacao.php");
-        // exit();
+        header("Location: pagamento_btc.php?id=" . $conn->insert_id);
+        exit();
     } else {
-        echo "Erro ao processar a compra.";
+        die("Erro ao processar compra: " . $conn->error);
     }
 }
 ?>
