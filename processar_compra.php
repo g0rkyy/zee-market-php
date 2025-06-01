@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insere a compra no banco
     $stmt = $conn->prepare("INSERT INTO compras 
-                          (produto_id, vendedor_id, nome, endereco, btc_wallet, 
+                          (produto_id, vendedor_id, nome, endereco, btc_wallet_comprador, 
                            valor_btc, taxa_plataforma, wallet_plataforma) 
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("iisssdds", 
