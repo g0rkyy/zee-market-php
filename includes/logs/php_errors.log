@@ -1,0 +1,458 @@
+[01-Jun-2025 15:02:26 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:02:26 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(5): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:03:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:03:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:36 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:36 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:37 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:38 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:39 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:39 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:05:39 America/Sao_Paulo] PHP Warning:  file_get_contents(C:\xampp\htdocs\ecommerceZEE\includes/../cache/last_crypto_check.txt): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 755
+[01-Jun-2025 15:05:39 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'username' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php:376
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(376): mysqli->prepare('\r\n            S...')
+#1 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(760): ZeeMarketWallet->processAllPendingDeposits()
+#2 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(794): ZeeMarketWallet->autoTrigger()
+#3 C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php(799): autoTriggerWallet()
+#4 C:\xampp\htdocs\ecommerceZEE\dashboard.php(6): require_once('C:\\xampp\\htdocs...')
+#5 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 376
+[01-Jun-2025 15:08:55 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare ZeeMarketWallet::checkDeposits() in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 452
+[01-Jun-2025 15:12:24 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare ZeeMarketWallet::checkBitcoinDeposits() in C:\xampp\htdocs\ecommerceZEE\includes\btc_functions.php on line 453
+[01-Jun-2025 15:17:00 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:18:57 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:01 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:02 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:03 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:07 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:24 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:26 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:27 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:32 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:33 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:38 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:38 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:38 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:40 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:43 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:44 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:44 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:44 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:44 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:44 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:45 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:19:50 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:22:06 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:22:06 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:22:06 America/Sao_Paulo] Erro no auto trigger: Unknown column 'eth_deposit_address' in 'field list'
+[01-Jun-2025 15:22:06 America/Sao_Paulo] Usuário não logado - redirecionando para login
+[01-Jun-2025 15:22:06 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:22:11 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:22:11 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'eth_balance' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\functions.php:15
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\functions.php(15): mysqli->prepare('SELECT id, name...')
+#1 C:\xampp\htdocs\ecommerceZEE\login.php(18): login('z33m4rketoffici...', 'm4rketpl@ceforD...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\functions.php on line 15
+[01-Jun-2025 15:24:29 America/Sao_Paulo] Tabela obrigatória 'btc_balance_history' não encontrada no banco de dados
+[01-Jun-2025 15:24:29 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'eth_balance' in 'field list' in C:\xampp\htdocs\ecommerceZEE\includes\functions.php:15
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\functions.php(15): mysqli->prepare('SELECT id, name...')
+#1 C:\xampp\htdocs\ecommerceZEE\login.php(18): login('z33m4rketoffici...', 'm4rketpl@ceforD...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\functions.php on line 15
