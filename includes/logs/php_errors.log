@@ -462,3 +462,35 @@ Stack trace:
 [01-Jun-2025 15:32:38 America/Sao_Paulo] Erro ao buscar transações: Unknown column 'type' in 'field list'
 [01-Jun-2025 15:33:04 America/Sao_Paulo] User Data Dashboard: {"name":"m1sterZ33Admin_SUPREME","email":"z33m4rketofficial@pronton.me","btc_balance":"0.00000000","eth_balance":"0.00000000","xmr_balance":"0.00000000","btc_wallet":"14QQJSyP9FiJPjky5u9pm62fjpwUJAJrcM","btc_deposit_address":null,"eth_deposit_address":null,"xmr_deposit_address":null}
 [01-Jun-2025 15:33:04 America/Sao_Paulo] Erro ao buscar transações: Unknown column 'type' in 'field list'
+[01-Jun-2025 15:45:00 America/Sao_Paulo] User Data Dashboard: {"name":"m1sterZ33Admin_SUPREME","email":"z33m4rketofficial@pronton.me","btc_balance":"0.00000000","eth_balance":"0.00000000","xmr_balance":"0.00000000","btc_wallet":"14QQJSyP9FiJPjky5u9pm62fjpwUJAJrcM","btc_deposit_address":null,"eth_deposit_address":null,"xmr_deposit_address":null}
+[01-Jun-2025 15:45:00 America/Sao_Paulo] Erro ao buscar transações: Unknown column 'confirmations' in 'field list'
+[01-Jun-2025 15:46:43 America/Sao_Paulo] User Data Dashboard: {"name":"m1sterZ33Admin_SUPREME","email":"z33m4rketofficial@pronton.me","btc_balance":"0.00000000","eth_balance":"0.00000000","xmr_balance":"0.00000000","btc_wallet":"14QQJSyP9FiJPjky5u9pm62fjpwUJAJrcM","btc_deposit_address":null,"eth_deposit_address":null,"xmr_deposit_address":null}
+[01-Jun-2025 15:46:43 America/Sao_Paulo] Erro ao buscar transações: Unknown column 'confirmations' in 'field list'
+[01-Jun-2025 15:46:53 America/Sao_Paulo] Login bem-sucedido para usuário ID: 6
+[01-Jun-2025 15:46:53 America/Sao_Paulo] User Data Dashboard: {"name":"m1sterZ33Admin_SUPREME","email":"z33m4rketofficial@pronton.me","btc_balance":"0.00000000","eth_balance":"0.00000000","xmr_balance":"0.00000000","btc_wallet":"14QQJSyP9FiJPjky5u9pm62fjpwUJAJrcM","btc_deposit_address":null,"eth_deposit_address":null,"xmr_deposit_address":null}
+[01-Jun-2025 15:46:53 America/Sao_Paulo] Erro ao buscar transações: Unknown column 'confirmations' in 'field list'
+[01-Jun-2025 15:48:11 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'carteira' in 'field list' in C:\xampp\htdocs\ecommerceZEE\vendedores.php:43
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\vendedores.php(43): mysqli->prepare('INSERT INTO ven...')
+#1 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 43
+[01-Jun-2025 15:51:58 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'carteira' in 'field list' in C:\xampp\htdocs\ecommerceZEE\vendedores.php:43
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\vendedores.php(43): mysqli->prepare('INSERT INTO ven...')
+#1 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 43
+[01-Jun-2025 15:52:02 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'carteira' in 'field list' in C:\xampp\htdocs\ecommerceZEE\vendedores.php:43
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\vendedores.php(43): mysqli->prepare('INSERT INTO ven...')
+#1 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 43
+[01-Jun-2025 15:52:28 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'carteira' in 'field list' in C:\xampp\htdocs\ecommerceZEE\vendedores.php:42
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\vendedores.php(42): mysqli->prepare('INSERT INTO ven...')
+#1 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 42
+[01-Jun-2025 15:52:55 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: No data supplied for parameters in prepared statement in C:\xampp\htdocs\ecommerceZEE\vendedores.php:47
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\vendedores.php(47): mysqli_stmt->execute()
+#1 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 47

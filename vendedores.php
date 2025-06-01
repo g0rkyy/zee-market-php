@@ -8,7 +8,35 @@ if (isset($_SESSION['vendedor_id'])) {
 }
 
 $erro = "";
-
+    // Processar Login
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $email = trim($_POST['email']);
+    $senha = $_POST['senha'];
+    
+    if (empty($email) || empty($senha)) {
+        $erro = "Preencha e-mail e senha!";
+    } else {
+        $stmt = $conn->prepare("SELECT id, senha FROM vendedores WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows == 1) {
+            $stmt->bind_result($id, $senha_hash);
+            $stmt->fetch();
+            
+            if (password_verify($senha, $senha_hash)) {
+                $_SESSION['vendedor_id'] = $id;
+                header("Location: admin/painel_vendedor.php");
+                exit();
+            } else {
+                $erro = "Senha incorreta!";
+            }
+        } else {
+            $erro = "E-mail não cadastrado!";
+        }
+    }
+}
 // Processar Registro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
     $nome = trim($_POST['nome']);
