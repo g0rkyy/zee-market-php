@@ -18,12 +18,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$produto) die("Produto não encontrado!");
 
-    // Configuração da taxa (3% para Wasabi)
-    $wasabi_wallet = "bc1qaecjks06lyrfqzqm8dhn5c98ltd9zmlstg36f2"; // SEU ENDEREÇO
-    $taxa_plataforma = $produto['preco_btc'] * 0.03;
-    $valor_vendedor = $produto['preco_btc'] - $taxa_plataforma;
+    // ========== CONFIGURAÇÃO DE TAXAS ========== //
+    
+    // Taxa da plataforma (2.5% ao invés de 3%)
+    $taxa_percentual = 0.025; // 2.5%
+    $platform_wallet = "bc1qaecjks06lyrfqzqm8dhn5c98ltd9zmlstg36f2"; // SEU ENDEREÇO
+    
+    // Cálculos
+    $valor_total_btc = $produto['preco_btc'];
+    $taxa_plataforma = $valor_total_btc * $taxa_percentual;
+    $valor_vendedor = $valor_total_btc - $taxa_plataforma;
+    
+    // Validação mínima
+    if ($valor_vendedor <= 0) {
+        die("Erro: valor do produto muito baixo para cobrir taxas!");
+    }
 
-    // Insere a compra no banco
+    // ========== INSERIR COMPRA NO BANCO ========== //
+    
     $stmt = $conn->prepare("INSERT INTO compras 
                           (produto_id, vendedor_id, nome, endereco, btc_wallet_comprador, 
                            valor_btc, taxa_plataforma, wallet_plataforma) 
@@ -34,12 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      $nome, 
                      $endereco, 
                      $btc_wallet,
-                     $produto['preco_btc'],
-                     $taxa_plataforma,
-                     $wasabi_wallet);
+                     $valor_total_btc,      // Valor total que o cliente paga
+                     $taxa_plataforma,      // Taxa da plataforma (2.5%)
+                     $platform_wallet       // Sua carteira
+                    );
 
     if ($stmt->execute()) {
-        header("Location: pagamento_btc.php?id=" . $conn->insert_id);
+        $compra_id = $conn->insert_id;
+        
+        // Log da transação
+        error_log("Nova compra #$compra_id - Total: $valor_total_btc BTC - Taxa: $taxa_plataforma BTC - Vendedor: $valor_vendedor BTC");
+        
+        // Redirecionar para pagamento
+        header("Location: pagamento_btc.php?id=" . $compra_id);
         exit();
     } else {
         die("Erro ao processar compra: " . $conn->error);
