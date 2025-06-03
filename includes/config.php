@@ -55,7 +55,7 @@ try {
 $blockchainConfig = [
     // BlockCypher API - Gratuita até 3 requests/segundo
     'blockcypher' => [
-        'api_key' => '', // Deixe vazio para usar sem token (limitado)
+        'api_key' => '1a406e8d527943418bd99f7afaf3d461', // Deixe vazio para usar sem token (limitado)
         'base_url' => 'https://api.blockcypher.com/v1/btc/main',
         'webhook_url' => 'https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/btc/webhook.php'
     ],
@@ -67,7 +67,7 @@ $blockchainConfig = [
     
     // Etherscan API
     'etherscan' => [
-        'api_key' => '', // Deixe vazio para usar sem token
+        'api_key' => 'D43Q7D5AAG2V4YSVXMVHEQ2NUDECJMFKKJ', // Deixe vazio para usar sem token
         'base_url' => 'https://api.etherscan.io/api'
     ],
     

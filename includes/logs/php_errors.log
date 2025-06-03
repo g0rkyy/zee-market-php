@@ -496,3 +496,167 @@ Stack trace:
   thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 47
 [02-Jun-2025 22:18:12 America/Sao_Paulo] Usuário não logado - redirecionando para login
 [02-Jun-2025 22:18:17 America/Sao_Paulo] Login bem-sucedido para usuário ID: 6
+[02-Jun-2025 22:40:48 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '6e034e064989cad...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:41:54 America/Sao_Paulo] Carteira BTC gerada para usuário 6: bc1q0buostt8pde990d2ie1kxcg5ocavt63m
+[02-Jun-2025 22:41:56 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '89c75e9f1849926...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:41:57 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:57 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:57 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:58 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:58 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:58 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:58 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:58 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:41:58 America/Sao_Paulo] Carteira XMR gerada para usuário 6: 4f6bd13ba20b182563f69ea04075b5814b5a39c63b65f575c4a61ddf70c30aef64ecb97fe0eb1f8ff0c64fc2ecb6675
+[02-Jun-2025 22:42:28 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '19e2b90f9bf81fc...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:30 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '98b97121e5f878c...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '56e1a54acffdb0d...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '5584de1f0252abe...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '3d932cebc29689d...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '933ca4060d46161...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '38a79efee110b9c...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '90197ccd2cfc37f...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '5d4880395a79679...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'ce8687bd35a0d62...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '9a613259333e1e2...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '929c352c120b1c5...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '8bcafe003cd2e14...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'e2f3a421d53d71e...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'de774fc4ec33804...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'a1306692f0a671f...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'f88d93fb8095a5b...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:34 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'd4056b4768948ca...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:34 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'c29dc153f50d749...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:42:53 America/Sao_Paulo] [WARNING] Undefined property: mysqli::$inTransaction in C:\xampp\htdocs\ecommerceZEE\withdraw.php on line 159
+[02-Jun-2025 22:42:53 America/Sao_Paulo] Erro no saque: Saldo insuficiente
+[02-Jun-2025 22:42:54 America/Sao_Paulo] [WARNING] Undefined property: mysqli::$inTransaction in C:\xampp\htdocs\ecommerceZEE\withdraw.php on line 159
+[02-Jun-2025 22:42:54 America/Sao_Paulo] Erro no saque: Saldo insuficiente
+[02-Jun-2025 22:42:54 America/Sao_Paulo] [WARNING] Undefined property: mysqli::$inTransaction in C:\xampp\htdocs\ecommerceZEE\withdraw.php on line 159
+[02-Jun-2025 22:42:54 America/Sao_Paulo] Erro no saque: Saldo insuficiente
+[02-Jun-2025 22:42:54 America/Sao_Paulo] [WARNING] Undefined property: mysqli::$inTransaction in C:\xampp\htdocs\ecommerceZEE\withdraw.php on line 159
+[02-Jun-2025 22:42:54 America/Sao_Paulo] Erro no saque: Saldo insuficiente
+[02-Jun-2025 22:42:54 America/Sao_Paulo] [WARNING] Undefined property: mysqli::$inTransaction in C:\xampp\htdocs\ecommerceZEE\withdraw.php on line 159
+[02-Jun-2025 22:42:54 America/Sao_Paulo] Erro no saque: Saldo insuficiente
+[02-Jun-2025 22:42:55 America/Sao_Paulo] [WARNING] Undefined property: mysqli::$inTransaction in C:\xampp\htdocs\ecommerceZEE\withdraw.php on line 159
+[02-Jun-2025 22:42:55 America/Sao_Paulo] Erro no saque: Saldo insuficiente
+[02-Jun-2025 22:46:01 America/Sao_Paulo] API Error: HTTP 400 for https://blockstream.info/api/address/bc1q0buostt8pde990d2ie1kxcg5ocavt63m/txs
+[02-Jun-2025 22:46:01 America/Sao_Paulo] API Error: HTTP 404 for https://blockchain.info/rawaddr/bc1q0buostt8pde990d2ie1kxcg5ocavt63m
+[02-Jun-2025 22:50:25 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'cfa0d9c2d0f2281...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[02-Jun-2025 22:51:51 America/Sao_Paulo] API Error: HTTP 400 for https://blockstream.info/api/address/bc1q0buostt8pde990d2ie1kxcg5ocavt63m/txs
+[02-Jun-2025 22:51:51 America/Sao_Paulo] API Error: HTTP 404 for https://blockchain.info/rawaddr/bc1q0buostt8pde990d2ie1kxcg5ocavt63m
+[02-Jun-2025 22:52:15 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '6cf4045d7a80a98...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166

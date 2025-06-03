@@ -8,8 +8,8 @@
 require_once '../includes/config.php';
 
 class RealBlockchainAPI {
-    private $btc_api_key = ''; // Coloque sua chave do BlockCypher aqui
-    private $eth_api_key = ''; // Coloque sua chave do Etherscan aqui
+    private $btc_api_key = '1a406e8d527943418bd99f7afaf3d461'; // Coloque sua chave do BlockCypher aqui
+    private $eth_api_key = 'D43Q7D5AAG2V4YSVXMVHEQ2NUDECJMFKKJ'; // Coloque sua chave do Etherscan aqui
     
     /**
      * Verificar depósitos Bitcoin REAIS
