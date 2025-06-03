@@ -2,12 +2,11 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// IMPORTANTE: Incluir config.php PRIMEIRO (antes de session_start)
+// IMPORTANTE: Incluir config.php PRIMEIRO
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-require_once 'includes/btc_functions.php';
 
-// Verificar login (isso pode redirecionar se não estiver logado)
+// Verificar login
 verificarLogin();
 
 // Se chegou aqui, o usuário está logado
@@ -50,9 +49,6 @@ try {
     ];
 }
 
-// Debug - Log dos dados do usuário
-error_log("User Data Dashboard: " . json_encode($user_data));
-
 // Buscar reputação
 try {
     $reputacao = getReputacao($user_id);
@@ -64,7 +60,8 @@ try {
 // Buscar transações recentes
 try {
     $stmt = $conn->prepare("
-        SELECT tx_hash, type, amount, crypto_type, status, confirmations, created_at 
+        SELECT tx_hash, type, amount, crypto_type, status, 
+               COALESCE(confirmations, 0) as confirmations, created_at 
         FROM btc_transactions 
         WHERE user_id = ? 
         ORDER BY created_at DESC 
@@ -80,7 +77,11 @@ try {
 
 // Buscar cotações atuais
 try {
-    $crypto_rates = getCryptoRates();
+    $crypto_rates = [
+        'bitcoin' => ['usd' => 45000, 'brl' => 240000],
+        'ethereum' => ['usd' => 2800, 'brl' => 15000],
+        'monero' => ['usd' => 180, 'brl' => 950]
+    ];
 } catch (Exception $e) {
     error_log("Erro ao buscar cotações: " . $e->getMessage());
     $crypto_rates = [
@@ -298,12 +299,6 @@ try {
             border: 1px solid #28a745;
         }
         
-        .status-processing {
-            background-color: rgba(23, 162, 184, 0.2);
-            color: #17a2b8;
-            border: 1px solid #17a2b8;
-        }
-        
         .welcome-section {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -392,18 +387,6 @@ try {
             color: #dc3545;
         }
         
-        .debug-info {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 9999;
-        }
-        
         @media (max-width: 768px) {
             #container-principal {
                 margin: 1rem;
@@ -421,13 +404,6 @@ try {
     </style>
 </head>
 <body>
-    <!-- Debug Info -->
-    <div class="debug-info">
-        User ID: <?= $user_id ?><br>
-        Session: <?= session_id() ?><br>
-        Time: <?= date('H:i:s') ?>
-    </div>
-
     <div id="container-principal">
         <!-- Mensagens de status -->
         <?php if(isset($_SESSION['success_msg'])): ?>
@@ -451,14 +427,8 @@ try {
             <a href="index.php" class="btn btn-outline-primary">
                 <i class="bi bi-house-door"></i> Home
             </a>
-            <a href="products.php" class="btn btn-outline-primary">
-                <i class="bi bi-shop"></i> Produtos
-            </a>
-            <a href="orders.php" class="btn btn-outline-primary">
-                <i class="bi bi-receipt"></i> Pedidos
-            </a>
-            <a href="test_login.php" class="btn btn-outline-info">
-                <i class="bi bi-bug"></i> Debug
+            <a href="vendedores.php" class="btn btn-outline-info">
+                <i class="bi bi-shop"></i> Área Vendedor
             </a>
             <a href="logout.php" class="btn btn-outline-danger">
                 <i class="bi bi-box-arrow-right"></i> Sair
@@ -471,16 +441,13 @@ try {
             <h1 class="neon-effect">Olá, <?= htmlspecialchars($user_data['name'] ?? 'Usuário') ?> 
                 <span class="reputation-badge reputation-gold">
                     <?= $reputacao['icon'] ?> <?= htmlspecialchars($reputacao['level']) ?>
-                    <?php if (isset($reputacao['rating']) && $reputacao['rating'] > 0): ?>
-                        (<?= $reputacao['rating'] ?>)
-                    <?php endif; ?>
                 </span>
             </h1>
             <p class="text-muted">Bem-vindo ao seu painel de controle multi-cripto</p>
         </div>
 
-        <!-- Grid de Criptomoedas -->
-        <div class="crypto-grid">
+       <!-- Grid de Criptomoedas -->
+       <div class="crypto-grid">
             <!-- Bitcoin -->
             <div class="crypto-card btc">
                 <div class="crypto-header">
@@ -812,6 +779,479 @@ try {
             
             new bootstrap.Modal(document.getElementById('withdrawModal')).show();
         }
+
+        // Função para processar saque
+        document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('withdraw.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('success', result.message);
+                    bootstrap.Modal.getInstance(document.getElementById('withdrawModal')).hide();
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showAlert('error', result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Erro na comunicação com o servidor');
+            }
+        });
+
+        // Função para copiar endereço
+        function copyAddress() {
+            const addressInput = document.getElementById('depositAddress');
+            addressInput.select();
+            document.execCommand('copy');
+            
+            showAlert('success', 'Endereço copiado para a área de transferência!');
+        }
+
+        // Função para mostrar alertas
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-dark ${type === 'error' ? 'alert-danger' : ''} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            const container = document.getElementById('container-principal');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Fechar alertas automaticamente
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                if (bootstrap.Alert.getInstance(alert)) {
+                    bootstrap.Alert.getInstance(alert).close();
+                }
+            });
+        }, 5000);
+
+        console.log('Dashboard carregado com sucesso!');
+    </script>
+</body>
+</html>crypto-icon btc">
+                        <i class="bi bi-currency-bitcoin"></i>
+                    </div>
+                    <div>
+                        <h3>Bitcoin</h3>
+                        <small class="text-muted">BTC</small>
+                    </div>
+                </div>
+                
+                <div class="crypto-balance btc">
+                    <?= number_format(floatval($user_data['btc_balance'] ?? 0), 8) ?> BTC
+                </div>
+                
+                <div class="crypto-value">
+                    ≈ R$ <?= number_format((floatval($user_data['btc_balance'] ?? 0)) * ($crypto_rates['bitcoin']['brl'] ?? 0), 2, ',', '.') ?>
+                </div>
+                
+                <?php if(!empty($user_data['btc_deposit_address'])): ?>
+                    <div class="crypto-address">
+                        <small>Endereço de depósito:</small><br>
+                        <?= htmlspecialchars($user_data['btc_deposit_address']) ?>
+                    </div>
+                    
+                    <div class="crypto-actions">
+                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('BTC', '<?= htmlspecialchars($user_data['btc_deposit_address']) ?>')">
+                            <i class="bi bi-box-arrow-in-down"></i> Depositar
+                        </button>
+                        <button class="btn-crypto btn-withdraw" onclick="openWithdrawModal('BTC')">
+                            <i class="bi bi-box-arrow-up"></i> Sacar
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <div class="crypto-actions">
+                        <button class="btn-crypto btn-generate" onclick="generateAddress('BTC')">
+                            <i class="bi bi-lightning"></i> Gerar Carteira BTC
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Ethereum -->
+            <div class="crypto-card eth">
+                <div class="crypto-header">
+                    <div class="crypto-icon eth">
+                        <i class="bi bi-currency-exchange"></i>
+                    </div>
+                    <div>
+                        <h3>Ethereum</h3>
+                        <small class="text-muted">ETH</small>
+                    </div>
+                </div>
+                
+                <div class="crypto-balance eth">
+                    <?= number_format(floatval($user_data['eth_balance'] ?? 0), 6) ?> ETH
+                </div>
+                
+                <div class="crypto-value">
+                    ≈ R$ <?= number_format((floatval($user_data['eth_balance'] ?? 0)) * ($crypto_rates['ethereum']['brl'] ?? 0), 2, ',', '.') ?>
+                </div>
+                
+                <?php if(!empty($user_data['eth_deposit_address'])): ?>
+                    <div class="crypto-address">
+                        <small>Endereço de depósito:</small><br>
+                        <?= htmlspecialchars($user_data['eth_deposit_address']) ?>
+                    </div>
+                    
+                    <div class="crypto-actions">
+                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('ETH', '<?= htmlspecialchars($user_data['eth_deposit_address']) ?>')">
+                            <i class="bi bi-box-arrow-in-down"></i> Depositar
+                        </button>
+                        <button class="btn-crypto btn-withdraw" onclick="openWithdrawModal('ETH')">
+                            <i class="bi bi-box-arrow-up"></i> Sacar
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <div class="crypto-actions">
+                        <button class="btn-crypto btn-generate" onclick="generateAddress('ETH')">
+                            <i class="bi bi-lightning"></i> Gerar Carteira ETH
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Monero -->
+            <div class="crypto-card xmr">
+                <div class="crypto-header">
+                    <div class="crypto-icon xmr">
+                        <i class="bi bi-shield-shaded"></i>
+                    </div>
+                    <div>
+                        <h3>Monero</h3>
+                        <small class="text-muted">XMR</small>
+                    </div>
+                </div>
+                
+                <div class="crypto-balance xmr">
+                    <?= number_format(floatval($user_data['xmr_balance'] ?? 0), 6) ?> XMR
+                </div>
+                
+                <div class="crypto-value">
+                    ≈ R$ <?= number_format((floatval($user_data['xmr_balance'] ?? 0)) * ($crypto_rates['monero']['brl'] ?? 0), 2, ',', '.') ?>
+                </div>
+                
+                <?php if(!empty($user_data['xmr_deposit_address'])): ?>
+                    <div class="crypto-address">
+                        <small>Endereço de depósito:</small><br>
+                        <?= htmlspecialchars($user_data['xmr_deposit_address']) ?>
+                    </div>
+                    
+                    <div class="crypto-actions">
+                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('XMR', '<?= htmlspecialchars($user_data['xmr_deposit_address']) ?>')">
+                            <i class="bi bi-box-arrow-in-down"></i> Depositar
+                        </button>
+                        <button class="btn-crypto btn-withdraw" onclick="openWithdrawModal('XMR')">
+                            <i class="bi bi-box-arrow-up"></i> Sacar
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <div class="crypto-actions">
+                        <button class="btn-crypto btn-generate" onclick="generateAddress('XMR')">
+                            <i class="bi bi-lightning"></i> Gerar Carteira XMR
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Seção de Transações Recentes -->
+        <div class="transactions-section">
+            <h3><i class="bi bi-clock-history"></i> Transações Recentes</h3>
+            
+            <?php if (!empty($recent_transactions)): ?>
+                <div class="transaction-list">
+                    <?php foreach ($recent_transactions as $tx): ?>
+                        <div class="transaction-item">
+                            <div class="transaction-details">
+                                <div class="transaction-amount <?= strtolower($tx['crypto_type']) ?>">
+                                    <?php if ($tx['type'] === 'deposit'): ?>
+                                        <i class="bi bi-arrow-down-circle text-success"></i>
+                                    <?php else: ?>
+                                        <i class="bi bi-arrow-up-circle text-danger"></i>
+                                    <?php endif; ?>
+                                    <?= number_format(floatval($tx['amount']), 6) ?> <?= strtoupper($tx['crypto_type']) ?>
+                                </div>
+                                <div class="transaction-info">
+                                    <?= ucfirst($tx['type']) ?> • 
+                                    <?= date('d/m/Y H:i', strtotime($tx['created_at'])) ?> • 
+                                    <?= substr($tx['tx_hash'], 0, 16) ?>...
+                                    <?php if (intval($tx['confirmations']) > 0): ?>
+                                        • <?= $tx['confirmations'] ?> confirmações
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <span class="status-badge status-<?= $tx['status'] ?>">
+                                <?= ucfirst($tx['status']) ?>
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="text-muted text-center py-4">
+                    <i class="bi bi-inbox"></i> Nenhuma transação ainda
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Seção de Estatísticas -->
+        <div class="transactions-section">
+            <h3><i class="bi bi-bar-chart"></i> Resumo da Conta</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-dark border-warning">
+                        <div class="card-body text-center">
+                            <h5>Total em BRL</h5>
+                            <h3 class="text-warning">
+                                R$ <?= number_format(
+                                    (floatval($user_data['btc_balance']) * $crypto_rates['bitcoin']['brl']) +
+                                    (floatval($user_data['eth_balance']) * $crypto_rates['ethereum']['brl']) +
+                                    (floatval($user_data['xmr_balance']) * $crypto_rates['monero']['brl']),
+                                    2, ',', '.'
+                                ) ?>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark border-success">
+                        <div class="card-body text-center">
+                            <h5>Transações</h5>
+                            <h3 class="text-success"><?= count($recent_transactions) ?></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-dark border-info">
+                        <div class="card-body text-center">
+                            <h5>Carteiras Ativas</h5>
+                            <h3 class="text-info">
+                                <?= 
+                                    (!empty($user_data['btc_deposit_address']) ? 1 : 0) +
+                                    (!empty($user_data['eth_deposit_address']) ? 1 : 0) +
+                                    (!empty($user_data['xmr_deposit_address']) ? 1 : 0)
+                                ?>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Depósito -->
+    <div class="modal fade modal-dark" id="depositModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-box-arrow-in-down"></i> Depositar <span id="depositCrypto"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <div id="depositQRCode"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Endereço para depósito:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="depositAddress" readonly>
+                            <button class="btn btn-outline-secondary" onclick="copyAddress()">
+                                <i class="bi bi-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> Instruções:</h6>
+                        <ul class="mb-0">
+                            <li>Envie apenas <span id="cryptoName"></span> para este endereço</li>
+                            <li>Depósitos são creditados após 1-3 confirmações</li>
+                            <li>Valor mínimo: 0.0001 (BTC) / 0.001 (ETH) / 0.01 (XMR)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Saque -->
+    <div class="modal fade modal-dark" id="withdrawModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-box-arrow-up"></i> Sacar <span id="withdrawCrypto"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="withdrawForm">
+                        <input type="hidden" id="withdrawCryptoType" name="crypto_type">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Endereço de destino:</label>
+                            <input type="text" class="form-control" name="to_address" required 
+                                   placeholder="Endereço da carteira de destino">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Valor a sacar:</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="amount" step="0.00000001" 
+                                       min="0.0001" required placeholder="0.00000000">
+                                <span class="input-group-text" id="withdrawCryptoSymbol">BTC</span>
+                            </div>
+                            <small class="text-muted">
+                                Saldo disponível: <span id="availableBalance">0.00000000</span> <span id="balanceCrypto">BTC</span>
+                            </small>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <h6><i class="bi bi-exclamation-triangle"></i> Atenção:</h6>
+                            <ul class="mb-0">
+                                <li>Verifique o endereço de destino</li>
+                                <li>Taxa de rede será deduzida automaticamente</li>
+                                <li>Transações são irreversíveis</li>
+                            </ul>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-send"></i> Confirmar Saque
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // Função para gerar endereço de criptomoeda
+        async function generateAddress(crypto) {
+            try {
+                const response = await fetch('generate_wallet.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `csrf_token=${encodeURIComponent('<?= $_SESSION['csrf_token'] ?>')}&crypto=${crypto}`
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('success', `Endereço ${crypto} gerado com sucesso!`);
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showAlert('error', data.error || `Erro ao gerar endereço ${crypto}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Erro na comunicação com o servidor');
+            }
+        }
+
+        // Função para abrir modal de depósito
+        function openDepositModal(crypto, address) {
+            document.getElementById('depositCrypto').textContent = crypto;
+            document.getElementById('cryptoName').textContent = crypto;
+            document.getElementById('depositAddress').value = address;
+            
+            // Gerar QR Code
+            const qrContainer = document.getElementById('depositQRCode');
+            qrContainer.innerHTML = '';
+            
+            const qrData = crypto === 'BTC' ? `bitcoin:${address}` : 
+                          crypto === 'ETH' ? `ethereum:${address}` : 
+                          `${crypto.toLowerCase()}:${address}`;
+            
+            QRCode.toCanvas(qrContainer, qrData, {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            });
+            
+            new bootstrap.Modal(document.getElementById('depositModal')).show();
+        }
+
+        // Função para abrir modal de saque
+        function openWithdrawModal(crypto) {
+            document.getElementById('withdrawCrypto').textContent = crypto;
+            document.getElementById('withdrawCryptoType').value = crypto;
+            document.getElementById('withdrawCryptoSymbol').textContent = crypto;
+            document.getElementById('balanceCrypto').textContent = crypto;
+            
+            // Definir saldo disponível
+            const balances = {
+                'BTC': <?= floatval($user_data['btc_balance'] ?? 0) ?>,
+                'ETH': <?= floatval($user_data['eth_balance'] ?? 0) ?>,
+                'XMR': <?= floatval($user_data['xmr_balance'] ?? 0) ?>
+            };
+            
+            document.getElementById('availableBalance').textContent = 
+                parseFloat(balances[crypto]).toFixed(8);
+            
+            new bootstrap.Modal(document.getElementById('withdrawModal')).show();
+        }
+
+        // Função para processar saque
+        document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('withdraw.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('success', result.message);
+                    bootstrap.Modal.getInstance(document.getElementById('withdrawModal')).hide();
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showAlert('error', result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('error', 'Erro na comunicação com o servidor');
+            }
+        });
 
         // Função para copiar endereço
         function copyAddress() {
