@@ -1150,145 +1150,73 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script>
-        // Função para gerar endereço de criptomoeda
-        async function generateAddress(crypto) {
-            try {
-                const response = await fetch('generate_wallet.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `csrf_token=${encodeURIComponent('<?= $_SESSION['csrf_token'] ?>')}&crypto=${crypto}`
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert('success', `Endereço ${crypto} gerado com sucesso!`);
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showAlert('error', data.error || `Erro ao gerar endereço ${crypto}`);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('error', 'Erro na comunicação com o servidor');
+    <!-- ADICIONAR NO FINAL DO dashboard.php, ANTES DE </body> -->
+
+<!-- Verificação automática em background -->
+<script>
+// Executar verificação automática a cada 5 minutos
+function autoCheck() {
+    fetch('api/cron_checker.php?api=1')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Auto-check concluído:', data);
+            
+            // Atualizar saldos se houver mudanças
+            if (data.deposits_checked > 0) {
+                setTimeout(() => location.reload(), 2000);
             }
-        }
+        })
+        .catch(error => console.error('Erro na verificação automática:', error));
+}
 
-        // Função para abrir modal de depósito
-        function openDepositModal(crypto, address) {
-            document.getElementById('depositCrypto').textContent = crypto;
-            document.getElementById('cryptoName').textContent = crypto;
-            document.getElementById('depositAddress').value = address;
-            
-            // Gerar QR Code
-            const qrContainer = document.getElementById('depositQRCode');
-            qrContainer.innerHTML = '';
-            
-            const qrData = crypto === 'BTC' ? `bitcoin:${address}` : 
-                          crypto === 'ETH' ? `ethereum:${address}` : 
-                          `${crypto.toLowerCase()}:${address}`;
-            
-            QRCode.toCanvas(qrContainer, qrData, {
-                width: 200,
-                margin: 2,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            });
-            
-            new bootstrap.Modal(document.getElementById('depositModal')).show();
-        }
+// Iniciar verificação automática
+setTimeout(autoCheck, 60000); // Primeira verificação após 1 minuto
+setInterval(autoCheck, 300000); // Depois a cada 5 minutos
 
-        // Função para abrir modal de saque
-        function openWithdrawModal(crypto) {
-            document.getElementById('withdrawCrypto').textContent = crypto;
-            document.getElementById('withdrawCryptoType').value = crypto;
-            document.getElementById('withdrawCryptoSymbol').textContent = crypto;
-            document.getElementById('balanceCrypto').textContent = crypto;
-            
-            // Definir saldo disponível
-            const balances = {
-                'BTC': <?= floatval($user_data['btc_balance'] ?? 0) ?>,
-                'ETH': <?= floatval($user_data['eth_balance'] ?? 0) ?>,
-                'XMR': <?= floatval($user_data['xmr_balance'] ?? 0) ?>
-            };
-            
-            document.getElementById('availableBalance').textContent = 
-                parseFloat(balances[crypto]).toFixed(8);
-            
-            new bootstrap.Modal(document.getElementById('withdrawModal')).show();
-        }
-
-        // Função para processar saque
-        document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            try {
-                const response = await fetch('withdraw.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+// Notificação de modo real
+<?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+    // Verificar se o modo real está ativo
+    fetch('admin/get_system_status.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.real_mode) {
+                console.warn('🔴 MODO REAL ATIVO - APIs blockchain conectadas!');
                 
-                const result = await response.json();
-                
-                if (result.success) {
-                    showAlert('success', result.message);
-                    bootstrap.Modal.getInstance(document.getElementById('withdrawModal')).hide();
-                    setTimeout(() => location.reload(), 2000);
-                } else {
-                    showAlert('error', result.error);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('error', 'Erro na comunicação com o servidor');
+                // Mostrar indicador visual
+                const indicator = document.createElement('div');
+                indicator.innerHTML = '🔴 MODO REAL';
+                indicator.style.cssText = `
+                    position: fixed; top: 10px; right: 10px; 
+                    background: #dc3545; color: white; 
+                    padding: 5px 10px; border-radius: 5px; 
+                    font-weight: bold; z-index: 9999;
+                `;
+                document.body.appendChild(indicator);
             }
         });
+<?php endif; ?>
+</script>
 
-        // Função para copiar endereço
-        function copyAddress() {
-            const addressInput = document.getElementById('depositAddress');
-            addressInput.select();
-            document.execCommand('copy');
-            
-            showAlert('success', 'Endereço copiado para a área de transferência!');
-        }
+<!-- Botão de acesso rápido ao admin (só para admins) -->
+<?php if (isset($_SESSION['user_id']) && isAdmin($_SESSION['user_id'])): ?>
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <a href="admin/admin_panel.php" class="btn btn-danger btn-lg rounded-circle" 
+           title="Painel Admin" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+            🛡️
+        </a>
+    </div>
+<?php endif; ?>
 
-        // Função para mostrar alertas
-        function showAlert(type, message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-dark ${type === 'error' ? 'alert-danger' : ''} alert-dismissible fade show`;
-            alertDiv.innerHTML = `
-                <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i> ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            const container = document.getElementById('container-principal');
-            container.insertBefore(alertDiv, container.firstChild);
-            
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
-        }
-
-        // Fechar alertas automaticamente
-        setTimeout(() => {
-            document.querySelectorAll('.alert').forEach(alert => {
-                if (bootstrap.Alert.getInstance(alert)) {
-                    bootstrap.Alert.getInstance(alert).close();
-                }
-            });
-        }, 5000);
-
-        console.log('Dashboard carregado com sucesso!');
-    </script>
+<!-- Função para verificar se é admin -->
+<?php
+function isAdmin($userId) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT is_admin FROM users WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    return $result && $result['is_admin'] == 1;
+}
+?>
 </body>
 </html>

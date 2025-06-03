@@ -494,3 +494,5 @@ Stack trace:
 #0 C:\xampp\htdocs\ecommerceZEE\vendedores.php(47): mysqli_stmt->execute()
 #1 {main}
   thrown in C:\xampp\htdocs\ecommerceZEE\vendedores.php on line 47
+[02-Jun-2025 22:18:12 America/Sao_Paulo] Usuário não logado - redirecionando para login
+[02-Jun-2025 22:18:17 America/Sao_Paulo] Login bem-sucedido para usuário ID: 6
