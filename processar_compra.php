@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Taxa da plataforma (2.5% ao invés de 3%)
     $taxa_percentual = 0.025; // 2.5%
-    $platform_wallet = "bc1qaecjks06lyrfqzqm8dhn5c98ltd9zmlstg36f2"; // SEU ENDEREÇO
+    $platform_wallet = "bc1qxvkeglgc745f7ekah7w4evkjg65j5qm0n3ex9m"; // SEU ENDEREÇO
     
     // Cálculos
     $valor_total_btc = $produto['preco_btc'];

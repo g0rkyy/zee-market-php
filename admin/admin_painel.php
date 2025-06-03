@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($message)) {
         $_SESSION['admin_message'] = $message;
-        header("Location: admin_panel.php");
+        header("Location: admin_painel.php");
         exit();
     }
 }
