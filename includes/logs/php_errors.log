@@ -660,3 +660,6 @@ Stack trace:
 #1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
 #2 {main}
   thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[03-Jun-2025 20:52:25 America/Sao_Paulo] Login bem-sucedido para usuário ID: 6
+[03-Jun-2025 20:54:42 America/Sao_Paulo] Nova compra #40 - Total: 0.00000940 BTC - Taxa: 2.35E-7 BTC - Vendedor: 9.165E-6 BTC
+[03-Jun-2025 20:55:37 America/Sao_Paulo] Nova compra #41 - Total: 0.00000940 BTC - Taxa: 2.35E-7 BTC - Vendedor: 9.165E-6 BTC

@@ -440,32 +440,7 @@ class ZeeMarketWallet {
         return $transactions;
     }
 
-    /**
-     * SIMULAÇÃO PARA DESENVOLVIMENTO
-     */
-    private function simulateBitcoinTransactions($address) {
-        // Para desenvolvimento - simular algumas transações
-        static $simulated = [];
-        
-        if (!isset($simulated[$address])) {
-            $simulated[$address] = true;
-            
-            // Simular transação aleatória ocasionalmente
-            if (rand(1, 100) <= 3) { // 3% de chance
-                return [[
-                    'txid' => hash('sha256', $address . time()),
-                    'amount' => 0.001 + (rand(1, 100) / 100000), // 0.001 a 0.002 BTC
-                    'confirmations' => rand(0, 6),
-                    'timestamp' => time() - rand(0, 3600),
-                    'block_height' => 800000 + rand(1, 1000),
-                    'crypto' => 'BTC',
-                    'verified_real' => false // Marca como simulado
-                ]];
-            }
-        }
-        
-        return [];
-    }
+   
 
     private function checkEthereumDeposits($address) {
         if ($this->realMode) {
