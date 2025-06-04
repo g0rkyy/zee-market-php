@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/config.php';
+require_once 'includes/functions.php';
 
 // Função para obter configurações do sistema
 function getSystemConfig($key, $default = null) {
@@ -31,16 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $produto_id = (int)$_POST['produto_id'];
     $nome = trim($_POST['nome']);
     $endereco = trim($_POST['endereco']);
-    $btc_wallet = trim($_POST['btc_wallet']);
+    $payment_method = $_POST['payment_method'] ?? 'external';
+    $btc_wallet = trim($_POST['btc_wallet'] ?? '');
 
     // Validações básicas
-    if (empty($nome) || empty($endereco) || empty($btc_wallet)) {
-        die("Erro: Todos os campos são obrigatórios!");
+    if (empty($nome) || empty($endereco)) {
+        die("Erro: Nome e endereço são obrigatórios!");
     }
 
-    // Validar formato da carteira Bitcoin
-    if (!preg_match('/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/', $btc_wallet)) {
-        die("Erro: Formato de carteira Bitcoin inválido!");
+    // Validar carteira Bitcoin se pagamento externo
+    if ($payment_method === 'external') {
+        if (empty($btc_wallet)) {
+            die("Erro: Carteira Bitcoin é obrigatória para pagamento externo!");
+        }
+        if (!preg_match('/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/', $btc_wallet)) {
+            die("Erro: Formato de carteira Bitcoin inválido!");
+        }
     }
 
     // Busca o produto e vendedor
@@ -79,9 +86,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($valor_total_btc < 0.00001) {
         die("Erro: Valor mínimo não atingido (0.00001 BTC)!");
     }
+
+    // ========== VERIFICAR SALDO SE PAGAMENTO INTERNO ========== //
+    
+    if ($payment_method === 'balance') {
+        if (!isLoggedIn()) {
+            die("Erro: Faça login para usar pagamento com saldo!");
+        }
+        
+        $user_id = $_SESSION['user_id'];
+        
+        // Verificar saldo do usuário
+        $stmt = $conn->prepare("SELECT btc_balance FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $user_data = $stmt->get_result()->fetch_assoc();
+        
+        if (!$user_data) {
+            die("Erro: Usuário não encontrado!");
+        }
+        
+        $saldo_usuario = floatval($user_data['btc_balance']);
+        
+        if ($saldo_usuario < $valor_total_btc) {
+            die("Erro: Saldo insuficiente! Saldo: " . number_format($saldo_usuario, 8) . " BTC - Necessário: " . number_format($valor_total_btc, 8) . " BTC");
+        }
+    }
     
     // Log para debug
-    error_log("Nova compra iniciada - Produto: {$produto['nome']} - Valor: {$produto['preco']} BRL - BTC: {$valor_total_btc}");
+    error_log("Nova compra iniciada - Produto: {$produto['nome']} - Valor: {$produto['preco']} BRL - BTC: {$valor_total_btc} - Método: {$payment_method}");
 
     // ========== INSERIR COMPRA NO BANCO ========== //
     
@@ -91,9 +124,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Inserir dados da compra
         $stmt = $conn->prepare("INSERT INTO compras 
                               (produto_id, vendedor_id, nome, endereco, btc_wallet_comprador, 
-                               valor_btc, taxa_plataforma, wallet_plataforma, data_compra) 
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-        $stmt->bind_param("iisssdds", 
+                               valor_btc, taxa_plataforma, wallet_plataforma, data_compra, pago) 
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
+        
+        // Se pagamento com saldo, marcar como pago imediatamente
+        $is_paid = ($payment_method === 'balance') ? 1 : 0;
+        
+        $stmt->bind_param("iisssddssi", 
                          $produto_id, 
                          $produto['vendedor_id'], 
                          $nome, 
@@ -101,7 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                          $btc_wallet,
                          $valor_total_btc,      // Valor total que o cliente paga
                          $taxa_plataforma,      // Taxa da plataforma (2.5%)
-                         $platform_wallet       // Carteira da plataforma
+                         $platform_wallet,      // Carteira da plataforma
+                         $is_paid               // Pago se for saldo interno
                         );
 
         if (!$stmt->execute()) {
@@ -109,6 +147,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $compra_id = $conn->insert_id;
+
+        // ========== PROCESSAR PAGAMENTO COM SALDO ========== //
+        
+        if ($payment_method === 'balance') {
+            // Deduzir saldo do usuário
+            $stmt = $conn->prepare("UPDATE users SET btc_balance = btc_balance - ? WHERE id = ?");
+            $stmt->bind_param("di", $valor_total_btc, $user_id);
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Erro ao deduzir saldo: " . $conn->error);
+            }
+            
+            // Registrar transação de débito
+            $stmt = $conn->prepare("INSERT INTO btc_transactions 
+                                  (user_id, type, amount, status, crypto_type, tx_hash, created_at) 
+                                  VALUES (?, 'withdrawal', ?, 'confirmed', 'BTC', ?, NOW())");
+            $tx_hash_interno = 'internal_' . $compra_id . '_' . time();
+            $stmt->bind_param("ids", $user_id, $valor_total_btc, $tx_hash_interno);
+            $stmt->execute();
+            
+            // Registrar no histórico de saldo
+            $stmt = $conn->prepare("SELECT btc_balance FROM users WHERE id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $novo_saldo = $stmt->get_result()->fetch_assoc()['btc_balance'];
+            
+            $stmt = $conn->prepare("INSERT INTO btc_balance_history 
+                                  (user_id, type, amount, balance_before, balance_after, description, tx_hash, crypto_type) 
+                                  VALUES (?, 'debit', ?, ?, ?, 'Compra com saldo interno', ?, 'BTC')");
+            $saldo_anterior = $saldo_usuario;
+            $stmt->bind_param("idddss", $user_id, $valor_total_btc, $saldo_anterior, $novo_saldo, $tx_hash_interno);
+            $stmt->execute();
+            
+            // Marcar compra com hash interno
+            $stmt = $conn->prepare("UPDATE compras SET tx_hash = ?, confirmations = 999 WHERE id = ?");
+            $stmt->bind_param("si", $tx_hash_interno, $compra_id);
+            $stmt->execute();
+            
+            // Atualizar saldo na sessão
+            $_SESSION['btc_balance'] = floatval($novo_saldo);
+        }
         
         // Atualizar preço BTC do produto com cotação atual
         $stmt = $conn->prepare("UPDATE produtos SET preco_btc = ? WHERE id = ?");
@@ -124,28 +203,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'produto_id' => $produto_id,
             'valor_btc' => $valor_total_btc,
             'taxa_plataforma' => $taxa_plataforma,
-            'btc_price_usd' => $btc_price_usd
+            'btc_price_usd' => $btc_price_usd,
+            'payment_method' => $payment_method,
+            'paid_immediately' => $is_paid
         ]);
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
-        $user_id = 0; // Compra anônima
+        $log_user_id = ($payment_method === 'balance') ? $user_id : 0;
         
-        $stmt->bind_param("isss", $user_id, $details, $ip_address, $user_agent);
+        $stmt->bind_param("isss", $log_user_id, $details, $ip_address, $user_agent);
         $stmt->execute();
         
         $conn->commit();
         
         // Log de sucesso
-        error_log("Compra #{$compra_id} criada com sucesso - Total: {$valor_total_btc} BTC - Taxa: {$taxa_plataforma} BTC - Vendedor: {$valor_vendedor} BTC");
+        $status_msg = ($payment_method === 'balance') ? 'PAGO COM SALDO' : 'AGUARDANDO PAGAMENTO';
+        error_log("Compra #{$compra_id} criada - Total: {$valor_total_btc} BTC - Taxa: {$taxa_plataforma} BTC - Vendedor: {$valor_vendedor} BTC - Status: {$status_msg}");
         
-        // Redirecionar para pagamento
-        header("Location: pagamento_btc.php?id=" . $compra_id);
+        // Redirecionar baseado no método de pagamento
+        if ($payment_method === 'balance') {
+            // Compra paga - redirecionar para confirmação
+            header("Location: compra_confirmada.php?id=" . $compra_id);
+        } else {
+            // Pagamento externo - redirecionar para pagamento
+            header("Location: pagamento_btc.php?id=" . $compra_id);
+        }
         exit();
         
     } catch (Exception $e) {
         $conn->rollback();
         error_log("Erro ao processar compra: " . $e->getMessage());
-        die("Erro ao processar compra. Tente novamente em alguns minutos.");
+        die("Erro ao processar compra: " . $e->getMessage());
     }
     
 } else {

@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/config.php';
+require_once 'includes/functions.php';
 
 $id = (int)$_GET['id'];
 
@@ -14,6 +15,17 @@ $produto = $stmt->get_result()->fetch_assoc();
 
 if (!$produto) {
     die("Produto não encontrado!");
+}
+
+// Verificar se usuário está logado para mostrar saldo
+$user_logged_in = isLoggedIn();
+$user_balance = null;
+
+if ($user_logged_in) {
+    $stmt = $conn->prepare("SELECT btc_balance, eth_balance, xmr_balance FROM users WHERE id = ?");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $user_balance = $stmt->get_result()->fetch_assoc();
 }
 
 // Obter cotação atual do Bitcoin
@@ -43,7 +55,7 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             --accent-orange: #f7931a;
             --success-green: #28a745;
             --text-light: #e0e0e0;
-            --text-muted:rgb(255, 255, 255);
+            --text-muted: rgb(255, 255, 255);
             --border-dark: #444;
         }
         
@@ -60,12 +72,13 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             padding: 0 1rem;
         }
         
-        .product-card {
+        .product-card, .wallet-card {
             background: var(--secondary-dark);
             border: 1px solid var(--border-dark);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             overflow: hidden;
+            margin-bottom: 2rem;
         }
         
         .product-header {
@@ -75,7 +88,14 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             text-align: center;
         }
         
-        .product-body {
+        .wallet-header {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .product-body, .wallet-body {
             padding: 2rem;
         }
         
@@ -122,6 +142,94 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             margin-top: 2rem;
         }
         
+        .payment-method-selector {
+            margin-bottom: 2rem;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .payment-option:hover {
+            border-color: var(--accent-orange);
+        }
+        
+        .payment-option.active {
+            border-color: var(--accent-orange);
+            background: rgba(247, 147, 26, 0.1);
+        }
+        
+        .payment-option input[type="radio"] {
+            margin-right: 1rem;
+        }
+        
+        .payment-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .payment-details {
+            flex: 1;
+        }
+        
+        .payment-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .payment-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        .balance-info {
+            text-align: right;
+            color: var(--success-green);
+            font-weight: 600;
+        }
+        
+        .insufficient-balance {
+            color: #dc3545 !important;
+        }
+        
+        .wallet-balance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .crypto-icon {
+            font-size: 1.2rem;
+        }
+        
+        .crypto-icon.btc { color: var(--accent-orange); }
+        .crypto-icon.eth { color: #627eea; }
+        .crypto-icon.xmr { color: #ff6600; }
+        
+        .balance-amount {
+            font-weight: 600;
+        }
+        
         .form-label {
             color: var(--text-light);
             font-weight: 600;
@@ -164,6 +272,13 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(247, 147, 26, 0.4);
             color: white;
+        }
+        
+        .btn-purchase:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .back-btn {
@@ -225,18 +340,47 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             margin-left: 0.5rem;
         }
         
+        .wallet-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-wallet {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-dark);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-light);
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-wallet:hover {
+            color: var(--text-light);
+            border-color: var(--accent-orange);
+            background: rgba(247, 147, 26, 0.1);
+        }
+        
         @media (max-width: 768px) {
             .container {
                 margin: 1rem auto;
                 padding: 0 0.5rem;
             }
             
-            .product-body {
+            .product-body, .wallet-body {
                 padding: 1rem;
             }
             
             .purchase-form {
                 padding: 1rem;
+            }
+            
+            .wallet-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -246,6 +390,52 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
         <a href="index.php" class="back-btn">
             <i class="fas fa-arrow-left"></i> Voltar ao Catálogo
         </a>
+        
+        <!-- Bloco da Carteira (se logado) -->
+        <?php if ($user_logged_in && $user_balance): ?>
+        <div class="wallet-card">
+            <div class="wallet-header">
+                <h4><i class="fas fa-wallet"></i> Minha Carteira</h4>
+            </div>
+            <div class="wallet-body">
+                <div class="wallet-balance">
+                    <div class="crypto-info">
+                        <i class="fas fa-bitcoin crypto-icon btc"></i>
+                        <span>Bitcoin (BTC)</span>
+                    </div>
+                    <span class="balance-amount"><?= number_format($user_balance['btc_balance'], 8) ?> BTC</span>
+                </div>
+                
+                <div class="wallet-balance">
+                    <div class="crypto-info">
+                        <i class="fab fa-ethereum crypto-icon eth"></i>
+                        <span>Ethereum (ETH)</span>
+                    </div>
+                    <span class="balance-amount"><?= number_format($user_balance['eth_balance'], 6) ?> ETH</span>
+                </div>
+                
+                <div class="wallet-balance">
+                    <div class="crypto-info">
+                        <i class="fas fa-coins crypto-icon xmr"></i>
+                        <span>Monero (XMR)</span>
+                    </div>
+                    <span class="balance-amount"><?= number_format($user_balance['xmr_balance'], 6) ?> XMR</span>
+                </div>
+                
+                <div class="wallet-actions">
+                    <a href="dashboard.php" class="btn-wallet">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="dashboard.php#deposits" class="btn-wallet">
+                        <i class="fas fa-plus-circle"></i> Depositar
+                    </a>
+                    <a href="dashboard.php#withdrawals" class="btn-wallet">
+                        <i class="fas fa-minus-circle"></i> Sacar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
         
         <div class="product-card">
             <div class="product-header">
@@ -308,21 +498,68 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
             <form method="POST" action="processar_compra.php" id="purchase-form">
                 <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
                 
+                <!-- Seletor de Método de Pagamento -->
+                <?php if ($user_logged_in): ?>
+                <div class="payment-method-selector">
+                    <h5><i class="fas fa-credit-card"></i> Método de Pagamento</h5>
+                    
+                    <!-- Pagamento com Saldo -->
+                    <div class="payment-option" data-method="balance">
+                        <input type="radio" name="payment_method" value="balance" id="payment-balance">
+                        <div class="payment-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="payment-details">
+                            <div class="payment-title">Pagar com Saldo da Carteira</div>
+                            <div class="payment-description">Use seu saldo em Bitcoin</div>
+                        </div>
+                        <div class="balance-info <?= floatval($user_balance['btc_balance']) < $preco_btc_atual ? 'insufficient-balance' : '' ?>">
+                            <?= number_format($user_balance['btc_balance'], 8) ?> BTC
+                            <?php if (floatval($user_balance['btc_balance']) < $preco_btc_atual): ?>
+                                <br><small>Saldo insuficiente</small>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagamento Externo -->
+                    <div class="payment-option active" data-method="external">
+                        <input type="radio" name="payment_method" value="external" id="payment-external" checked>
+                        <div class="payment-icon">
+                            <i class="fas fa-bitcoin"></i>
+                        </div>
+                        <div class="payment-details">
+                            <div class="payment-title">Pagar com Bitcoin Externo</div>
+                            <div class="payment-description">Enviar Bitcoin de sua carteira externa</div>
+                        </div>
+                        <div class="balance-info">
+                            <?= number_format($preco_btc_atual, 8) ?> BTC
+                        </div>
+                    </div>
+                </div>
+                <?php else: ?>
+                    <input type="hidden" name="payment_method" value="external">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> 
+                        <a href="login.php" style="color: #17a2b8;">Faça login</a> para usar saldo da carteira ou pague diretamente com Bitcoin.
+                    </div>
+                <?php endif; ?>
+                
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="nome" class="form-label">
-                            <i class="fas fa-user"></i> User *
+                            <i class="fas fa-user"></i> Nome de Usuário *
                         </label>
                         <input type="text" id="nome" name="nome" class="form-control" 
-                               placeholder="User" required maxlength="100">
+                               placeholder="Seu nickname" required maxlength="100"
+                               value="<?= $user_logged_in ? htmlspecialchars($_SESSION['user_name'] ?? '') : '' ?>">
                     </div>
                     
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3" id="btc-wallet-field">
                         <label for="btc_wallet" class="form-label">
                             <i class="fab fa-bitcoin"></i> Sua Carteira Bitcoin *
                         </label>
                         <input type="text" id="btc_wallet" name="btc_wallet" class="form-control" 
-                               placeholder="bc1... ou 1... ou 3..." required 
+                               placeholder="bc1... ou 1... ou 3..." 
                                pattern="^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$">
                         <small class="text-muted">Para recebimento do produto</small>
                     </div>
@@ -333,12 +570,12 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
                         <i class="fas fa-map-marker-alt"></i> Endereço de Entrega *
                     </label>
                     <textarea id="endereco" name="endereco" class="form-control" rows="3" 
-                              placeholder="Cuidado com o que escreve" required maxlength="500"></textarea>
+                              placeholder="Endereço completo para entrega" required maxlength="500"></textarea>
                 </div>
                 
-                <button type="submit" class="btn-purchase">
-                    <i class="fab fa-bitcoin"></i> Comprar com Bitcoin
-                    <div style="font-size: 0.9rem; margin-top: 0.25rem;">
+                <button type="submit" class="btn-purchase" id="purchase-btn">
+                    <i class="fab fa-bitcoin"></i> <span id="purchase-text">Comprar com Bitcoin</span>
+                    <div style="font-size: 0.9rem; margin-top: 0.25rem;" id="purchase-amount">
                         <?= number_format($preco_btc_atual, 8) ?> BTC
                     </div>
                 </button>
@@ -349,21 +586,81 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
         <div class="security-notice">
             <h6><i class="fas fa-shield-alt"></i> Informações de Segurança</h6>
             <ul>
-                <li><strong>Pagamento 100% Bitcoin:</strong> Transações irreversíveis na blockchain</li>
+                <li><strong>Pagamento Bitcoin:</strong> Transações irreversíveis na blockchain</li>
                 <li><strong>Taxa da plataforma:</strong> 2.5% já incluída no preço</li>
                 <li><strong>Confirmação:</strong> 1-3 confirmações (10-30 minutos)</li>
                 <li><strong>Suporte:</strong> Acompanhe sua compra pela página de pagamento</li>
+                <?php if ($user_logged_in): ?>
+                <li><strong>Saldo interno:</strong> Pagamento instantâneo com saldo da carteira</li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
+        const productPrice = <?= $preco_btc_atual ?>;
+        const userBalance = <?= $user_logged_in ? floatval($user_balance['btc_balance']) : 0 ?>;
+        const isLoggedIn = <?= $user_logged_in ? 'true' : 'false' ?>;
+        
+        // Seletor de método de pagamento
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove active de todas as opções
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    opt.querySelector('input[type="radio"]').checked = false;
+                });
+                
+                // Ativa a opção clicada
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+                
+                updatePaymentMethod();
+            });
+        });
+        
+        function updatePaymentMethod() {
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const btcWalletField = document.getElementById('btc-wallet-field');
+            const btcWalletInput = document.getElementById('btc_wallet');
+            const purchaseBtn = document.getElementById('purchase-btn');
+            const purchaseText = document.getElementById('purchase-text');
+            
+            if (selectedMethod === 'balance') {
+                // Pagamento com saldo
+                btcWalletField.style.display = 'none';
+                btcWalletInput.required = false;
+                
+                if (userBalance >= productPrice) {
+                    purchaseBtn.disabled = false;
+                    purchaseText.textContent = 'Comprar com Saldo';
+                    purchaseBtn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                } else {
+                    purchaseBtn.disabled = true;
+                    purchaseText.textContent = 'Saldo Insuficiente';
+                    purchaseBtn.style.background = '#6c757d';
+                }
+            } else {
+                // Pagamento externo
+                btcWalletField.style.display = 'block';
+                btcWalletInput.required = true;
+                purchaseBtn.disabled = false;
+                purchaseText.textContent = 'Comprar com Bitcoin';
+                purchaseBtn.style.background = 'linear-gradient(135deg, #f7931a, #e67e22)';
+            }
+        }
+        
+        // Inicializar com método selecionado
+        if (isLoggedIn) {
+            updatePaymentMethod();
+        }
+        
         // Validação do formulário
         document.getElementById('purchase-form').addEventListener('submit', function(e) {
             const nome = document.getElementById('nome').value.trim();
             const endereco = document.getElementById('endereco').value.trim();
-            const wallet = document.getElementById('btc_wallet').value.trim();
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
             
             if (nome.length < 3) {
                 e.preventDefault();
@@ -377,16 +674,19 @@ $preco_btc_atual = $produto['preco'] / $btc_rate;
                 return;
             }
             
-            // Validar formato da carteira Bitcoin
-            const walletRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/;
-            if (!walletRegex.test(wallet)) {
-                e.preventDefault();
-                alert('Formato de carteira Bitcoin inválido.\nUse formato: bc1... ou 1... ou 3...');
-                return;
+            if (selectedMethod === 'external') {
+                const wallet = document.getElementById('btc_wallet').value.trim();
+                const walletRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/;
+                if (!walletRegex.test(wallet)) {
+                    e.preventDefault();
+                    alert('Formato de carteira Bitcoin inválido.\nUse formato: bc1... ou 1... ou 3...');
+                    return;
+                }
             }
             
             // Confirmação final
-            const confirmMessage = `Confirmar compra?\n\nProduto: <?= htmlspecialchars($produto['nome']) ?>\nValor: ${document.querySelector('.btc-price').textContent}\n\nO pagamento será processado imediatamente após a confirmação.`;
+            const paymentText = selectedMethod === 'balance' ? 'saldo da carteira' : 'Bitcoin externo';
+            const confirmMessage = `Confirmar compra?\n\nProduto: <?= htmlspecialchars($produto['nome']) ?>\nValor: ${document.querySelector('#purchase-amount').textContent}\nPagamento: ${paymentText}\n\nO pagamento será processado imediatamente.`;
             
             if (!confirm(confirmMessage)) {
                 e.preventDefault();
