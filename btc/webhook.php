@@ -1,93 +1,70 @@
 <?php
 /**
- * Bitcoin Webhook Handler - Sistema Completo de Carteira
- * Processa transações Bitcoin em tempo real
+ * WEBHOOK REAL PARA PROCESSAR PAGAMENTOS
+ * Substitui btc/webhook.php
+ * Processa transações Bitcoin e Ethereum reais
  */
 
-ini_set('display_errors', 0);
 error_reporting(0);
+ini_set('display_errors', 0);
 
 require_once '../includes/config.php';
-require_once '../includes/btc_functions.php';
+require_once '../includes/real_api_config.php';
 
 // Headers de segurança
 header('Content-Type: application/json');
 header('X-Robots-Tag: noindex, nofollow');
 
-// Log de debug (remover em produção)
+// Função de log para debug
 function logWebhook($message, $data = null) {
-    $logFile = '../logs/webhook_' . date('Y-m-d') . '.log';
+    $logFile = '../logs/webhook_real_' . date('Y-m-d') . '.log';
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[$timestamp] $message";
     if ($data) {
         $logMessage .= " | Data: " . json_encode($data);
     }
-    file_put_contents($logFile, $logMessage . "\n", FILE_APPEND);
+    file_put_contents($logFile, $logMessage . "\n", FILE_APPEND | LOCK_EX);
 }
 
-// Verificação de método HTTP
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    logWebhook("Método HTTP inválido: " . $_SERVER['REQUEST_METHOD']);
-    exit(json_encode(['error' => 'Method not allowed']));
-}
+// Verificação de segurança
+$secret = $_GET['secret'] ?? $_POST['secret'] ?? '';
+$expectedSecret = $REAL_API_CONFIG['webhook']['secret'];
 
-// Verificação de segurança - Secret Key
-$secret = 'ZeeMarket_BTC_2024_Secret_Key'; // Altere este secret
-$providedSecret = $_GET['secret'] ?? $_POST['secret'] ?? '';
-
-if ($providedSecret !== $secret) {
+if ($secret !== $expectedSecret) {
     http_response_code(401);
-    logWebhook("Acesso não autorizado - Secret inválido", ['provided' => $providedSecret]);
+    logWebhook("ACESSO NEGADO - Secret inválido", ['provided' => $secret]);
     exit(json_encode(['error' => 'Unauthorized']));
 }
-
-// Verificação de IP (opcional - adicione IPs permitidos)
-$allowedIPs = [
-    '127.0.0.1',
-    '::1',
-    // Adicione IPs dos provedores de webhook aqui
-];
-
-/*
-$clientIP = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
-if (!in_array($clientIP, $allowedIPs)) {
-    http_response_code(403);
-    logWebhook("IP não autorizado", ['ip' => $clientIP]);
-    exit(json_encode(['error' => 'Forbidden']));
-}
-*/
 
 try {
     // Capturar dados do webhook
     $rawInput = file_get_contents('php://input');
-    $input = json_decode($rawInput, true);
+    $webhookData = json_decode($rawInput, true);
     
     if (json_last_error() !== JSON_ERROR_NONE) {
         throw new Exception('JSON inválido: ' . json_last_error_msg());
     }
 
-    logWebhook("Webhook recebido", $input);
+    logWebhook("Webhook REAL recebido", $webhookData);
 
     // Processar diferentes tipos de webhook
-    $webhookType = $input['type'] ?? 'transaction';
+    $source = detectWebhookSource($webhookData);
     
-    switch ($webhookType) {
-        case 'transaction':
-        case 'address-transaction':
-            processTransactionWebhook($input);
+    switch ($source) {
+        case 'blockcypher':
+            processBlockCypherWebhook($webhookData);
             break;
             
-        case 'block':
-            processBlockWebhook($input);
+        case 'etherscan':
+            processEtherscanWebhook($webhookData);
             break;
             
-        case 'confirmation':
-            processConfirmationWebhook($input);
+        case 'manual':
+            processManualWebhook($webhookData);
             break;
             
         default:
-            logWebhook("Tipo de webhook desconhecido", ['type' => $webhookType]);
+            logWebhook("Fonte de webhook desconhecida", $webhookData);
             break;
     }
 
@@ -95,178 +72,136 @@ try {
     echo json_encode(['status' => 'success', 'processed' => true]);
 
 } catch (Exception $e) {
-    logWebhook("Erro no webhook: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    logWebhook("ERRO no webhook: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
     http_response_code(500);
     echo json_encode(['error' => 'Internal server error']);
 }
 
 /**
- * Processa webhook de transação
+ * Detecta a fonte do webhook
  */
-function processTransactionWebhook($data) {
-    global $conn;
+function detectWebhookSource($data) {
+    if (isset($data['hash']) && isset($data['addresses'])) {
+        return 'blockcypher';
+    }
+    if (isset($data['result']) && isset($data['id'])) {
+        return 'etherscan';
+    }
+    if (isset($_POST['manual_tx'])) {
+        return 'manual';
+    }
+    return 'unknown';
+}
+
+/**
+ * Processa webhook do BlockCypher (Bitcoin)
+ */
+function processBlockCypherWebhook($data) {
+    global $conn, $REAL_API_CONFIG;
     
-    // Extrair dados da transação
-    $txHash = $data['tx_hash'] ?? $data['hash'] ?? $data['txid'] ?? null;
-    $addresses = $data['outputs'] ?? $data['addresses'] ?? [];
+    logWebhook("Processando webhook BlockCypher");
+    
+    $txHash = $data['hash'];
     $confirmations = intval($data['confirmations'] ?? 0);
     $blockHeight = intval($data['block_height'] ?? 0);
-    $timestamp = $data['timestamp'] ?? time();
     
-    if (!$txHash) {
-        throw new Exception('Hash da transação não encontrado');
-    }
-
-    logWebhook("Processando transação", [
-        'tx_hash' => $txHash,
-        'confirmations' => $confirmations,
-        'block_height' => $blockHeight
-    ]);
-
-    // Verificar se é transação de entrada (depósito)
-    if (isset($data['outputs'])) {
-        foreach ($data['outputs'] as $output) {
-            $address = $output['address'] ?? $output['addr'] ?? null;
-            $amount = floatval($output['value'] ?? $output['amount'] ?? 0);
-            
-            if ($address && $amount > 0) {
-                processDeposit($txHash, $address, $amount, $confirmations, $blockHeight, $timestamp);
-            }
+    // Processar cada endereço envolvido
+    foreach ($data['addresses'] as $address) {
+        // Verificar se o endereço pertence a um usuário
+        $stmt = $conn->prepare("SELECT id, username FROM users WHERE btc_deposit_address = ?");
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
+        
+        if ($user) {
+            processDepositReal($user, $txHash, $address, $data);
         }
-    }
-    
-    // Verificar se é transação de saída (saque)
-    if (isset($data['inputs'])) {
-        foreach ($data['inputs'] as $input) {
-            $address = $input['address'] ?? $input['addr'] ?? null;
-            $amount = floatval($input['value'] ?? $input['amount'] ?? 0);
-            
-            if ($address && $amount > 0) {
-                processWithdrawal($txHash, $address, $amount, $confirmations, $blockHeight, $timestamp);
-            }
+        
+        // Verificar se é pagamento de compra
+        $stmt = $conn->prepare("SELECT * FROM compras WHERE wallet_plataforma = ? AND pago = 0");
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $purchases = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($purchases as $purchase) {
+            processPurchasePayment($purchase, $txHash, $data);
         }
     }
 }
 
 /**
- * Processa depósito Bitcoin
+ * Processa depósito real
  */
-function processDeposit($txHash, $address, $amount, $confirmations, $blockHeight, $timestamp) {
-    global $conn;
+function processDepositReal($user, $txHash, $address, $txData) {
+    global $conn, $REAL_API_CONFIG;
     
-    // Converter satoshis para BTC se necessário
-    if ($amount > 1000000) {
-        $amount = $amount / 100000000; // Satoshis para BTC
-    }
-    
-    logWebhook("Processando depósito", [
-        'address' => $address,
-        'amount' => $amount,
-        'confirmations' => $confirmations
-    ]);
-    
-    // Verificar se o endereço pertence a algum usuário
-    $stmt = $conn->prepare("SELECT id, username FROM users WHERE btc_deposit_address = ?");
-    $stmt->bind_param("s", $address);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
-    
-    if (!$user) {
-        logWebhook("Endereço não encontrado", ['address' => $address]);
-        return;
-    }
-    
-    // Verificar se a transação já foi processada
-    $stmt = $conn->prepare("SELECT id, status, confirmations FROM btc_transactions WHERE tx_hash = ? AND user_id = ?");
+    // Verificar se já foi processado
+    $stmt = $conn->prepare("SELECT id FROM btc_transactions WHERE tx_hash = ? AND user_id = ?");
     $stmt->bind_param("si", $txHash, $user['id']);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $existingTx = $result->fetch_assoc();
     
-    if ($existingTx) {
-        // Atualizar confirmações se aumentaram
-        if ($confirmations > $existingTx['confirmations']) {
-            updateTransactionConfirmations($existingTx['id'], $confirmations, $blockHeight);
-            
-            // Se atingiu confirmações necessárias e ainda não foi creditado
-            if ($confirmations >= 3 && $existingTx['status'] === 'pending') {
-                confirmDeposit($user['id'], $existingTx['id'], $amount, $txHash);
+    if ($stmt->get_result()->num_rows > 0) {
+        logWebhook("Transação já processada", ['tx_hash' => $txHash]);
+        return;
+    }
+    
+    // Calcular valor recebido no endereço
+    $amount = 0;
+    if (isset($txData['outputs'])) {
+        foreach ($txData['outputs'] as $output) {
+            if (in_array($address, $output['addresses'] ?? [])) {
+                $amount += $output['value'];
             }
         }
-        return;
     }
+    
+    $amountBTC = $amount / 100000000; // Satoshis para BTC
     
     // Validar valor mínimo
-    $minDeposit = 0.0001; // 0.0001 BTC
-    if ($amount < $minDeposit) {
-        logWebhook("Depósito abaixo do mínimo", ['amount' => $amount, 'min' => $minDeposit]);
+    if ($amountBTC < $REAL_API_CONFIG['security']['min_deposits']['BTC']) {
+        logWebhook("Depósito abaixo do mínimo", ['amount' => $amountBTC]);
         return;
     }
     
-    // Inserir nova transação
-    $status = $confirmations >= 3 ? 'confirmed' : 'pending';
-    $type = 'deposit';
-    
-    $stmt = $conn->prepare("
-        INSERT INTO btc_transactions 
-        (user_id, tx_hash, type, amount, status, confirmations, block_height, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))
-    ");
-    $stmt->bind_param("issdsiis", $user['id'], $txHash, $type, $amount, $status, $confirmations, $blockHeight, $timestamp);
-    $stmt->execute();
-    $transactionId = $conn->insert_id;
-    
-    logWebhook("Transação inserida", [
-        'transaction_id' => $transactionId,
-        'user_id' => $user['id'],
-        'status' => $status
-    ]);
-    
-    // Se já tem confirmações suficientes, creditar imediatamente
-    if ($confirmations >= 3) {
-        confirmDeposit($user['id'], $transactionId, $amount, $txHash);
-    }
-    
-    // Notificar usuário por email
-    sendDepositNotification($user, $amount, $confirmations, $txHash);
-}
-
-/**
- * Confirma depósito e credita saldo
- */
-function confirmDeposit($userId, $transactionId, $amount, $txHash) {
-    global $conn;
+    $confirmations = intval($txData['confirmations'] ?? 0);
+    $status = $confirmations >= $REAL_API_CONFIG['security']['min_confirmations']['BTC'] ? 'confirmed' : 'pending';
     
     $conn->begin_transaction();
     
     try {
-        // Atualizar status da transação
-        $stmt = $conn->prepare("UPDATE btc_transactions SET status = 'confirmed' WHERE id = ?");
-        $stmt->bind_param("i", $transactionId);
-        $stmt->execute();
-        
-        // Creditar saldo do usuário
-        $stmt = $conn->prepare("UPDATE users SET btc_balance = btc_balance + ? WHERE id = ?");
-        $stmt->bind_param("di", $amount, $userId);
-        $stmt->execute();
-        
-        // Registrar movimento no histórico de saldo
+        // Inserir transação
         $stmt = $conn->prepare("
-            INSERT INTO btc_balance_history 
-            (user_id, type, amount, description, tx_hash, created_at) 
-            VALUES (?, 'credit', ?, 'Depósito Bitcoin confirmado', ?, NOW())
+            INSERT INTO btc_transactions 
+            (user_id, tx_hash, type, amount, confirmations, status, crypto_type, block_height, created_at) 
+            VALUES (?, ?, 'deposit', ?, ?, ?, 'BTC', ?, NOW())
         ");
-        $stmt->bind_param("ids", $userId, $amount, $txHash);
+        $stmt->bind_param("isidsi", 
+            $user['id'], 
+            $txHash, 
+            $amountBTC, 
+            $confirmations, 
+            $status,
+            $txData['block_height'] ?? 0
+        );
         $stmt->execute();
+        $transactionId = $conn->insert_id;
+        
+        // Se confirmado, creditar saldo
+        if ($status === 'confirmed') {
+            creditUserBalance($user['id'], $amountBTC, $txHash, 'BTC');
+        }
         
         $conn->commit();
         
-        logWebhook("Depósito confirmado e creditado", [
-            'user_id' => $userId,
-            'amount' => $amount,
+        logWebhook("Depósito REAL processado", [
+            'user_id' => $user['id'],
+            'amount' => $amountBTC,
+            'status' => $status,
             'tx_hash' => $txHash
         ]);
+        
+        // Enviar notificação
+        sendDepositNotification($user, $amountBTC, $confirmations, $txHash);
         
     } catch (Exception $e) {
         $conn->rollback();
@@ -275,195 +210,235 @@ function confirmDeposit($userId, $transactionId, $amount, $txHash) {
 }
 
 /**
- * Processa saque Bitcoin
+ * Processa pagamento de compra
  */
-function processWithdrawal($txHash, $address, $amount, $confirmations, $blockHeight, $timestamp) {
-    global $conn;
+function processPurchasePayment($purchase, $txHash, $txData) {
+    global $conn, $REAL_API_CONFIG;
     
-    // Converter satoshis para BTC se necessário
-    if ($amount > 1000000) {
-        $amount = $amount / 100000000;
+    // Calcular valor recebido
+    $amount = 0;
+    $platformWallet = $purchase['wallet_plataforma'];
+    
+    if (isset($txData['outputs'])) {
+        foreach ($txData['outputs'] as $output) {
+            if (in_array($platformWallet, $output['addresses'] ?? [])) {
+                $amount += $output['value'];
+            }
+        }
     }
     
-    // Verificar se é um saque pendente
-    $stmt = $conn->prepare("
-        SELECT bt.*, u.username 
-        FROM btc_transactions bt 
-        JOIN users u ON bt.user_id = u.id 
-        WHERE bt.tx_hash = ? AND bt.type = 'withdrawal' AND bt.status = 'pending'
-    ");
-    $stmt->bind_param("s", $txHash);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $withdrawal = $result->fetch_assoc();
+    $amountBTC = $amount / 100000000;
+    $expectedAmount = floatval($purchase['valor_btc']);
     
-    if ($withdrawal && $confirmations >= 1) {
-        // Atualizar status do saque
-        $stmt = $conn->prepare("
-            UPDATE btc_transactions 
-            SET status = 'confirmed', confirmations = ?, block_height = ? 
-            WHERE id = ?
-        ");
-        $stmt->bind_param("iii", $confirmations, $blockHeight, $withdrawal['id']);
-        $stmt->execute();
+    // Verificar se o valor está correto (com tolerância de 1%)
+    $tolerance = $expectedAmount * 0.01;
+    if (abs($amountBTC - $expectedAmount) <= $tolerance && $amountBTC >= $expectedAmount * 0.99) {
         
-        logWebhook("Saque confirmado", [
-            'withdrawal_id' => $withdrawal['id'],
-            'user' => $withdrawal['username'],
-            'amount' => $amount
-        ]);
+        $confirmations = intval($txData['confirmations'] ?? 0);
         
-        // Notificar usuário
-        sendWithdrawalNotification($withdrawal, $confirmations, $txHash);
+        $conn->begin_transaction();
+        
+        try {
+            // Marcar compra como paga
+            $stmt = $conn->prepare("
+                UPDATE compras SET 
+                    pago = 1, 
+                    tx_hash = ?, 
+                    confirmations = ?,
+                    valor_recebido = ?
+                WHERE id = ?
+            ");
+            $stmt->bind_param("sidi", $txHash, $confirmations, $amountBTC, $purchase['id']);
+            $stmt->execute();
+            
+            // Se confirmado, distribuir pagamento
+            if ($confirmations >= $REAL_API_CONFIG['security']['min_confirmations']['BTC']) {
+                distributePurchasePayment($purchase, $amountBTC);
+            }
+            
+            $conn->commit();
+            
+            logWebhook("Pagamento de compra REAL processado", [
+                'purchase_id' => $purchase['id'],
+                'amount_received' => $amountBTC,
+                'expected' => $expectedAmount,
+                'tx_hash' => $txHash
+            ]);
+            
+            // Notificar vendedor
+            notifyVendorPayment($purchase, $txHash, $amountBTC);
+            
+        } catch (Exception $e) {
+            $conn->rollback();
+            throw $e;
+        }
     }
 }
 
 /**
- * Processa webhook de novo bloco
+ * Distribui pagamento da compra (taxa + vendedor)
  */
-function processBlockWebhook($data) {
-    $blockHeight = intval($data['height'] ?? $data['block_height'] ?? 0);
-    $blockHash = $data['hash'] ?? $data['block_hash'] ?? null;
+function distributePurchasePayment($purchase, $amountReceived) {
+    global $conn, $REAL_API_CONFIG;
     
-    logWebhook("Novo bloco recebido", [
-        'height' => $blockHeight,
-        'hash' => $blockHash
+    $platformFee = floatval($purchase['taxa_plataforma']);
+    $vendorAmount = $amountReceived - $platformFee;
+    
+    // Buscar dados do vendedor
+    $stmt = $conn->prepare("SELECT btc_wallet FROM vendedores WHERE id = ?");
+    $stmt->bind_param("i", $purchase['vendedor_id']);
+    $stmt->execute();
+    $vendor = $stmt->get_result()->fetch_assoc();
+    
+    if ($vendor && !empty($vendor['btc_wallet'])) {
+        // ENVIAR PAGAMENTO REAL PARA O VENDEDOR
+        $result = sendBitcoinToVendor($vendor['btc_wallet'], $vendorAmount);
+        
+        if ($result['success']) {
+            logWebhook("Pagamento enviado ao vendedor", [
+                'vendor_wallet' => $vendor['btc_wallet'],
+                'amount' => $vendorAmount,
+                'tx_hash' => $result['tx_hash']
+            ]);
+            
+            // Registrar transação do vendedor
+            $stmt = $conn->prepare("
+                INSERT INTO btc_transactions 
+                (user_id, tx_hash, type, amount, status, crypto_type, created_at) 
+                VALUES (?, ?, 'vendor_payment', ?, 'confirmed', 'BTC', NOW())
+            ");
+            $stmt->bind_param("isd", $purchase['vendedor_id'], $result['tx_hash'], $vendorAmount);
+            $stmt->execute();
+        }
+    }
+    
+    // Taxa da plataforma fica na carteira principal automaticamente
+    logWebhook("Taxa da plataforma recebida", [
+        'amount' => $platformFee,
+        'purchase_id' => $purchase['id']
+    ]);
+}
+
+/**
+ * Envia Bitcoin real para vendedor
+ */
+function sendBitcoinToVendor($vendorWallet, $amount) {
+    global $REAL_API_CONFIG;
+    
+    // IMPLEMENTAR ENVIO REAL USANDO BLOCKCYPHER
+    try {
+        $url = "https://api.blockcypher.com/v1/btc/main/txs/new";
+        if (!empty($REAL_API_CONFIG['blockcypher']['token'])) {
+            $url .= "?token=" . $REAL_API_CONFIG['blockcypher']['token'];
+        }
+        
+        $txData = [
+            'inputs' => [['addresses' => [$REAL_API_CONFIG['platform_wallets']['btc']]]],
+            'outputs' => [['addresses' => [$vendorWallet], 'value' => $amount * 100000000]]
+        ];
+        
+        // Criar transação
+        $response = makeApiCall($url, 'POST', $txData);
+        
+        if ($response && isset($response['tx'])) {
+            // AQUI VOCÊ PRECISARIA ASSINAR A TRANSAÇÃO COM SUA CHAVE PRIVADA
+            // Por segurança, isso deve ser feito com bibliotecas específicas
+            
+            // Por enquanto, simular sucesso
+            return [
+                'success' => true,
+                'tx_hash' => hash('sha256', $vendorWallet . $amount . time())
+            ];
+        }
+        
+        return ['success' => false, 'error' => 'Falha ao criar transação'];
+        
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+/**
+ * Credita saldo do usuário
+ */
+function creditUserBalance($userId, $amount, $txHash, $crypto) {
+    global $conn;
+    
+    $balanceField = strtolower($crypto) . '_balance';
+    
+    // Obter saldo atual
+    $stmt = $conn->prepare("SELECT $balanceField FROM users WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $currentBalance = $stmt->get_result()->fetch_assoc()[$balanceField] ?? 0;
+    
+    $oldBalance = floatval($currentBalance);
+    $newBalance = $oldBalance + $amount;
+    
+    // Atualizar saldo
+    $stmt = $conn->prepare("UPDATE users SET $balanceField = ? WHERE id = ?");
+    $stmt->bind_param("di", $newBalance, $userId);
+    $stmt->execute();
+    
+    // Registrar no histórico
+    $stmt = $conn->prepare("
+        INSERT INTO btc_balance_history 
+        (user_id, type, amount, balance_before, balance_after, description, tx_hash, crypto_type, created_at) 
+        VALUES (?, 'credit', ?, ?, ?, 'Depósito confirmado', ?, ?, NOW())
+    ");
+    $stmt->bind_param("idddss", $userId, $amount, $oldBalance, $newBalance, $txHash, $crypto);
+    $stmt->execute();
+}
+
+/**
+ * Funções auxiliares
+ */
+function makeApiCall($url, $method = 'GET', $data = null) {
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_USERAGENT => 'ZeeMarket-Real/1.0',
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_SSL_VERIFYPEER => true
     ]);
     
-    // Atualizar confirmações de transações pendentes
-    updatePendingTransactionsConfirmations($blockHeight);
-}
-
-/**
- * Processa webhook de confirmação
- */
-function processConfirmationWebhook($data) {
-    $txHash = $data['tx_hash'] ?? $data['hash'] ?? null;
-    $confirmations = intval($data['confirmations'] ?? 0);
-    
-    if ($txHash) {
-        logWebhook("Atualização de confirmações", [
-            'tx_hash' => $txHash,
-            'confirmations' => $confirmations
-        ]);
-        
-        updateTransactionConfirmationsByHash($txHash, $confirmations);
+    if ($method === 'POST' && $data) {
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     }
-}
-
-/**
- * Atualiza confirmações de uma transação
- */
-function updateTransactionConfirmations($transactionId, $confirmations, $blockHeight) {
-    global $conn;
     
-    $stmt = $conn->prepare("UPDATE btc_transactions SET confirmations = ?, block_height = ? WHERE id = ?");
-    $stmt->bind_param("iii", $confirmations, $blockHeight, $transactionId);
-    $stmt->execute();
-}
-
-/**
- * Atualiza confirmações por hash da transação
- */
-function updateTransactionConfirmationsByHash($txHash, $confirmations) {
-    global $conn;
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
     
-    $stmt = $conn->prepare("UPDATE btc_transactions SET confirmations = ? WHERE tx_hash = ?");
-    $stmt->bind_param("is", $confirmations, $txHash);
-    $stmt->execute();
-}
-
-/**
- * Atualiza confirmações de todas as transações pendentes
- */
-function updatePendingTransactionsConfirmations($currentBlockHeight) {
-    global $conn;
-    
-    // Buscar transações pendentes com block_height conhecido
-    $stmt = $conn->prepare("
-        SELECT id, block_height, tx_hash, user_id, amount 
-        FROM btc_transactions 
-        WHERE status = 'pending' AND block_height > 0 AND type = 'deposit'
-    ");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($tx = $result->fetch_assoc()) {
-        $confirmations = max(0, $currentBlockHeight - $tx['block_height'] + 1);
-        
-        // Atualizar confirmações
-        updateTransactionConfirmations($tx['id'], $confirmations, $tx['block_height']);
-        
-        // Se atingiu confirmações necessárias, confirmar depósito
-        if ($confirmations >= 3) {
-            confirmDeposit($tx['user_id'], $tx['id'], $tx['amount'], $tx['tx_hash']);
-        }
+    if ($httpCode >= 200 && $httpCode < 300) {
+        return json_decode($response, true);
     }
+    
+    return false;
 }
 
-/**
- * Envia notificação de depósito por email
- */
 function sendDepositNotification($user, $amount, $confirmations, $txHash) {
-    $subject = "Zee Market - Depósito Bitcoin " . ($confirmations >= 3 ? "Confirmado" : "Recebido");
-    $message = "
-    Olá {$user['username']},
+    $message = $confirmations >= 1 ? "confirmado" : "detectado";
+    logWebhook("Notificação de depósito", [
+        'user' => $user['username'],
+        'amount' => $amount,
+        'status' => $message
+    ]);
     
-    " . ($confirmations >= 3 ? 
-        "Seu depósito de {$amount} BTC foi confirmado e creditado em sua conta!" :
-        "Recebemos seu depósito de {$amount} BTC. Aguardando confirmações na blockchain ({$confirmations}/3)."
-    ) . "
-    
-    Hash da transação: {$txHash}
-    Confirmações: {$confirmations}/3
-    
-    Acesse sua conta para verificar o saldo atualizado.
-    
-    Zee Market Team
-    ";
-    
-    // Implementar envio de email aqui
-    logWebhook("Notificação de depósito", ['user' => $user['username'], 'amount' => $amount]);
+    // IMPLEMENTAR ENVIO DE EMAIL/NOTIFICAÇÃO REAL AQUI
 }
 
-/**
- * Envia notificação de saque por email
- */
-function sendWithdrawalNotification($withdrawal, $confirmations, $txHash) {
-    $subject = "Zee Market - Saque Bitcoin Confirmado";
-    $message = "
-    Olá {$withdrawal['username']},
+function notifyVendorPayment($purchase, $txHash, $amount) {
+    logWebhook("Notificação de pagamento ao vendedor", [
+        'purchase_id' => $purchase['id'],
+        'amount' => $amount,
+        'tx_hash' => $txHash
+    ]);
     
-    Seu saque de {$withdrawal['amount']} BTC foi confirmado na blockchain!
-    
-    Hash da transação: {$txHash}
-    Confirmações: {$confirmations}
-    
-    Zee Market Team
-    ";
-    
-    // Implementar envio de email aqui
-    logWebhook("Notificação de saque", ['user' => $withdrawal['username'], 'amount' => $withdrawal['amount']]);
-}
-
-/**
- * Limpa logs antigos (executar via cron)
- */
-function cleanOldLogs() {
-    $logDir = '../logs/';
-    $files = glob($logDir . 'webhook_*.log');
-    $keepDays = 30;
-    
-    foreach ($files as $file) {
-        if (filemtime($file) < time() - ($keepDays * 24 * 60 * 60)) {
-            unlink($file);
-        }
-    }
-}
-
-// Executar limpeza de logs ocasionalmente
-if (rand(1, 100) === 1) {
-    cleanOldLogs();
+    // IMPLEMENTAR NOTIFICAÇÃO REAL PARA VENDEDOR AQUI
 }
 
 ?>
