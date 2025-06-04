@@ -1,0 +1,27 @@
+# docker-compose.yml para infraestrutura distribuída
+version: '3.8'
+services:
+  app1:
+    build: .
+    environment:
+      - NODE_ROLE=primary
+      - TOR_ENABLED=true
+    volumes:
+      - /dev/urandom:/dev/random # Entropia real
+  
+  app2:
+    build: .
+    environment:
+      - NODE_ROLE=backup
+      - LOCATION=EU
+  
+  app3:
+    build: .
+    environment:
+      - NODE_ROLE=backup
+      - LOCATION=ASIA
+
+  tor-proxy:
+    image: dperson/torproxy
+    ports:
+      - "9050:9050"

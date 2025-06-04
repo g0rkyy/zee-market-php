@@ -100,6 +100,13 @@ $blockchainConfig = [
     'webhook_secret' => 'zee_market_webhook_2024_' . md5($_SERVER['HTTP_HOST'] ?? 'localhost'),
     'encryption_key' => 'zee_market_encrypt_2024_' . md5($_SERVER['HTTP_HOST'] ?? 'localhost')
 ];
+$torConfig = [
+    'proxy' => 'socks5://127.0.0.1:9050',
+    'user_agent_rotation' => true,
+    'circuit_renewal' => 300, // Renovar circuito a cada 5min
+    'timeout' => 60,
+    'ssl_verify' => false // Apenas para .onion
+];
 
 // Constantes globais
 define('SITE_URL', (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
@@ -300,5 +307,83 @@ $_SESSION['last_api_call'] = $_SESSION['last_api_call'] ?? 0;
 // Limpar calls antigos (mais de 1 minuto)
 if (time() - ($_SESSION['last_api_call'] ?? 0) > 60) {
     $_SESSION['api_calls'] = [];
+}
+class TorNetwork {
+    private static $userAgents = [
+        'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+    ];
+
+    public static function makeSecureRequest($url, $data = null) {
+        global $torConfig;
+        
+        $ch = curl_init();
+        $options = [
+            CURLOPT_URL => $url,
+            CURLOPT_PROXY => $torConfig['proxy'],
+            CURLOPT_PROXYTYPE => CURLPROXY_SOCKS5_HOSTNAME,
+            CURLOPT_TIMEOUT => $torConfig['timeout'],
+            CURLOPT_SSL_VERIFYPEER => $torConfig['ssl_verify'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true
+        ];
+
+        // Rotação de User-Agent
+        if ($torConfig['user_agent_rotation']) {
+            $options[CURLOPT_USERAGENT] = self::getRandomUserAgent();
+        }
+
+        // Adicionar dados para POST se necessário
+        if (!empty($data)) {
+            $options[CURLOPT_POST] = true;
+            $options[CURLOPT_POSTFIELDS] = is_array($data) ? http_build_query($data) : $data;
+        }
+
+        curl_setopt_array($ch, $options);
+        $response = curl_exec($ch);
+        
+        if (curl_errno($ch)) {
+            error_log("TOR Request Failed: " . curl_error($ch));
+            return false;
+        }
+
+        curl_close($ch);
+        return $response;
+    }
+
+    private static function getRandomUserAgent() {
+        return self::$userAgents[array_rand(self::$userAgents)];
+    }
+}
+// =============================================
+// CLASSE AdvancedCrypto (Adicionada no final)
+// =============================================
+class AdvancedCrypto {
+    private static $pepper = 'ZEE_ULTRA_SECRET_2024_RANDOM_STRING';
+    
+    public static function encryptData($data, $userKey = null) {
+        $key = hash('sha3-512', self::$pepper . ($userKey ?? random_bytes(32)));
+        $iv = random_bytes(16);
+        $tag = '';
+        $encrypted = openssl_encrypt($data, 'aes-256-gcm', $key, 0, $iv, $tag);
+        return base64_encode($iv . $tag . $encrypted);
+    }
+    
+    public static function decryptData($encryptedData, $userKey = null) {
+        $key = hash('sha3-512', self::$pepper . ($userKey ?? ''));
+        $data = base64_decode($encryptedData);
+        $iv = substr($data, 0, 16);
+        $tag = substr($data, 16, 16);
+        $encrypted = substr($data, 32);
+        return openssl_decrypt($encrypted, 'aes-256-gcm', $key, 0, $iv, $tag);
+    }
+    
+    public static function generateSecureAddress() {
+        // Implementação básica (apenas para exemplo)
+        $prefix = 'bc1q';
+        $randomBytes = bin2hex(random_bytes(16));
+        return $prefix . substr($randomBytes, 0, 40); // Simula um endereço Bitcoin
+    }
 }
 ?>
