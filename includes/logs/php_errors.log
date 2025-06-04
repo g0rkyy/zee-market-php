@@ -663,3 +663,25 @@ Stack trace:
 [03-Jun-2025 20:52:25 America/Sao_Paulo] Login bem-sucedido para usuário ID: 6
 [03-Jun-2025 20:54:42 America/Sao_Paulo] Nova compra #40 - Total: 0.00000940 BTC - Taxa: 2.35E-7 BTC - Vendedor: 9.165E-6 BTC
 [03-Jun-2025 20:55:37 America/Sao_Paulo] Nova compra #41 - Total: 0.00000940 BTC - Taxa: 2.35E-7 BTC - Vendedor: 9.165E-6 BTC
+[03-Jun-2025 21:41:02 America/Sao_Paulo] Nova compra #42 - Total: 0.00000940 BTC - Taxa: 2.35E-7 BTC - Vendedor: 9.165E-6 BTC
+[03-Jun-2025 21:44:38 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '9ed45bfd8124675...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(6)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[03-Jun-2025 21:55:28 America/Sao_Paulo] [WARNING] Undefined array key "btc_wallet" in C:\xampp\htdocs\ecommerceZEE\processar_compra.php on line 34
+[03-Jun-2025 21:57:05 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[03-Jun-2025 21:57:05 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[03-Jun-2025 21:59:07 America/Sao_Paulo] Dados do usuário não encontrados para ID: 6
+[03-Jun-2025 21:59:07 America/Sao_Paulo] Logout do usuário ID: 6
+[03-Jun-2025 21:59:19 America/Sao_Paulo] Novo usuário cadastrado: z33m4rketofficial@pronton.me
+[03-Jun-2025 21:59:22 America/Sao_Paulo] Login bem-sucedido para usuário ID: 8
+[03-Jun-2025 21:59:27 America/Sao_Paulo] Carteira BTC gerada para usuário 8: bc1q8aqta9devl13jz3fvqh73pozlcvu69rf
+[03-Jun-2025 22:00:51 America/Sao_Paulo] Nova compra iniciada - Produto: pedido teste - Valor: 1.00 BRL - BTC: 1.0E-5
+[03-Jun-2025 22:00:51 America/Sao_Paulo] Compra #43 criada com sucesso - Total: 1.0E-5 BTC - Taxa: 2.5E-7 BTC - Vendedor: 9.75E-6 BTC
+[03-Jun-2025 22:01:16 America/Sao_Paulo] Nova compra iniciada - Produto: pedido teste - Valor: 1.00 BRL - BTC: 1.0E-5
+[03-Jun-2025 22:01:16 America/Sao_Paulo] Compra #44 criada com sucesso - Total: 1.0E-5 BTC - Taxa: 2.5E-7 BTC - Vendedor: 9.75E-6 BTC

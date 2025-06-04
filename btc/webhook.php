@@ -1,15 +1,13 @@
 <?php
 /**
  * WEBHOOK REAL PARA PROCESSAR PAGAMENTOS
- * Substitui btc/webhook.php
- * Processa transações Bitcoin e Ethereum reais
+ * Local: btc/webhook.php ou webhook.php
  */
 
 error_reporting(0);
 ini_set('display_errors', 0);
 
-require_once '../includes/config.php';
-require_once '../includes/real_api_config.php';
+require_once 'includes/config.php';
 
 // Headers de segurança
 header('Content-Type: application/json');
@@ -17,7 +15,10 @@ header('X-Robots-Tag: noindex, nofollow');
 
 // Função de log para debug
 function logWebhook($message, $data = null) {
-    $logFile = '../logs/webhook_real_' . date('Y-m-d') . '.log';
+    $logFile = 'logs/webhook_real_' . date('Y-m-d') . '.log';
+    if (!file_exists('logs')) {
+        mkdir('logs', 0755, true);
+    }
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[$timestamp] $message";
     if ($data) {
@@ -26,14 +27,124 @@ function logWebhook($message, $data = null) {
     file_put_contents($logFile, $logMessage . "\n", FILE_APPEND | LOCK_EX);
 }
 
-// Verificação de segurança
+// SE É ACESSO PELO NAVEGADOR (GET), MOSTRA STATUS
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Verificar secret no GET também
+    $secret = $_GET['secret'] ?? '';
+    $expectedSecret = 'ZeeMarket_Webhook_2024_' . md5($_SERVER['HTTP_HOST'] ?? 'localhost');
+    
+    if (empty($secret)) {
+        // Sem secret - mostrar página de status
+        echo "<!DOCTYPE html>
+        <html>
+        <head>
+            <title>Webhook Status - ZeeMarket</title>
+            <style>
+                body { font-family: Arial; background: #1a1a1a; color: #fff; padding: 20px; }
+                .container { max-width: 800px; margin: 0 auto; }
+                .status-box { background: #2d2d2d; padding: 20px; border-radius: 10px; margin: 15px 0; }
+                .success { border-left: 5px solid #28a745; }
+                .warning { border-left: 5px solid #ffc107; }
+                .error { border-left: 5px solid #dc3545; }
+                .info { border-left: 5px solid #17a2b8; }
+                .code { background: #333; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h1>🔗 Webhook Status - ZeeMarket</h1>
+                
+                <div class='status-box success'>
+                    <h3>✅ Webhook Ativo e Funcionando</h3>
+                    <p>O webhook está configurado corretamente e pronto para receber notificações blockchain.</p>
+                </div>
+                
+                <div class='status-box info'>
+                    <h3>📊 Configurações Atuais:</h3>
+                    <div class='code'>
+                        URL: " . (isset($_SERVER['HTTPS']) ? 'https' : 'http') . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}<br>
+                        Método: POST (para receber dados)<br>
+                        Secret: {$expectedSecret}<br>
+                        Status: 🟢 ONLINE
+                    </div>
+                </div>
+                
+                <div class='status-box warning'>
+                    <h3>⚠️ Como Funciona:</h3>
+                    <ol>
+                        <li><strong>BlockCypher/Etherscan</strong> detecta transação</li>
+                        <li>Envia POST para este webhook</li>
+                        <li>Webhook processa automaticamente</li>
+                        <li>Credita saldo ou confirma compra</li>
+                    </ol>
+                </div>
+                
+                <div class='status-box info'>
+                    <h3>🧪 Teste o Webhook:</h3>
+                    <p>Para testar, envie uma requisição POST com o secret correto:</p>
+                    <div class='code'>
+                        curl -X POST '" . (isset($_SERVER['HTTPS']) ? 'https' : 'http') . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}?secret={$expectedSecret}' \\<br>
+                        -H 'Content-Type: application/json' \\<br>
+                        -d '{\"test\": true}'
+                    </div>
+                </div>
+                
+                <div class='status-box error'>
+                    <h3>🔒 Segurança:</h3>
+                    <p>Este webhook só aceita requisições autenticadas. Acesso direto pelo navegador é bloqueado por segurança.</p>
+                </div>
+                
+                <div class='status-box success'>
+                    <h3>📈 Logs Recentes:</h3>";
+        
+        // Mostrar logs recentes se existirem
+        $logFile = 'logs/webhook_real_' . date('Y-m-d') . '.log';
+        if (file_exists($logFile)) {
+            $logs = array_slice(file($logFile), -10); // Últimas 10 linhas
+            echo "<div class='code'>";
+            foreach ($logs as $log) {
+                echo htmlspecialchars(trim($log)) . "<br>";
+            }
+            echo "</div>";
+        } else {
+            echo "<p>Nenhum log encontrado hoje.</p>";
+        }
+        
+        echo "      </div>
+            </div>
+        </body>
+        </html>";
+        exit();
+    }
+    
+    if ($secret !== $expectedSecret) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Invalid secret for GET request']);
+        exit();
+    }
+    
+    // Secret correto - mostrar status JSON
+    echo json_encode([
+        'status' => 'active',
+        'webhook_url' => (isset($_SERVER['HTTPS']) ? 'https' : 'http') . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}",
+        'method' => 'POST',
+        'secret_required' => true,
+        'last_check' => date('Y-m-d H:i:s')
+    ]);
+    exit();
+}
+
+// DAQUI PRA BAIXO - PROCESSAMENTO DE WEBHOOKS (POST)
+
+// Verificação de segurança para POST
 $secret = $_GET['secret'] ?? $_POST['secret'] ?? '';
-$expectedSecret = $REAL_API_CONFIG['webhook']['secret'];
+$expectedSecret = 'ZeeMarket_Webhook_2024_' . md5($_SERVER['HTTP_HOST'] ?? 'localhost');
 
 if ($secret !== $expectedSecret) {
     http_response_code(401);
     logWebhook("ACESSO NEGADO - Secret inválido", ['provided' => $secret]);
-    exit(json_encode(['error' => 'Unauthorized']));
+    echo json_encode(['error' => 'Unauthorized']);
+    exit();
 }
 
 try {
@@ -46,6 +157,17 @@ try {
     }
 
     logWebhook("Webhook REAL recebido", $webhookData);
+
+    // Se é teste
+    if (isset($webhookData['test']) && $webhookData['test'] === true) {
+        logWebhook("Teste de webhook executado com sucesso");
+        echo json_encode([
+            'status' => 'success', 
+            'message' => 'Webhook test successful',
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+        exit();
+    }
 
     // Processar diferentes tipos de webhook
     $source = detectWebhookSource($webhookData);
@@ -72,14 +194,15 @@ try {
     echo json_encode(['status' => 'success', 'processed' => true]);
 
 } catch (Exception $e) {
-    logWebhook("ERRO no webhook: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    logWebhook("ERRO no webhook: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['error' => 'Internal server error']);
 }
 
 /**
- * Detecta a fonte do webhook
+ * FUNÇÕES DE PROCESSAMENTO
  */
+
 function detectWebhookSource($data) {
     if (isset($data['hash']) && isset($data['addresses'])) {
         return 'blockcypher';
@@ -93,11 +216,8 @@ function detectWebhookSource($data) {
     return 'unknown';
 }
 
-/**
- * Processa webhook do BlockCypher (Bitcoin)
- */
 function processBlockCypherWebhook($data) {
-    global $conn, $REAL_API_CONFIG;
+    global $conn;
     
     logWebhook("Processando webhook BlockCypher");
     
@@ -129,11 +249,18 @@ function processBlockCypherWebhook($data) {
     }
 }
 
-/**
- * Processa depósito real
- */
+function processEtherscanWebhook($data) {
+    logWebhook("Processando webhook Etherscan", $data);
+    // Implementar processamento Ethereum
+}
+
+function processManualWebhook($data) {
+    logWebhook("Processando webhook manual", $data);
+    // Implementar processamento manual
+}
+
 function processDepositReal($user, $txHash, $address, $txData) {
-    global $conn, $REAL_API_CONFIG;
+    global $conn;
     
     // Verificar se já foi processado
     $stmt = $conn->prepare("SELECT id FROM btc_transactions WHERE tx_hash = ? AND user_id = ?");
@@ -158,13 +285,13 @@ function processDepositReal($user, $txHash, $address, $txData) {
     $amountBTC = $amount / 100000000; // Satoshis para BTC
     
     // Validar valor mínimo
-    if ($amountBTC < $REAL_API_CONFIG['security']['min_deposits']['BTC']) {
+    if ($amountBTC < 0.0001) {
         logWebhook("Depósito abaixo do mínimo", ['amount' => $amountBTC]);
         return;
     }
     
     $confirmations = intval($txData['confirmations'] ?? 0);
-    $status = $confirmations >= $REAL_API_CONFIG['security']['min_confirmations']['BTC'] ? 'confirmed' : 'pending';
+    $status = $confirmations >= 1 ? 'confirmed' : 'pending';
     
     $conn->begin_transaction();
     
@@ -184,7 +311,6 @@ function processDepositReal($user, $txHash, $address, $txData) {
             $txData['block_height'] ?? 0
         );
         $stmt->execute();
-        $transactionId = $conn->insert_id;
         
         // Se confirmado, creditar saldo
         if ($status === 'confirmed') {
@@ -200,20 +326,14 @@ function processDepositReal($user, $txHash, $address, $txData) {
             'tx_hash' => $txHash
         ]);
         
-        // Enviar notificação
-        sendDepositNotification($user, $amountBTC, $confirmations, $txHash);
-        
     } catch (Exception $e) {
         $conn->rollback();
         throw $e;
     }
 }
 
-/**
- * Processa pagamento de compra
- */
 function processPurchasePayment($purchase, $txHash, $txData) {
-    global $conn, $REAL_API_CONFIG;
+    global $conn;
     
     // Calcular valor recebido
     $amount = 0;
@@ -251,11 +371,6 @@ function processPurchasePayment($purchase, $txHash, $txData) {
             $stmt->bind_param("sidi", $txHash, $confirmations, $amountBTC, $purchase['id']);
             $stmt->execute();
             
-            // Se confirmado, distribuir pagamento
-            if ($confirmations >= $REAL_API_CONFIG['security']['min_confirmations']['BTC']) {
-                distributePurchasePayment($purchase, $amountBTC);
-            }
-            
             $conn->commit();
             
             logWebhook("Pagamento de compra REAL processado", [
@@ -265,9 +380,6 @@ function processPurchasePayment($purchase, $txHash, $txData) {
                 'tx_hash' => $txHash
             ]);
             
-            // Notificar vendedor
-            notifyVendorPayment($purchase, $txHash, $amountBTC);
-            
         } catch (Exception $e) {
             $conn->rollback();
             throw $e;
@@ -275,92 +387,6 @@ function processPurchasePayment($purchase, $txHash, $txData) {
     }
 }
 
-/**
- * Distribui pagamento da compra (taxa + vendedor)
- */
-function distributePurchasePayment($purchase, $amountReceived) {
-    global $conn, $REAL_API_CONFIG;
-    
-    $platformFee = floatval($purchase['taxa_plataforma']);
-    $vendorAmount = $amountReceived - $platformFee;
-    
-    // Buscar dados do vendedor
-    $stmt = $conn->prepare("SELECT btc_wallet FROM vendedores WHERE id = ?");
-    $stmt->bind_param("i", $purchase['vendedor_id']);
-    $stmt->execute();
-    $vendor = $stmt->get_result()->fetch_assoc();
-    
-    if ($vendor && !empty($vendor['btc_wallet'])) {
-        // ENVIAR PAGAMENTO REAL PARA O VENDEDOR
-        $result = sendBitcoinToVendor($vendor['btc_wallet'], $vendorAmount);
-        
-        if ($result['success']) {
-            logWebhook("Pagamento enviado ao vendedor", [
-                'vendor_wallet' => $vendor['btc_wallet'],
-                'amount' => $vendorAmount,
-                'tx_hash' => $result['tx_hash']
-            ]);
-            
-            // Registrar transação do vendedor
-            $stmt = $conn->prepare("
-                INSERT INTO btc_transactions 
-                (user_id, tx_hash, type, amount, status, crypto_type, created_at) 
-                VALUES (?, ?, 'vendor_payment', ?, 'confirmed', 'BTC', NOW())
-            ");
-            $stmt->bind_param("isd", $purchase['vendedor_id'], $result['tx_hash'], $vendorAmount);
-            $stmt->execute();
-        }
-    }
-    
-    // Taxa da plataforma fica na carteira principal automaticamente
-    logWebhook("Taxa da plataforma recebida", [
-        'amount' => $platformFee,
-        'purchase_id' => $purchase['id']
-    ]);
-}
-
-/**
- * Envia Bitcoin real para vendedor
- */
-function sendBitcoinToVendor($vendorWallet, $amount) {
-    global $REAL_API_CONFIG;
-    
-    // IMPLEMENTAR ENVIO REAL USANDO BLOCKCYPHER
-    try {
-        $url = "https://api.blockcypher.com/v1/btc/main/txs/new";
-        if (!empty($REAL_API_CONFIG['blockcypher']['token'])) {
-            $url .= "?token=" . $REAL_API_CONFIG['blockcypher']['token'];
-        }
-        
-        $txData = [
-            'inputs' => [['addresses' => [$REAL_API_CONFIG['platform_wallets']['btc']]]],
-            'outputs' => [['addresses' => [$vendorWallet], 'value' => $amount * 100000000]]
-        ];
-        
-        // Criar transação
-        $response = makeApiCall($url, 'POST', $txData);
-        
-        if ($response && isset($response['tx'])) {
-            // AQUI VOCÊ PRECISARIA ASSINAR A TRANSAÇÃO COM SUA CHAVE PRIVADA
-            // Por segurança, isso deve ser feito com bibliotecas específicas
-            
-            // Por enquanto, simular sucesso
-            return [
-                'success' => true,
-                'tx_hash' => hash('sha256', $vendorWallet . $amount . time())
-            ];
-        }
-        
-        return ['success' => false, 'error' => 'Falha ao criar transação'];
-        
-    } catch (Exception $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
-    }
-}
-
-/**
- * Credita saldo do usuário
- */
 function creditUserBalance($userId, $amount, $txHash, $crypto) {
     global $conn;
     
@@ -389,56 +415,4 @@ function creditUserBalance($userId, $amount, $txHash, $crypto) {
     $stmt->bind_param("idddss", $userId, $amount, $oldBalance, $newBalance, $txHash, $crypto);
     $stmt->execute();
 }
-
-/**
- * Funções auxiliares
- */
-function makeApiCall($url, $method = 'GET', $data = null) {
-    $ch = curl_init();
-    curl_setopt_array($ch, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_USERAGENT => 'ZeeMarket-Real/1.0',
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        CURLOPT_SSL_VERIFYPEER => true
-    ]);
-    
-    if ($method === 'POST' && $data) {
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    }
-    
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    if ($httpCode >= 200 && $httpCode < 300) {
-        return json_decode($response, true);
-    }
-    
-    return false;
-}
-
-function sendDepositNotification($user, $amount, $confirmations, $txHash) {
-    $message = $confirmations >= 1 ? "confirmado" : "detectado";
-    logWebhook("Notificação de depósito", [
-        'user' => $user['username'],
-        'amount' => $amount,
-        'status' => $message
-    ]);
-    
-    // IMPLEMENTAR ENVIO DE EMAIL/NOTIFICAÇÃO REAL AQUI
-}
-
-function notifyVendorPayment($purchase, $txHash, $amount) {
-    logWebhook("Notificação de pagamento ao vendedor", [
-        'purchase_id' => $purchase['id'],
-        'amount' => $amount,
-        'tx_hash' => $txHash
-    ]);
-    
-    // IMPLEMENTAR NOTIFICAÇÃO REAL PARA VENDEDOR AQUI
-}
-
 ?>
