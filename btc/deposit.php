@@ -1,6 +1,6 @@
 <?php
 require_once '../includes/config.php';
-require_once '../includes/btc_functions.php';
+require_once '../includes/blockchain_real.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");

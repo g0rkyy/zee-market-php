@@ -52,26 +52,27 @@ class ZeeMarketBlockchain {
             
             if (!empty($result['eth_deposit_address'])) {
                 return [
-                    'success' => true,
+                    'success' => true, 
                     'address' => $result['eth_deposit_address']
                 ];
             }
             
-            // CORREÇÃO: Usar método alternativo para gerar endereço ETH
+            // Gerar chave privada aleatória
             $private_key = bin2hex(random_bytes(32));
             
-            // Simular geração de endereço ETH válido (em produção use web3.php ou similar)
-            $address = '0x' . substr(hash('sha256', $private_key . time()), 0, 40);
+            // Gerar endereço ETH a partir da chave privada
+            $keccak = hash('keccak256', hex2bin($private_key));
+            $address = '0x' . substr($keccak, -40);
             
-            // Criptografar chave privada
+            // Criptografar chave privada antes de salvar
             $encrypted_key = $this->encryptData($private_key);
             
             // Salvar no banco
             $stmt = $this->conn->prepare("
                 UPDATE users SET 
-                    eth_deposit_address = ?, 
-                    eth_private_key = ?,
-                    last_deposit_check = NOW()
+                eth_deposit_address = ?,
+                eth_private_key = ?,
+                last_deposit_check = NOW()
                 WHERE id = ?
             ");
             $stmt->bind_param("ssi", $address, $encrypted_key, $userId);
@@ -83,8 +84,11 @@ class ZeeMarketBlockchain {
             ];
             
         } catch (Exception $e) {
-            error_log("Erro ao gerar endereço Ethereum: " . $e->getMessage());
-            return ['success' => false, 'error' => $e->getMessage()];
+            error_log("Erro ao gerar endereço ETH: " . $e->getMessage());
+            return [
+                'success' => false, 
+                'error' => 'Erro ao gerar endereço Ethereum'
+            ];
         }
     }
 
@@ -511,6 +515,14 @@ class ZeeMarketBlockchain {
         
         return isset($patterns[$crypto]) ? preg_match($patterns[$crypto], $address) : false;
     }
+
+     /**
+     * Validação específica para endereços Ethereum
+     */
+    private function isValidEthereumAddress($address) {
+        return (bool)preg_match('/^0x[a-fA-F0-9]{40}$/', $address);
+    }
+
 
     /**
      * FUNÇÕES AUXILIARES

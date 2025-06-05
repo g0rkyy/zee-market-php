@@ -8,6 +8,7 @@ error_reporting(0);
 ini_set('display_errors', 0);
 
 require_once 'includes/config.php';
+require_once '../includes/blockchain_real.php';
 
 // Headers de segurança
 header('Content-Type: application/json');

@@ -67,9 +67,9 @@ $blockchainConfig = [
     
     // Etherscan API
     'etherscan' => [
-        'api_key' => 'D43Q7D5AAG2V4YSVXMVHEQ2NUDECJMFKKJ', // Deixe vazio para usar sem token
-        'base_url' => 'https://api.etherscan.io/api'
-    ],
+    'api_key' => '6PA6CHCT9UGWQ2MWFE2UFM94UVFAFKQT8Z',
+    'base_url' => 'https://api.etherscan.io/api'
+],
     
     // CoinGecko API para cotações
     'coingecko' => [

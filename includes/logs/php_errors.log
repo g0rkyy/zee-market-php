@@ -709,3 +709,74 @@ Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
 [05-Jun-2025 18:41:40 America/Sao_Paulo] Usuário não logado - redirecionando para login
+[05-Jun-2025 19:51:34 America/Sao_Paulo] Login bem-sucedido para usuário ID: 8
+[05-Jun-2025 19:51:37 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '2e00118f2371a3c...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(8)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[05-Jun-2025 19:51:40 America/Sao_Paulo] Carteira XMR gerada para usuário 8: 4dbd2fdd74a30388c2186342e59339e1f7980e19b50c0d2a4645aa47153db895cdda15f32180d6c1ecb0681277c4e22
+[05-Jun-2025 19:52:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 19:52:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 19:56:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 19:56:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:01:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:01:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:06:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:06:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:07:19 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '916e5606ac21909...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(8)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[05-Jun-2025 20:08:19 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:08:19 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:12:19 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:12:19 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:13:26 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', 'ab057fa21d1848e...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(8)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[05-Jun-2025 20:13:30 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php:166
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(166): hash('keccak256', '0e065b92fee1735...')
+#1 C:\xampp\htdocs\ecommerceZEE\generate_wallet.php(58): generateEthereumAddress(8)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\generate_wallet.php on line 166
+[05-Jun-2025 20:14:25 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:14:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:18:25 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:18:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:23:25 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:23:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29

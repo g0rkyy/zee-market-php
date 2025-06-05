@@ -18,11 +18,16 @@ try {
         throw new Exception("Erro na conexão com o banco de dados");
     }
 
-    // Busca produtos no banco de dados
-    $stmt = $conn->prepare("SELECT * FROM produtos LIMIT ? OFFSET ?");
-    if (!$stmt) {
-        throw new Exception("Erro ao preparar consulta: " . $conn->error);
-    }
+    // Busca produtos com preços em cripto
+    $stmt = $conn->prepare("
+        SELECT p.*, v.nome as vendedor_nome,
+        p.preco_btc,
+        p.preco_eth,
+        (p.preco_btc * 0.05) as preco_xmr
+        FROM produtos p 
+        LEFT JOIN vendedores v ON p.vendedor_id = v.id 
+        LIMIT ? OFFSET ?
+    ");
     
     $stmt->bind_param("ii", $produtos_por_pagina, $offset);
     if (!$stmt->execute()) {
@@ -67,6 +72,21 @@ try {
             svg {
                 fill: white;
             }
+            .crypto-price {
+            display: flex;
+            align-items: center;
+            margin: 2px 0;
+            font-size: 0.8em;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .crypto-price img {
+            width: 30px;
+            height: 30px;
+            margin-right: 4px;
+            
+        }
+        
         </style>
     </head>
     <body>
@@ -196,24 +216,48 @@ try {
 
         <!-- AREA DE PAGINAÇÃO -->
         <div id="paginationProducts">
-            <h2>Bem-Vindo ao Zee-Market, seu site libertário predileto!</h2>
-             <!-- Área de Produtos Dinâmicos -->
-             <div id="cardContainer" class="items">
-                <?php if ($produtos->num_rows > 0): ?>
-                    <?php while ($produto = $produtos->fetch_assoc()): ?> 
-                        <a href="comprar.php?id=<?= $produto['id'] ?>" class="item-link">
-                        <div class="item">
-                            <img src="assets/uploads/<?= htmlspecialchars($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
-                            <h3 class="item-title"><?= htmlspecialchars($produto['nome']) ?></h3>
-                            <p class="preco">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                <h2>Bem-Vindo ao Zee-Market, seu site libertário predileto!</h2>
+                <div id="cardContainer" class="items">
+                    <?php if ($produtos && $produtos->num_rows > 0): ?>
+                        <?php while ($produto = $produtos->fetch_assoc()): ?> 
+                            <a href="comprar.php?id=<?= $produto['id'] ?>" class="item-link">
+                                <div class="item">
+                                    <img src="assets/uploads/<?= htmlspecialchars($produto['imagem']) ?>" 
+                                         alt="<?= htmlspecialchars($produto['nome']) ?>">
+                                    <h3 class="item-title"><?= htmlspecialchars($produto['nome']) ?></h3>
+                                    
+                                    <div class="price-container">
+                                        <div class="crypto-price">
+                                            <span><img src="assets/images/btc.svg"></span>
+                                            <span><?= number_format($produto['preco_btc'], 8) ?> BTC</span>
+                                        </div>
+                                        
+                                        <div class="crypto-price">
+                                        <span><img src="assets/images/eth.svg"></span>
+                                            <span><?= number_format($produto['preco_eth'], 8) ?> ETH</span>
+                                        </div>
+                                        
+                                        <div class="crypto-price">
+                                        <span><img src="assets/images/xmr.svg"></span>
+                                            <span><?= number_format($produto['preco_xmr'], 8) ?> XMR</span>
+                                        </div>
+                                    </div>
+                                                                        <div class="mt-2">
+                                        <small class="text-muted">
+                                            Vendedor: <?= htmlspecialchars($produto['vendedor_nome'] ?? 'Anônimo') ?>
+                                        </small>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <div id="no_results">
+                            <p>Nenhum produto encontrado</p>
                         </div>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <div id="no_results">
-                        <p>Nenhum produto encontrado</p>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
+        </div>  
 
             <!-- Paginação Dinâmica -->
             <?php if ($total_paginas > 1): ?>
@@ -247,5 +291,7 @@ try {
     </div>
 
     <script src="assets/bootstrap5/js/bootstrap.bundle.js"></script>
+    <script src="assets/js/my_script.js" defer></script>
+    <script src="assets/js/item.js" defer></script>
 </body>
 </html>

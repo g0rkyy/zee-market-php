@@ -5,7 +5,7 @@
  */
 
 require_once '../includes/config.php';
-require_once '../includes/btc_functions.php';
+require_once '../includes/blockchain_real.php';
 
 // Verificar se usuário é admin
 if (!isset($_SESSION['user_id']) || !isAdmin($_SESSION['user_id'])) {
