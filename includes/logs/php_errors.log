@@ -708,3 +708,4 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 18:41:40 America/Sao_Paulo] Usuário não logado - redirecionando para login
