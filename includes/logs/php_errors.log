@@ -686,3 +686,25 @@ Stack trace:
 [03-Jun-2025 22:01:16 America/Sao_Paulo] Nova compra iniciada - Produto: pedido teste - Valor: 1.00 BRL - BTC: 1.0E-5
 [03-Jun-2025 22:01:16 America/Sao_Paulo] Compra #44 criada com sucesso - Total: 1.0E-5 BTC - Taxa: 2.5E-7 BTC - Vendedor: 9.75E-6 BTC
 [04-Jun-2025 19:41:38 America/Sao_Paulo] Login bem-sucedido para usuário ID: 8
+[04-Jun-2025 22:38:08 America/Sao_Paulo] Usuário não logado - redirecionando para login
+[04-Jun-2025 22:38:11 America/Sao_Paulo] Login bem-sucedido para usuário ID: 8
+[04-Jun-2025 22:39:13 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[04-Jun-2025 22:39:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[04-Jun-2025 22:43:13 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[04-Jun-2025 22:43:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[04-Jun-2025 22:48:13 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[04-Jun-2025 22:48:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[04-Jun-2025 22:53:13 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[04-Jun-2025 22:53:13 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
