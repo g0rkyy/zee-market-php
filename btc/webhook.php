@@ -3,6 +3,15 @@
  * WEBHOOK REAL PARA PROCESSAR PAGAMENTOS
  * Local: btc/webhook.php ou webhook.php
  */
+// Adicione no início do arquivo
+$webhookSecret = hash('sha256', 'ZeeMarket_' . $_SERVER['HTTP_HOST'] . '_2024');
+
+// Verificar assinatura
+$signature = $_SERVER['HTTP_X_WEBHOOK_SIGNATURE'] ?? '';
+if (!hash_equals($webhookSecret, $signature)) {
+    http_response_code(403);
+    die('Invalid signature');
+}
 
 error_reporting(0);
 ini_set('display_errors', 0);

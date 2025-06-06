@@ -77,7 +77,7 @@ try {
             align-items: center;
             margin: 2px 0;
             font-size: 0.8em;
-            padding: 2px 4px;
+            padding: 2px;
             border-radius: 3px;
         }
         .crypto-price img {

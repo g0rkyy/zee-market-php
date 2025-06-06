@@ -6,6 +6,8 @@
  */
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+use kornrunner\Keccak;
 
 class ZeeMarketBlockchain {
     private $conn;
@@ -43,54 +45,54 @@ class ZeeMarketBlockchain {
      * 1. CORREÇÃO: Geração de carteiras Ethereum (problema com keccak256)
      */
     public function generateEthereumAddress($userId) {
-        try {
-            // Verificar se já tem endereço
-            $stmt = $this->conn->prepare("SELECT eth_deposit_address FROM users WHERE id = ?");
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result()->fetch_assoc();
-            
-            if (!empty($result['eth_deposit_address'])) {
-                return [
-                    'success' => true, 
-                    'address' => $result['eth_deposit_address']
-                ];
-            }
-            
-            // Gerar chave privada aleatória
-            $private_key = bin2hex(random_bytes(32));
-            
-            // Gerar endereço ETH a partir da chave privada
-            $keccak = hash('keccak256', hex2bin($private_key));
-            $address = '0x' . substr($keccak, -40);
-            
-            // Criptografar chave privada antes de salvar
-            $encrypted_key = $this->encryptData($private_key);
-            
-            // Salvar no banco
-            $stmt = $this->conn->prepare("
-                UPDATE users SET 
-                eth_deposit_address = ?,
-                eth_private_key = ?,
-                last_deposit_check = NOW()
-                WHERE id = ?
-            ");
-            $stmt->bind_param("ssi", $address, $encrypted_key, $userId);
-            $stmt->execute();
-            
+    try {
+        // Verificar se já tem endereço
+        $stmt = $this->conn->prepare("SELECT eth_deposit_address FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        
+        if (!empty($result['eth_deposit_address'])) {
             return [
-                'success' => true,
-                'address' => $address
-            ];
-            
-        } catch (Exception $e) {
-            error_log("Erro ao gerar endereço ETH: " . $e->getMessage());
-            return [
-                'success' => false, 
-                'error' => 'Erro ao gerar endereço Ethereum'
+                'success' => true, 
+                'address' => $result['eth_deposit_address']
             ];
         }
+        
+        // Gerar chave privada aleatória (apenas uma vez)
+        $private_key = bin2hex(random_bytes(32));
+        
+        // Gerar endereço ETH usando keccak256
+        $keccak = Keccak::hash(hex2bin($private_key), 256);
+        $address = '0x' . substr($keccak, -40);
+        
+        // Criptografar chave privada antes de salvar
+        $encrypted_key = $this->encryptData($private_key);
+        
+        // Salvar no banco
+        $stmt = $this->conn->prepare("
+            UPDATE users SET 
+            eth_deposit_address = ?,
+            eth_private_key = ?,
+            last_deposit_check = NOW()
+            WHERE id = ?
+        ");
+        $stmt->bind_param("ssi", $address, $encrypted_key, $userId);
+        $stmt->execute();
+        
+        return [
+            'success' => true,
+            'address' => $address
+        ];
+        
+    } catch (Exception $e) {
+        error_log("Erro ao gerar endereço ETH: " . $e->getMessage());
+        return [
+            'success' => false,
+            'error' => 'Erro ao gerar endereço Ethereum'
+        ];
     }
+}
 
     /**
      * 2. CORREÇÃO: Verificação REAL de depósitos Bitcoin
@@ -304,17 +306,12 @@ class ZeeMarketBlockchain {
      */
     public function checkAllPendingDeposits() {
         try {
-            // Buscar usuários com endereços de depósito
+            // Buscar usuários com depósitos pendentes
             $stmt = $this->conn->prepare("
-                SELECT id, btc_deposit_address, eth_deposit_address, xmr_deposit_address,
-                       btc_balance, eth_balance, xmr_balance
+                SELECT id, btc_deposit_address, eth_deposit_address 
                 FROM users 
-                WHERE (btc_deposit_address IS NOT NULL 
-                    OR eth_deposit_address IS NOT NULL 
-                    OR xmr_deposit_address IS NOT NULL)
-                AND last_deposit_check < DATE_SUB(NOW(), INTERVAL 1 MINUTE)
-                ORDER BY last_deposit_check ASC
-                LIMIT 50
+                WHERE (btc_deposit_address IS NOT NULL OR eth_deposit_address IS NOT NULL)
+                AND last_deposit_check < DATE_SUB(NOW(), INTERVAL 5 MINUTE)
             ");
             $stmt->execute();
             $users = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -322,16 +319,16 @@ class ZeeMarketBlockchain {
             $processed = 0;
             
             foreach ($users as $user) {
-                // Verificar Bitcoin
+                // Verificar depósitos BTC
                 if (!empty($user['btc_deposit_address'])) {
-                    $btcDeposits = $this->checkBitcoinDepositsReal($user['btc_deposit_address']);
-                    $processed += $this->processNewDeposits($user['id'], $btcDeposits, 'BTC');
+                    $btc_deposits = $this->checkBitcoinDepositsReal($user['btc_deposit_address']);
+                    $processed += $this->processNewDeposits($user['id'], $btc_deposits, 'BTC');
                 }
                 
-                // Verificar Ethereum
+                // Verificar depósitos ETH
                 if (!empty($user['eth_deposit_address'])) {
-                    $ethDeposits = $this->checkEthereumDepositsReal($user['eth_deposit_address']);
-                    $processed += $this->processNewDeposits($user['id'], $ethDeposits, 'ETH');
+                    $eth_deposits = $this->checkEthereumDepositsReal($user['eth_deposit_address']);
+                    $processed += $this->processNewDeposits($user['id'], $eth_deposits, 'ETH');
                 }
                 
                 // Atualizar timestamp de verificação
@@ -346,7 +343,7 @@ class ZeeMarketBlockchain {
             return $processed;
             
         } catch (Exception $e) {
-            error_log("Erro na verificação de depósitos: " . $e->getMessage());
+            error_log("Erro ao verificar depósitos: " . $e->getMessage());
             return 0;
         }
     }

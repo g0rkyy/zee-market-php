@@ -780,3 +780,93 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:28:25 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:28:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:33:25 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:33:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:37:56 America/Sao_Paulo] 🚀 Sistema Blockchain ZeeMarket 100% funcional carregado!
+[05-Jun-2025 20:37:56 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkRateLimit() in C:\xampp\htdocs\ecommerceZEE\btc\deposit.php:17
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\btc\deposit.php on line 17
+[05-Jun-2025 20:39:26 America/Sao_Paulo] 🚀 Sistema Blockchain ZeeMarket 100% funcional carregado!
+[05-Jun-2025 20:39:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkRateLimit() in C:\xampp\htdocs\ecommerceZEE\btc\deposit.php:17
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\btc\deposit.php on line 17
+[05-Jun-2025 20:39:27 America/Sao_Paulo] 🚀 Sistema Blockchain ZeeMarket 100% funcional carregado!
+[05-Jun-2025 20:39:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkRateLimit() in C:\xampp\htdocs\ecommerceZEE\btc\deposit.php:17
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\btc\deposit.php on line 17
+[05-Jun-2025 20:40:17 America/Sao_Paulo] 🚀 Sistema Blockchain ZeeMarket 100% funcional carregado!
+[05-Jun-2025 20:40:17 America/Sao_Paulo] PHP Fatal error:  Uncaught ValueError: hash(): Argument #1 ($algo) must be a valid hashing algorithm in C:\xampp\htdocs\ecommerceZEE\includes\blockchain_real.php:64
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\blockchain_real.php(64): hash('keccak256', ':b\x18uK\xE5\xEF\xFF\x04\x95\xB7\xE2\xCEM\x9B...')
+#1 C:\xampp\htdocs\ecommerceZEE\btc\deposit.php(46): ZeeMarketBlockchain->generateEthereumAddress(8)
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\blockchain_real.php on line 64
+[05-Jun-2025 20:43:24 America/Sao_Paulo] 🚀 Sistema Blockchain ZeeMarket 100% funcional carregado!
+[05-Jun-2025 20:44:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:44:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:48:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:48:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:53:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:53:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 20:58:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 20:58:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 21:03:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 21:03:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 21:08:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 21:08:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 21:13:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 21:13:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 21:18:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 21:18:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 21:23:43 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 21:23:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[05-Jun-2025 21:27:48 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in C:\xampp\htdocs\ecommerceZEE\includes\blockchain_real.php on line 655
+[05-Jun-2025 21:27:49 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in C:\xampp\htdocs\ecommerceZEE\includes\blockchain_real.php on line 655
+[05-Jun-2025 21:27:49 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in C:\xampp\htdocs\ecommerceZEE\includes\blockchain_real.php on line 655
+[05-Jun-2025 21:34:00 America/Sao_Paulo] 🚀 Sistema Blockchain ZeeMarket 100% funcional carregado!
+[05-Jun-2025 21:58:34 America/Sao_Paulo] Sessão expirada para usuário ID: 8
+[05-Jun-2025 21:58:34 America/Sao_Paulo] Logout do usuário ID: 8
+[05-Jun-2025 21:58:38 America/Sao_Paulo] Login bem-sucedido para usuário ID: 8
+[05-Jun-2025 21:59:38 America/Sao_Paulo] 🔴 MODO REAL ATIVADO - Transações blockchain reais!
+[05-Jun-2025 21:59:38 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined function checkAllPendingDeposits() in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:29
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29

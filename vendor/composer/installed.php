@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'zeemarket/crypto',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '30a2005a54d84f2a82dc91e962b4012bb54edf6b',
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'kornrunner/keccak' => array(
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '433749d28e117fb97baf9f2631b92b5d9ab3c890',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../kornrunner/keccak',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-mbstring' => array(
+            'pretty_version' => 'v1.32.0',
+            'version' => '1.32.0.0',
+            'reference' => '6d857f4d76bd4b343eac26d6b539585d2bc56493',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'zeemarket/crypto' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '30a2005a54d84f2a82dc91e962b4012bb54edf6b',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

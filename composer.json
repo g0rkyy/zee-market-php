@@ -1,0 +1,14 @@
+{
+    "name": "zeemarket/crypto",
+    "description": "integração de criptomoedas",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "ZeeMarket"
+        }
+    ],
+    "require": {
+        "kornrunner/keccak": "^1.1"
+    }
+}
