@@ -349,4 +349,30 @@ function debugSession() {
     
     error_log("DEBUG Session: " . json_encode($sessionData));
 }
+
+function checkLoginAttempts($email) {
+    $max_attempts = 5;
+    $lockout_time = 300; // 5 minutos em segundos
+    
+    // Implemente a lógica para contar tentativas no seu banco de dados
+    // Exemplo simplificado:
+    $attempts = 0; // Substitua por consulta real ao banco
+    $last_attempt = 0; // Substitua por consulta real ao banco
+    
+    if ($attempts >= $max_attempts && (time() - $last_attempt < $lockout_time)) {
+        return false;
+    }
+    
+    return true;
+}
+function emailExists($email) {
+    global $conn;
+    
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    
+    return $stmt->num_rows > 0;
+}
 ?>
