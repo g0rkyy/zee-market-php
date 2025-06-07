@@ -1150,3 +1150,648 @@ Stack trace:
 [07-Jun-2025 13:16:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
 [07-Jun-2025 13:16:42 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
 [07-Jun-2025 13:19:46 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:23:48 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:27:53 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:33:33 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:43:13 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:43:51 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:44:41 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:45:15 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:45:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:45:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "AdvancedRateLimiter" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:24
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24
+[07-Jun-2025 13:47:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:29 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:30 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:31 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:32 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:33 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:47:33 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:47:33 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function AdvancedRateLimiter::__construct(), 0 passed in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 24 and exactly 1 expected in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php:5
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(24): AdvancedRateLimiter->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\AdvancedRateLimiter.php on line 5
+[07-Jun-2025 13:52:20 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:20 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:23 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:23 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:23 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:23 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:23 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:23 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:23 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:23 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:23 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:23 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:23 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:23 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:25 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:25 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:25 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:25 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:25 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:25 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:27 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:27 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:27 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:27 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:27 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:28 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:28 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:28 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:28 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:28 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:28 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:28 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:28 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:28 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:28 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:30 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:30 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:30 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:30 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:30 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:31 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:52:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:52:32 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "FraudDetectionEngine" not found in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:25
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(637): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 25
+[07-Jun-2025 13:57:20 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:20 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 13:57:22 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 13:57:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method SecureWithdrawalSystemV2::initializeSecurity() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php:31
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php(641): SecureWithdrawalSystemV2->__construct(Object(mysqli))
+#1 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 31
+[07-Jun-2025 14:00:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:00:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:00:40 America/Sao_Paulo] [WARNING] require_once(includes/secure_withdrawal.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\withdraw_real.php on line 32
+[07-Jun-2025 14:00:40 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'includes/secure_withdrawal.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\ecommerceZEE\withdraw_real.php:32
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\withdraw_real.php on line 32
+[07-Jun-2025 14:02:05 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:02:05 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:03:00 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:03:02 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:03:02 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:05:38 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:05:38 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:05:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:05:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:06:04 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:06:04 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:06:14 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:06:14 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:07:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:07:24 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644
+[07-Jun-2025 14:07:38 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:08:06 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:08:41 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:08:43 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:08:54 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:08:55 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:09:04 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[07-Jun-2025 14:09:04 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal_v2.php on line 644

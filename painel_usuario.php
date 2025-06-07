@@ -1,16 +1,4 @@
-// Inicialização e verificação do QR Code
-        document.addEventListener('DOMContentLoaded', function() {
-            const qrImg = document.getElementById('qrcode-img');
-            if (qrImg) {
-                // Verificar se QR carregou corretamente após 3 segundos
-                setTimeout(() => {
-                    if (qrImg.naturalWidth === 0 || qrImg.complete === false) {
-                        console.log('QR Code não carregou, tentando alternativas...');
-                        tryAlternativeQR(qrImg);
-                    }
-                }, 3000);
-            }
-        });<?php
+<?php
 /**
  * PAINEL DO USUÁRIO CORRIGIDO - ZEEMARKET
  * Corrige erro de QR Code 2FA e implementa geração inline
@@ -218,6 +206,9 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
             border-left: 4px solid #28a745;
             background: rgba(40, 167, 69, 0.1);
         }
+        .form-label {
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -319,19 +310,11 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                                                      onerror="tryAlternativeQR(this)">
                                             </div>
                                             
-                                            <!-- Debug info (remover em produção) -->
-                                            <details class="mt-2">
-                                                <summary class="btn btn-sm btn-outline-secondary">Debug Info</summary>
-                                                <div class="mt-2 p-2 bg-dark rounded">
-                                                    <small class="text-muted">
-                                                        <strong>Secret:</strong> <?= $_SESSION['temp_2fa_secret'] ?><br>
-                                                        <strong>URL:</strong> <span class="text-break"><?= htmlspecialchars($debug_url) ?></span>
-                                                    </small>
-                                                </div>
-                                            </details>
+                                            <!-- Debug info -->
+                                            
                                         </div>
-                                        <p class="text-muted small text-center">
-                                            <i class="fas fa-download"></i> 
+                                        <p class="text-muted small text-center form-label">
+                                            <i class="fas fa-download form-label"></i> 
                                             Use <strong>Google Authenticator</strong>, <strong>Authy</strong> ou app similar
                                         </p>
                                         
@@ -536,6 +519,21 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrImg = document.getElementById('qrcode-img');
+            if (qrImg) {
+                // Verificar se QR carregou corretamente após 3 segundos
+                setTimeout(() => {
+                    if (qrImg.naturalWidth === 0 || qrImg.complete === false) {
+                        console.log('QR Code não carregou, tentando alternativas...');
+                        tryAlternativeQR(qrImg);
+                    }
+                }, 3000);
+            }
+        });
+
+       
+
         // Inicializar tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -719,4 +717,4 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
         }
     </script>
 </body>
-</html>
+</html><?php

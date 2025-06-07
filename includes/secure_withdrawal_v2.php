@@ -7,7 +7,9 @@
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/two_factor_auth.php';
-
+require_once __DIR__ . '/AdvancedRateLimiter.php';
+require_once __DIR__ . '/FraudDetectionEngine.php';
+require_once __DIR__ . '/SecurityLogger.php';
 class SecureWithdrawalSystemV2 {
     private $conn;
     private $coldStorage;
@@ -19,14 +21,14 @@ class SecureWithdrawalSystemV2 {
     
     public function __construct($conn) {
         $this->conn = $conn;
-        $this->coldStorage = new ColdStorageManager();
-        $this->hotWallet = new SecureHotWallet();
-        $this->rateLimiter = new AdvancedRateLimiter();
-        $this->fraudDetector = new FraudDetectionEngine();
-        $this->logger = new SecurityLogger();
-        $this->twoFA = new TwoFactorAuth();
+        $this->coldStorage = new ColdStorageManager($conn);
+        $this->hotWallet = new SecureHotWallet($conn);
+        $this->rateLimiter = new AdvancedRateLimiter($conn);
+        $this->fraudDetector = new FraudDetectionEngine($conn);
+        $this->logger = new SecurityLogger($conn);
+        $this->twoFA = new TwoFactorAuth($conn);
         
-        $this->initializeSecurity();
+       
     }
     
     /**
@@ -557,10 +559,12 @@ class ColdStorageManager {
  * ✅ HOT WALLET ULTRA SEGURA
  */
 class SecureHotWallet {
-    private $hsm; // Hardware Security Module
+    private $hsm;
     private $balances;
+    private $conn;
     
-    public function __construct() {
+    public function __construct($conn) {
+        $this->conn = $conn;
         $this->initializeHSM();
         $this->loadBalances();
     }

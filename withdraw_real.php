@@ -24,12 +24,174 @@ require_once __DIR__ . '/includes/secure_withdrawal_v2.php';
     <meta charset="UTF-8">
     <title>Saque de Criptomoedas - ZeeMarket</title>
     <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <style>
+        /* Adicione isso no seu arquivo CSS existente ou crie um novo */
+:root {
+  --primary: #6c5ce7;
+  --secondary: #a29bfe;
+  --dark: #1e272e;
+  --darker: #0f1519;
+  --light: #f5f6fa;
+  --success: #00b894;
+  --danger: #d63031;
+  --warning: #fdcb6e;
+  --info: #0984e3;
+}
+
+body {
+  background-color: var(--darker);
+  color: var(--light);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+.card {
+  background-color: var(--dark);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  background-color: rgba(108, 92, 231, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+h2, h3, h4, h5 {
+  color: var(--light);
+  font-weight: 600;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: var(--primary);
+}
+
+.form-control, .form-select {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--light);
+  padding: 10px 15px;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  color: var(--light);
+  box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+}
+
+.form-text {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border: none;
+  padding: 10px 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #5649c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+}
+
+.alert {
+  border: none;
+  border-left: 4px solid;
+}
+
+.alert-success {
+  background-color: rgba(0, 184, 148, 0.1);
+  border-left-color: var(--success);
+  color: #b8f2e6;
+}
+
+.alert-danger {
+  background-color: rgba(214, 48, 49, 0.1);
+  border-left-color: var(--danger);
+  color: #f8c3c3;
+}
+
+.alert-info {
+  background-color: rgba(9, 132, 227, 0.1);
+  border-left-color: var(--info);
+  color: #c3e3f8;
+}
+
+.alert-warning {
+  background-color: rgba(253, 203, 110, 0.1);
+  border-left-color: var(--warning);
+  color: #f8e8c3;
+}
+
+/* Efeitos para os cards de saldo */
+.card .card-body {
+  transition: all 0.3s ease;
+}
+
+.card .card-body:hover {
+  background-color: rgba(108, 92, 231, 0.05);
+}
+
+/* Animação suave para o formulário */
+form {
+  animation: fadeIn 0.5s ease;
+}
+.form-label{
+    color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 15px;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+    </style>
 </head>
 <body>
 <?php
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-require_once 'includes/secure_withdrawal.php';
+require_once 'includes/secure_withdrawal_v2.php';
 
 // Verificar se está logado
 verificarLogin();
@@ -45,8 +207,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $amount = floatval($_POST['amount']);
         
         // Processar saque real
-        $realWithdrawal = new RealWithdrawalSystem($conn);
-        $result = $realWithdrawal->processRealWithdrawal($userId, $toAddress, $amount, $crypto);
+        $secureWithdrawal = new SecureWithdrawalSystemV2($conn);
+        $result = $secureWithdrawal->processSecureWithdrawal(
+            $userId,
+            $toAddress,
+            $amount,
+            $crypto,
+            $_POST['2fa_code'] // Adicione campo 2FA no formulário
+        );
         
         if ($result['success']) {
             $message = "✅ " . $result['message'] . "<br>";
@@ -69,7 +237,7 @@ $userBalance = getUserWalletInfo($_SESSION['user_id']);
 ?>
 
 <div class="container mt-4">
-    <h2>💰 Saque de Criptomoedas</h2>
+    <h2>Saque de Criptomoedas</h2>
     
     <?php if ($message): ?>
     <div class="alert alert-<?= $messageType ?>" role="alert">
@@ -108,7 +276,7 @@ $userBalance = getUserWalletInfo($_SESSION['user_id']);
     <!-- Formulário de Saque -->
     <div class="card">
         <div class="card-header">
-            <h4>🚀 Realizar Saque</h4>
+            <h4>Realizar Saque</h4>
         </div>
         <div class="card-body">
             <form method="POST" action="">
@@ -141,6 +309,12 @@ $userBalance = getUserWalletInfo($_SESSION['user_id']);
                            name="to_address" required 
                            placeholder="Digite o endereço da carteira de destino">
                 </div>
+                <div class="mb-3">
+    <label for="2fa_code" class="form-label">Código 2FA</label>
+    <input type="text" class="form-control" id="2fa_code" 
+           name="2fa_code" required 
+           placeholder="Digite o código do seu autenticador">
+</div>
                 
                 <div class="alert alert-warning">
                     <h6>⚠️ Importante:</h6>
@@ -153,7 +327,7 @@ $userBalance = getUserWalletInfo($_SESSION['user_id']);
                 </div>
                 
                 <button type="submit" class="btn btn-primary btn-lg">
-                    🚀 Processar Saque
+                    Processar Saque
                 </button>
             </form>
         </div>
