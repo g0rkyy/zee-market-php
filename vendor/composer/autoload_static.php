@@ -96,6 +96,7 @@ class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'PHPGangsta_GoogleAuthenticator' => __DIR__ . '/..' . '/phpgangsta/googleauthenticator/PHPGangsta/GoogleAuthenticator.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

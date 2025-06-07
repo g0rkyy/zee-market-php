@@ -3,7 +3,7 @@
         'name' => 'zeemarket/crypto',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7927a30e3309b44aeec9742cfaa04d40847deb5d',
+        'reference' => 'ec7d5ee7a539b410e74102b18b739463e26b98e0',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -82,6 +82,17 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpgangsta/googleauthenticator' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '505c2af8337b559b33557f37cda38e5f843f3768',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpgangsta/googleauthenticator',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'pleonasm/merkle-tree' => array(
             'pretty_version' => '1.0.0',
             'version' => '1.0.0.0',
@@ -103,7 +114,7 @@
         'zeemarket/crypto' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7927a30e3309b44aeec9742cfaa04d40847deb5d',
+            'reference' => 'ec7d5ee7a539b410e74102b18b739463e26b98e0',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

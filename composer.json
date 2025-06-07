@@ -10,6 +10,9 @@
     ],
     "require": {
         "bitwasp/bitcoin": "1.0.4",
-        "kornrunner/keccak": "^1.1"
-    }
+        "kornrunner/keccak": "^1.1",
+        "phpgangsta/googleauthenticator": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

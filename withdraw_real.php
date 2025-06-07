@@ -12,7 +12,7 @@
 // require_once __DIR__ . '/real_withdrawal_system.php';
 
 // ✅ SUBSTITUA POR:
-require_once __DIR__ . '/includes/secure_withdrawal.php';
+require_once __DIR__ . '/includes/secure_withdrawal_v2.php';
 
 // ============================================
 // 2. CRIAR PÁGINA DE SAQUE (withdraw_real.php)

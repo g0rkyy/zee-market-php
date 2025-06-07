@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "daea89e10f3a44bfde90cc9e73e0e9fb",
+    "content-hash": "b1ef1bd4261c6ae113ad2c34f3df021e",
     "packages": [
         {
             "name": "bitwasp/bech32",
@@ -497,6 +497,54 @@
             "time": "2018-12-03T18:17:01+00:00"
         },
         {
+            "name": "phpgangsta/googleauthenticator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPGangsta/GoogleAuthenticator.git",
+                "reference": "505c2af8337b559b33557f37cda38e5f843f3768"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPGangsta/GoogleAuthenticator/zipball/505c2af8337b559b33557f37cda38e5f843f3768",
+                "reference": "505c2af8337b559b33557f37cda38e5f843f3768",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "PHPGangsta/GoogleAuthenticator.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-4-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Kliewe",
+                    "email": "info@phpgangsta.de",
+                    "homepage": "http://www.phpgangsta.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Google Authenticator 2-factor authentication",
+            "keywords": [
+                "googleauthenticator",
+                "rfc6238",
+                "totp"
+            ],
+            "support": {
+                "issues": "https://github.com/PHPGangsta/GoogleAuthenticator/issues",
+                "source": "https://github.com/PHPGangsta/GoogleAuthenticator"
+            },
+            "time": "2019-03-20T00:55:58+00:00"
+        },
+        {
             "name": "pleonasm/merkle-tree",
             "version": "1.0.0",
             "source": {
@@ -627,9 +675,11 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "phpgangsta/googleauthenticator": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
