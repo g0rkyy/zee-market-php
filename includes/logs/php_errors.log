@@ -870,3 +870,58 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 29
+[07-Jun-2025 01:17:01 America/Sao_Paulo] Usuário não logado - redirecionando para login
+[07-Jun-2025 01:17:04 America/Sao_Paulo] Login bem-sucedido para usuário ID: 8
+[07-Jun-2025 01:18:05 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 9
+[07-Jun-2025 01:18:05 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 9
+[07-Jun-2025 01:20:21 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 9
+[07-Jun-2025 01:20:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 9
+[07-Jun-2025 01:21:37 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 9
+[07-Jun-2025 01:21:37 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php:9
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\api\cron_checker.php on line 9
+[07-Jun-2025 01:24:57 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method RealHotWallet::loadKeys() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php:639
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(51): RealHotWallet->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(801): RealWithdrawalSystem->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php on line 639
+[07-Jun-2025 01:27:18 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method RealHotWallet::loadKeys() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php:639
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(51): RealHotWallet->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(801): RealWithdrawalSystem->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php on line 639
+[07-Jun-2025 01:27:18 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method RealHotWallet::loadKeys() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php:639
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(51): RealHotWallet->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(801): RealWithdrawalSystem->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php on line 639
+[07-Jun-2025 01:27:19 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method RealHotWallet::loadKeys() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php:639
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(51): RealHotWallet->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(801): RealWithdrawalSystem->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php on line 639
+[07-Jun-2025 01:27:19 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method RealHotWallet::loadKeys() in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php:639
+Stack trace:
+#0 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(51): RealHotWallet->__construct()
+#1 C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php(801): RealWithdrawalSystem->__construct(Object(mysqli))
+#2 C:\xampp\htdocs\ecommerceZEE\withdraw_real.php(15): require_once('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\ecommerceZEE\includes\secure_withdrawal.php on line 639
+[07-Jun-2025 01:30:31 America/Sao_Paulo] Erro ao carregar chaves: Carteiras não configuradas
+[07-Jun-2025 01:31:31 America/Sao_Paulo] Erro ao carregar chaves: Carteiras não configuradas
+[07-Jun-2025 01:31:32 America/Sao_Paulo] Erro ao carregar chaves: Carteiras não configuradas

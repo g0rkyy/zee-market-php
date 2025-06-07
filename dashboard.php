@@ -475,13 +475,13 @@ try {
                     </div>
                     
                     <div class="crypto-actions">
-                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('BTC', '<?= htmlspecialchars($user_data['btc_deposit_address']) ?>')">
-                            <i class="bi bi-box-arrow-in-down"></i> Depositar
-                        </button>
-                        <button class="btn-crypto btn-withdraw" onclick="openWithdrawModal('BTC')">
-                            <i class="bi bi-box-arrow-up"></i> Sacar
-                        </button>
-                    </div>
+    <button class="btn-crypto btn-deposit" onclick="openDepositModal('BTC', '<?= htmlspecialchars($user_data['btc_deposit_address']) ?>')">
+        <i class="bi bi-box-arrow-in-down"></i> Depositar
+    </button>
+    <a href="withdraw_real.php?crypto=BTC" class="btn-crypto btn-withdraw">
+        <i class="bi bi-box-arrow-up"></i> Sacar Real
+    </a>
+</div>
                 <?php else: ?>
                     <div class="crypto-actions">
                         <button class="btn-crypto btn-generate" onclick="generateAddress('BTC')">
@@ -518,13 +518,14 @@ try {
                     </div>
                     
                     <div class="crypto-actions">
-                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('ETH', '<?= htmlspecialchars($user_data['eth_deposit_address']) ?>')">
-                            <i class="bi bi-box-arrow-in-down"></i> Depositar
-                        </button>
-                        <button class="btn-crypto btn-withdraw" onclick="openWithdrawModal('ETH')">
-                            <i class="bi bi-box-arrow-up"></i> Sacar
-                        </button>
-                    </div>
+    <button class="btn-crypto btn-deposit" onclick="openDepositModal('ETH', '<?= htmlspecialchars($user_data['eth_deposit_address']) ?>')">
+        <i class="bi bi-box-arrow-in-down"></i> Depositar
+    </button>
+    <a href="withdraw_real.php?crypto=ETH" class="btn-crypto btn-withdraw">
+        <i class="bi bi-box-arrow-up"></i> Sacar Real
+    </a>
+</div>
+
                 <?php else: ?>
                     <div class="crypto-actions">
                         <button class="btn-crypto btn-generate" onclick="generateAddress('ETH')">
@@ -561,13 +562,13 @@ try {
                     </div>
                     
                     <div class="crypto-actions">
-                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('XMR', '<?= htmlspecialchars($user_data['xmr_deposit_address']) ?>')">
-                            <i class="bi bi-box-arrow-in-down"></i> Depositar
-                        </button>
-                        <button class="btn-crypto btn-withdraw" onclick="openWithdrawModal('XMR')">
-                            <i class="bi bi-box-arrow-up"></i> Sacar
-                        </button>
-                    </div>
+    <button class="btn-crypto btn-deposit" onclick="openDepositModal('XMR', '<?= htmlspecialchars($user_data['xmr_deposit_address']) ?>')">
+        <i class="bi bi-box-arrow-in-down"></i> Depositar
+    </button>
+    <a href="withdraw_real.php?crypto=XMR" class="btn-crypto btn-withdraw">
+        <i class="bi bi-box-arrow-up"></i> Sacar Real
+    </a>
+</div>
                 <?php else: ?>
                     <div class="crypto-actions">
                         <button class="btn-crypto btn-generate" onclick="generateAddress('XMR')">

@@ -639,6 +639,42 @@ class RealHotWallet {
         $this->loadKeys();
         Bitcoin::setNetwork(\BitWasp\Bitcoin\Network\NetworkFactory::bitcoin());
     }
+    private function loadKeys() {
+        try {
+            // Carregar chaves do banco
+            $stmt = $this->conn->prepare("
+                SELECT crypto_type, private_key 
+                FROM platform_wallets 
+                WHERE is_active = 1
+            ");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            $this->keys = [];
+            while ($row = $result->fetch_assoc()) {
+                $this->keys[$row['crypto_type']] = [
+                    'private_key' => $this->decryptData($row['private_key'])
+                ];
+            }
+
+            // Verificar se as chaves existem
+            if (empty($this->keys['BTC']) || empty($this->keys['ETH'])) {
+                throw new Exception("Carteiras não configuradas");
+            }
+
+        } catch (Exception $e) {
+            error_log("Erro ao carregar chaves: " . $e->getMessage());
+            throw new Exception("Erro ao inicializar carteira");
+        }
+    }
+
+    private function decryptData($encryptedData) {
+        $key = hash('sha256', ENCRYPTION_KEY, true);
+        $iv = substr($encryptedData, 0, 16);
+        $encrypted = substr($encryptedData, 16);
+        return openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
+    }
+
 
     public function signBitcoinTransaction($rawTx, $utxos, $toAddress, $amount) {
         try {
