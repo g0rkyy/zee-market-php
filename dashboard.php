@@ -433,6 +433,9 @@ try {
             <a href="logout.php" class="btn btn-outline-danger">
                 <i class="bi bi-box-arrow-right"></i> Sair
             </a>
+            <a href="painel_usuario.php" class="btn btn-outline-secondary">
+                <i class="bi bi-person-circle"></i> 2FA
+            </a> 
         </div>
 
         <!-- Seção de Boas-vindas -->
