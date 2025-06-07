@@ -375,4 +375,31 @@ function emailExists($email) {
     
     return $stmt->num_rows > 0;
 }
+// Implementar função checkRateLimit em functions.php
+function checkRateLimit($userId, $action, $maxAttempts, $timeWindow = 3600) {
+    global $conn;
+    
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) as attempts 
+        FROM rate_limits 
+        WHERE user_id = ? AND action = ? 
+        AND created_at > DATE_SUB(NOW(), INTERVAL ? SECOND)
+    ");
+    $stmt->bind_param("isi", $userId, $action, $timeWindow);
+    $stmt->execute();
+    
+    $result = $stmt->get_result()->fetch_assoc();
+    
+    if ($result['attempts'] >= $maxAttempts) {
+        throw new Exception("Rate limit excedido para $action");
+    }
+    
+    // Registrar tentativa
+    $stmt = $conn->prepare("
+        INSERT INTO rate_limits (user_id, action, created_at) 
+        VALUES (?, ?, NOW())
+    ");
+    $stmt->bind_param("is", $userId, $action);
+    $stmt->execute();
+}
 ?>
