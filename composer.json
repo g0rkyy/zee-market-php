@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "bitwasp/bitcoin": "1.0.4",
         "kornrunner/keccak": "^1.1"
     }
 }

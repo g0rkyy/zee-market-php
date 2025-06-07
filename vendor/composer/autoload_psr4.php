@@ -6,6 +6,13 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'lastguest\\' => array($vendorDir . '/lastguest/murmurhash/src/lastguest'),
     'kornrunner\\' => array($vendorDir . '/kornrunner/keccak/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Mdanter\\Ecc\\' => array($vendorDir . '/mdanter/ecc/src'),
+    'FG\\' => array($vendorDir . '/fgrosse/phpasn1/lib'),
+    'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
+    'BitWasp\\Buffertools\\' => array($vendorDir . '/bitwasp/buffertools/src/Buffertools'),
+    'BitWasp\\Bitcoin\\' => array($vendorDir . '/bitwasp/bitcoin/src'),
+    'BitWasp\\Bech32\\' => array($vendorDir . '/bitwasp/bech32/src'),
 );

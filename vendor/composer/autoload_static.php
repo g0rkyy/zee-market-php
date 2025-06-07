@@ -7,10 +7,16 @@ namespace Composer\Autoload;
 class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
 {
     public static $files = array (
+        'a626201e4406003b96eee958a069f504' => __DIR__ . '/..' . '/bitwasp/bech32/src/bech32.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7cfce27594bbc1dd0dbf7e3eb5cd4911' => __DIR__ . '/..' . '/bitwasp/bitcoin/src/Script/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'l' => 
+        array (
+            'lastguest\\' => 10,
+        ),
         'k' => 
         array (
             'kornrunner\\' => 11,
@@ -19,9 +25,31 @@ class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
         ),
+        'M' => 
+        array (
+            'Mdanter\\Ecc\\' => 12,
+        ),
+        'F' => 
+        array (
+            'FG\\' => 3,
+        ),
+        'C' => 
+        array (
+            'Composer\\Semver\\' => 16,
+        ),
+        'B' => 
+        array (
+            'BitWasp\\Buffertools\\' => 20,
+            'BitWasp\\Bitcoin\\' => 16,
+            'BitWasp\\Bech32\\' => 15,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'lastguest\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lastguest/murmurhash/src/lastguest',
+        ),
         'kornrunner\\' => 
         array (
             0 => __DIR__ . '/..' . '/kornrunner/keccak/src',
@@ -29,6 +57,40 @@ class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Mdanter\\Ecc\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mdanter/ecc/src',
+        ),
+        'FG\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
+        ),
+        'Composer\\Semver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/semver/src',
+        ),
+        'BitWasp\\Buffertools\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bitwasp/buffertools/src/Buffertools',
+        ),
+        'BitWasp\\Bitcoin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bitwasp/bitcoin/src',
+        ),
+        'BitWasp\\Bech32\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bitwasp/bech32/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'Pleo' => 
+            array (
+                0 => __DIR__ . '/..' . '/pleonasm/merkle-tree/src',
+            ),
         ),
     );
 
@@ -41,6 +103,7 @@ class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$classMap;
 
         }, null, ClassLoader::class);
