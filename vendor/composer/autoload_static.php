@@ -4,18 +4,17 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
+class ComposerStaticInit478c6ed71a514f52832ee3ba45866377
 {
     public static $files = array (
-        'a626201e4406003b96eee958a069f504' => __DIR__ . '/..' . '/bitwasp/bech32/src/bech32.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '7cfce27594bbc1dd0dbf7e3eb5cd4911' => __DIR__ . '/..' . '/bitwasp/bitcoin/src/Script/functions.php',
+        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'l' => 
+        'p' => 
         array (
-            'lastguest\\' => 10,
+            'phpseclib3\\' => 11,
         ),
         'k' => 
         array (
@@ -24,31 +23,22 @@ class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Sonata\\GoogleAuthenticator\\' => 27,
         ),
-        'M' => 
+        'P' => 
         array (
-            'Mdanter\\Ecc\\' => 12,
+            'ParagonIE\\ConstantTime\\' => 23,
         ),
-        'F' => 
+        'G' => 
         array (
-            'FG\\' => 3,
-        ),
-        'C' => 
-        array (
-            'Composer\\Semver\\' => 16,
-        ),
-        'B' => 
-        array (
-            'BitWasp\\Buffertools\\' => 20,
-            'BitWasp\\Bitcoin\\' => 16,
-            'BitWasp\\Bech32\\' => 15,
+            'Google\\Authenticator\\' => 21,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'lastguest\\' => 
+        'phpseclib3\\' => 
         array (
-            0 => __DIR__ . '/..' . '/lastguest/murmurhash/src/lastguest',
+            0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
         'kornrunner\\' => 
         array (
@@ -58,54 +48,30 @@ class ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Mdanter\\Ecc\\' => 
+        'Sonata\\GoogleAuthenticator\\' => 
         array (
-            0 => __DIR__ . '/..' . '/mdanter/ecc/src',
+            0 => __DIR__ . '/..' . '/sonata-project/google-authenticator/src',
         ),
-        'FG\\' => 
+        'ParagonIE\\ConstantTime\\' => 
         array (
-            0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
+            0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'Composer\\Semver\\' => 
+        'Google\\Authenticator\\' => 
         array (
-            0 => __DIR__ . '/..' . '/composer/semver/src',
-        ),
-        'BitWasp\\Buffertools\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/bitwasp/buffertools/src/Buffertools',
-        ),
-        'BitWasp\\Bitcoin\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/bitwasp/bitcoin/src',
-        ),
-        'BitWasp\\Bech32\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/bitwasp/bech32/src',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'P' => 
-        array (
-            'Pleo' => 
-            array (
-                0 => __DIR__ . '/..' . '/pleonasm/merkle-tree/src',
-            ),
+            0 => __DIR__ . '/..' . '/sonata-project/google-authenticator/src',
         ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'PHPGangsta_GoogleAuthenticator' => __DIR__ . '/..' . '/phpgangsta/googleauthenticator/PHPGangsta/GoogleAuthenticator.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0e241fff912c006cfc0aeda4d4a4a203::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit478c6ed71a514f52832ee3ba45866377::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit478c6ed71a514f52832ee3ba45866377::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit478c6ed71a514f52832ee3ba45866377::$classMap;
 
         }, null, ClassLoader::class);
     }

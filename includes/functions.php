@@ -402,4 +402,5 @@ function checkRateLimit($userId, $action, $maxAttempts, $timeWindow = 3600) {
     $stmt->bind_param("is", $userId, $action);
     $stmt->execute();
 }
+
 ?>

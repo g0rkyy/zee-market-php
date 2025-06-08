@@ -2,9 +2,27 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+
+
 // IMPORTANTE: Incluir config.php PRIMEIRO
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
+// ✅ ADICIONAR SISTEMAS DE PRIVACIDADE
+require_once 'includes/tor_system.php';
+require_once 'includes/pgp_system.php';
+
+// ✅ INICIALIZAR SISTEMAS
+$torSystem = new ZeeMarketTor($conn);
+$pgpSystem = new ZeeMarketPGP($conn);
+
+// Analisar privacidade do usuário
+$privacyAnalysis = $torSystem->analyzePrivacyLevel($user_id);
+$hasPGPKeys = $pgpSystem->userHasPgpKey($user_id);
+
+// Gerar token CSRF se não existir
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // Verificar login
 verificarLogin();
@@ -665,7 +683,92 @@ try {
             </div>
         </div>
     </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card bg-dark border-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="fas fa-shield-alt"></i> Privacidade
+            </h5>
+            
+            <!-- Score de Privacidade -->
+            <div class="privacy-score mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Score:</span>
+                    <h3 class="mb-0 text-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
+                        <?= $privacyAnalysis['privacy_score'] ?>/100
+                    </h3>
+                </div>
+                <div class="progress" style="height: 10px;">
+                    <div class="progress-bar bg-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>" 
+                         style="width: <?= $privacyAnalysis['privacy_score'] ?>%"></div>
+                </div>
+            </div>
+            
+            <!-- Status dos recursos -->
+            <div class="privacy-features">
+                <div class="d-flex justify-content-between mb-2">
+                    <span><i class="fas fa-user-secret"></i> TOR</span>
+                    <span class="badge bg-<?= $privacyAnalysis['tor_usage']['is_tor'] ? 'success' : 'secondary' ?>">
+                        <?= $privacyAnalysis['tor_usage']['is_tor'] ? 'Ativo' : 'Inativo' ?>
+                    </span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span><i class="fas fa-key"></i> PGP</span>
+                    <span class="badge bg-<?= $hasPGPKeys ? 'success' : 'secondary' ?>">
+                        <?= $hasPGPKeys ? 'Configurado' : 'Não configurado' ?>
+                    </span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span><i class="fas fa-random"></i> Mixing</span>
+                    <span class="badge bg-<?= $privacyAnalysis['mixing_history'] > 0 ? 'success' : 'secondary' ?>">
+                        <?= $privacyAnalysis['mixing_history'] > 0 ? 'Usado' : 'Nunca usado' ?>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Botão de ação -->
+            <div class="text-center mt-3">
+                <a href="privacy_settings.php" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-cog"></i> Configurar Privacidade
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- ✅ ALERTAS DE PRIVACIDADE (se houver recomendações) -->
+<?php if (!empty($privacyAnalysis['recommendations'])): ?>
+<div class="col-12">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Melhorias de Privacidade Disponíveis</h6>
+        <ul class="mb-0">
+            <?php foreach ($privacyAnalysis['recommendations'] as $rec): ?>
+                <li><?= htmlspecialchars($rec) ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- ✅ ENDEREÇO .ONION (se disponível) -->
+<?php 
+$onionAddress = $torSystem->getOnionAddress();
+if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']): 
+?>
+<div class="col-12">
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> 
+        <strong>Acesso TOR disponível:</strong> 
+        <code><?= htmlspecialchars($onionAddress) ?></code>
+        <button class="btn btn-sm btn-secondary float-end" onclick="copyToClipboard('<?= $onionAddress ?>')">
+            <i class="fas fa-copy"></i> Copiar
+        </button>
+    </div>
+</div>
+<?php endif; ?>
     <!-- Modal de Depósito -->
     <div class="modal fade modal-dark" id="depositModal" tabindex="-1">
         <div class="modal-dialog">
@@ -935,6 +1038,21 @@ try {
                 }
             });
         }, 5000);
+// Função para copiar endereço .onion
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showAlert('success', 'Endereço .onion copiado!');
+    });
+}
+
+// Auto-atualizar score de privacidade
+<?php if ($privacyAnalysis['privacy_score'] < 60): ?>
+setTimeout(() => {
+    if (confirm('Seu score de privacidade está baixo. Deseja melhorá-lo agora?')) {
+        window.location.href = 'privacy_settings.php';
+    }
+}, 5000);
+<?php endif; ?>
 
         console.log('Dashboard carregado com sucesso!');
     </script>

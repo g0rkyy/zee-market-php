@@ -1,6 +1,23 @@
 <?php
+require_once __DIR__ . '/vendor/autoload.php'; 
+
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
+require_once 'includes/tor_system.php';
+require_once 'includes/pgp_system.php';
+
+// Inicializar sistemas de privacidade
+$torSystem = new ZeeMarketTor($conn);
+$torMiddleware = new TorMiddleware($torSystem);
+$torDetection = $torMiddleware->handle(); // Detecta e configura headers automaticamente
+
+// ✅ BONUS PARA USUÁRIOS TOR
+$isTorUser = $torDetection['is_tor'];
+$torBonus = $isTorUser ? 0.02 : 0; // 2% desconto para usuários TOR
+// Configuração de PGP
+$pgpSystem = new ZeeMarketPGP($conn);
+$pgpMiddleware = new PGPMiddleware($pgpSystem);
+$pgpDetection = $pgpMiddleware->handle(); // Detecta e configura headers automaticamente
 
 // Inicializa variáveis para evitar erros
 $produtos = null;

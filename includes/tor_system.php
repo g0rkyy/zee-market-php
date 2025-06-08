@@ -484,7 +484,7 @@ ExitPolicy reject *:*
         return shell_exec("tor --hash-password '{$this->torConfig['control_password']}'");
     }
     
-    private function getOnionAddress() {
+    public function getOnionAddress() {
         $hostnameFile = $this->hiddenServiceDir . 'hostname';
         if (file_exists($hostnameFile)) {
             return trim(file_get_contents($hostnameFile));

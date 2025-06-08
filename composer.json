@@ -9,10 +9,14 @@
         }
     ],
     "require": {
-        "bitwasp/bitcoin": "1.0.4",
-        "kornrunner/keccak": "^1.1",
-        "phpgangsta/googleauthenticator": "dev-master"
+        "phpseclib/phpseclib": "^3.0",
+        "sonata-project/google-authenticator": "^2.0",
+        "kornrunner/keccak": "^1.1"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "config": {
+        "allow-plugins": {
+            "*": true
+        }
+    },
+    "minimum-stability": "stable"
 }

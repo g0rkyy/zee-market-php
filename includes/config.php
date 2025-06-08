@@ -24,6 +24,7 @@ ini_set('error_log', __DIR__ . '/logs/php_errors.log');
 if (!file_exists(__DIR__ . '/logs')) {
     mkdir(__DIR__ . '/logs', 0750, true);
 }
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // Configurações do Banco de Dados
 $host = "localhost";
