@@ -49,7 +49,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <span class="navbar-text me-3">
                         Olá, <?= htmlspecialchars($_SESSION['user_name']) ?>
                     </span>
-                    <a href="../logout.php" class="btn btn-outline-danger">Sair</a>
+                    <a href="/includes/logout_2.php" class="btn btn-outline-danger">Sair</a>
                 <?php else: ?>
                     <a href="login.php" class="btn btn-outline-light me-2">Login</a>
                     <a href="signup.php" class="btn btn-warning">Cadastre-se</a>

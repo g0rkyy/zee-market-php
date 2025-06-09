@@ -3473,3 +3473,382 @@ Stack trace:
 [08-Jun-2025 19:17:44 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
 [08-Jun-2025 19:17:44 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
 [08-Jun-2025 19:17:44 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:38:41 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2032 ms: Couldn't connect to server
+[08-Jun-2025 19:38:43 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2029 ms: Couldn't connect to server
+[08-Jun-2025 19:38:43 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:38:43 America/Sao_Paulo] Erro ao gerar chaves PGP: Usuário já possui chaves PGP
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:38:43 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:39:25 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2040 ms: Couldn't connect to server
+[08-Jun-2025 19:39:27 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2031 ms: Couldn't connect to server
+[08-Jun-2025 19:39:27 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:39:27 America/Sao_Paulo] Erro ao gerar chaves PGP: Usuário já possui chaves PGP
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:39:27 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:40:58 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2045 ms: Couldn't connect to server
+[08-Jun-2025 19:41:00 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2044 ms: Couldn't connect to server
+[08-Jun-2025 19:41:00 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:41:00 America/Sao_Paulo] Erro ao gerar chaves PGP: Usuário já possui chaves PGP
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:41:00 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:41:25 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2033 ms: Couldn't connect to server
+[08-Jun-2025 19:41:27 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2041 ms: Couldn't connect to server
+[08-Jun-2025 19:41:27 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:41:27 America/Sao_Paulo] Erro ao gerar chaves PGP: Usuário já possui chaves PGP
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:41:27 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:41:49 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2046 ms: Couldn't connect to server
+[08-Jun-2025 19:41:51 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2045 ms: Couldn't connect to server
+[08-Jun-2025 19:41:51 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:41:51 America/Sao_Paulo] Erro ao gerar chaves PGP: Usuário já possui chaves PGP
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:41:51 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:41:56 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2046 ms: Couldn't connect to server
+[08-Jun-2025 19:41:56 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:41:56 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:41:58 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2044 ms: Couldn't connect to server
+[08-Jun-2025 19:42:03 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2038 ms: Couldn't connect to server
+[08-Jun-2025 19:42:03 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:03 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:03 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:42:05 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2047 ms: Couldn't connect to server
+[08-Jun-2025 19:42:05 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 687
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 697
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 698
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 702
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 703
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 725
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 726
+[08-Jun-2025 19:42:05 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 1049
+[08-Jun-2025 19:42:09 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2036 ms: Couldn't connect to server
+[08-Jun-2025 19:42:09 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:09 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:11 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2046 ms: Couldn't connect to server
+[08-Jun-2025 19:42:15 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2033 ms: Couldn't connect to server
+[08-Jun-2025 19:42:15 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:15 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:15 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[08-Jun-2025 19:42:15 America/Sao_Paulo] Usuário não logado - redirecionando para login
+[08-Jun-2025 19:42:17 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2035 ms: Couldn't connect to server
+[08-Jun-2025 19:42:17 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:17 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:19 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2043 ms: Couldn't connect to server
+[08-Jun-2025 19:42:46 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2035 ms: Couldn't connect to server
+[08-Jun-2025 19:42:46 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:46 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:48 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2035 ms: Couldn't connect to server
+[08-Jun-2025 19:42:48 America/Sao_Paulo] Login bem-sucedido para usuário ID: 10
+[08-Jun-2025 19:42:50 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2037 ms: Couldn't connect to server
+[08-Jun-2025 19:42:50 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:50 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:50 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:42:52 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2045 ms: Couldn't connect to server
+[08-Jun-2025 19:42:52 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 687
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 697
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 698
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 702
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 703
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 725
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 726
+[08-Jun-2025 19:42:52 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 1049
+[08-Jun-2025 19:42:57 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2038 ms: Couldn't connect to server
+[08-Jun-2025 19:42:57 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:42:57 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:42:57 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[08-Jun-2025 19:43:00 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2046 ms: Couldn't connect to server
+[08-Jun-2025 19:43:00 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:43:00 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:43:30 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2029 ms: Couldn't connect to server
+[08-Jun-2025 19:43:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:43:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:43:32 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2038 ms: Couldn't connect to server
+[08-Jun-2025 19:43:35 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2034 ms: Couldn't connect to server
+[08-Jun-2025 19:43:35 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:43:35 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:43:36 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:43:38 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2048 ms: Couldn't connect to server
+[08-Jun-2025 19:43:38 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:43:38 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:43:38 America/Sao_Paulo] Dados do usuário não encontrados para ID: 10
+[08-Jun-2025 19:43:38 America/Sao_Paulo] Logout do usuário ID: 10
+[08-Jun-2025 19:43:40 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2049 ms: Couldn't connect to server
+[08-Jun-2025 19:43:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:43:40 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:43:42 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2032 ms: Couldn't connect to server
+[08-Jun-2025 19:43:51 America/Sao_Paulo] Novo usuário cadastrado: z33m4rketofficial@pronton.me
+[08-Jun-2025 19:43:53 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2044 ms: Couldn't connect to server
+[08-Jun-2025 19:43:53 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:43:53 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:43:55 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2044 ms: Couldn't connect to server
+[08-Jun-2025 19:44:02 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2043 ms: Couldn't connect to server
+[08-Jun-2025 19:44:02 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:02 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:44:04 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2047 ms: Couldn't connect to server
+[08-Jun-2025 19:44:04 America/Sao_Paulo] Login bem-sucedido para usuário ID: 11
+[08-Jun-2025 19:44:06 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2032 ms: Couldn't connect to server
+[08-Jun-2025 19:44:06 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:06 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:44:06 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:44:08 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2030 ms: Couldn't connect to server
+[08-Jun-2025 19:44:08 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 687
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 697
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 698
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 702
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 703
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 725
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 726
+[08-Jun-2025 19:44:08 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 1049
+[08-Jun-2025 19:44:17 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2035 ms: Couldn't connect to server
+[08-Jun-2025 19:44:17 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:17 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:44:17 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[08-Jun-2025 19:44:19 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2040 ms: Couldn't connect to server
+[08-Jun-2025 19:44:19 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:44:19 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:44:21 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2042 ms: Couldn't connect to server
+[08-Jun-2025 19:44:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:44:21 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[08-Jun-2025 19:44:23 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2048 ms: Couldn't connect to server
+[08-Jun-2025 19:44:23 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:44:23 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:44:32 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2037 ms: Couldn't connect to server
+[08-Jun-2025 19:44:34 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2049 ms: Couldn't connect to server
+[08-Jun-2025 19:44:34 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:44:37 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:44:44 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2032 ms: Couldn't connect to server
+[08-Jun-2025 19:44:44 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:44 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:44:46 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2033 ms: Couldn't connect to server
+[08-Jun-2025 19:44:53 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2033 ms: Couldn't connect to server
+[08-Jun-2025 19:44:53 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:53 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:44:53 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:44:55 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2029 ms: Couldn't connect to server
+[08-Jun-2025 19:44:55 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 687
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 697
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 698
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 702
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 703
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 725
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 726
+[08-Jun-2025 19:44:55 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 1049
+[08-Jun-2025 19:44:59 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2043 ms: Couldn't connect to server
+[08-Jun-2025 19:44:59 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:44:59 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:45:01 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2047 ms: Couldn't connect to server
+[08-Jun-2025 19:45:42 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2044 ms: Couldn't connect to server
+[08-Jun-2025 19:45:42 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:45:42 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:45:44 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2042 ms: Couldn't connect to server
+[08-Jun-2025 19:45:54 America/Sao_Paulo] Novo usuário cadastrado: z33m4rketofficial@pronton.me
+[08-Jun-2025 19:45:56 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2032 ms: Couldn't connect to server
+[08-Jun-2025 19:45:56 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:45:56 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:45:58 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2046 ms: Couldn't connect to server
+[08-Jun-2025 19:46:11 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2033 ms: Couldn't connect to server
+[08-Jun-2025 19:46:11 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:46:11 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:46:13 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2049 ms: Couldn't connect to server
+[08-Jun-2025 19:46:13 America/Sao_Paulo] Login bem-sucedido para usuário ID: 12
+[08-Jun-2025 19:46:16 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2047 ms: Couldn't connect to server
+[08-Jun-2025 19:46:16 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:46:16 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:46:16 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:46:18 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2048 ms: Couldn't connect to server
+[08-Jun-2025 19:46:18 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 687
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 697
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 698
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 702
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 703
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 725
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 726
+[08-Jun-2025 19:46:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 1049
+[08-Jun-2025 19:46:58 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2031 ms: Couldn't connect to server
+[08-Jun-2025 19:46:58 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:46:58 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:46:58 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[08-Jun-2025 19:47:00 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2048 ms: Couldn't connect to server
+[08-Jun-2025 19:47:00 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:47:00 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:47:14 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2032 ms: Couldn't connect to server
+[08-Jun-2025 19:47:16 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2041 ms: Couldn't connect to server
+[08-Jun-2025 19:47:16 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:47:18 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:48:26 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2034 ms: Couldn't connect to server
+[08-Jun-2025 19:48:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:48:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:48:26 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\two_factor_auth.php on line 759
+[08-Jun-2025 19:48:28 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2036 ms: Couldn't connect to server
+[08-Jun-2025 19:48:28 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 127
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 128
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "level" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 130
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 132
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 133
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 152
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 155
+[08-Jun-2025 19:48:28 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\privacy_settings.php on line 250
+[08-Jun-2025 19:48:32 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2043 ms: Couldn't connect to server
+[08-Jun-2025 19:48:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:48:32 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:48:34 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2044 ms: Couldn't connect to server
+[08-Jun-2025 19:48:38 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2063 ms: Couldn't connect to server
+[08-Jun-2025 19:48:38 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:48:38 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:48:38 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 19
+[08-Jun-2025 19:48:40 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2046 ms: Couldn't connect to server
+[08-Jun-2025 19:48:40 America/Sao_Paulo] Erro na análise de privacidade: Unknown column 'btc_wallet' in 'field list'
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined variable $user_id in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 20
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 687
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 697
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 698
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 702
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 703
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 711
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "tor_usage" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Trying to access array offset on value of type null in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 712
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 725
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "mixing_history" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 726
+[08-Jun-2025 19:48:40 America/Sao_Paulo] [WARNING] Undefined array key "privacy_score" in C:\xampp\htdocs\ecommerceZEE\dashboard.php on line 1049
+[08-Jun-2025 19:48:43 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2042 ms: Couldn't connect to server
+[08-Jun-2025 19:48:43 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:48:43 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:48:45 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2043 ms: Couldn't connect to server
+[08-Jun-2025 19:50:03 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2043 ms: Couldn't connect to server
+[08-Jun-2025 19:50:03 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:50:03 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:50:05 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2033 ms: Couldn't connect to server
+[08-Jun-2025 19:50:05 America/Sao_Paulo] Login bem-sucedido para usuário ID: 12
+[08-Jun-2025 19:50:47 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2042 ms: Couldn't connect to server
+[08-Jun-2025 19:50:47 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 780
+[08-Jun-2025 19:50:47 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
+[08-Jun-2025 19:50:49 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2047 ms: Couldn't connect to server
+[08-Jun-2025 19:50:50 America/Sao_Paulo] Login bem-sucedido para usuário ID: 12

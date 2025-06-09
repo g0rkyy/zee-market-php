@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <?= htmlspecialchars($onionAddress) ?>
                         </div>
                         <button class="btn btn-sm btn-secondary mt-2" onclick="copyToClipboard('<?= $onionAddress ?>')">
-                            <i class="fas fa-copy"></i> Copiar
+                            <i class="fas fa-copy"></i> Copie 
                         </button>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -206,9 +206,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="code-display">
                             <?= htmlspecialchars($_SESSION['pgp_public_key']) ?>
                         </div>
-                        <button class="btn btn-sm btn-secondary mt-2" 
+                        <button disabled class="btn btn-sm btn-secondary mt-2" 
                                 onclick="copyToClipboard('<?= htmlspecialchars($_SESSION['pgp_public_key']) ?>')">
-                            <i class="fas fa-copy"></i> Copiar Chave Pública
+                            <i class="fas fa-copy"></i> Copie manualmente
                         </button>
                         <?php endif; ?>
                         
