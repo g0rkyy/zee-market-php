@@ -1,315 +1,381 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-require_once 'includes/functions.php';
-require_once 'includes/tor_system.php';
-require_once 'includes/pgp_system.php';
+/**
+ * 🚀 LOGIN SIMPLIFICADO - SEM PGP
+ * PGP agora é só para mensagens/contato
+ */
 
-// Se já estiver logado, redireciona
-if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+require_once 'includes/config.php';
+require_once 'includes/functions.php';
+
+// Se já estiver logado, redirecionar
+if (isLoggedIn()) {
+    header("Location: index.php");
     exit();
 }
 
-// Inicializar sistemas Tor e PGP
-try {
-    $torSystem = new ZeeMarketTor($conn);
-    $pgpSystem = new ZeeMarketPGP($conn);
-    $torMiddleware = new TorMiddleware($torSystem);
-    
-    // Executar middleware Tor
-    $torDetection = $torMiddleware->handle();
-    
-} catch (Exception $e) {
-    error_log("Erro ao inicializar sistemas: " . $e->getMessage());
-    $torDetection = ['is_tor' => false, 'confidence' => 0];
-}
+$erro = '';
+$sucesso = '';
 
-$erro = ""; // Inicializa a variável de erro
-$success = "";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
-    $senha = trim($_POST['senha']);
-    $use_pgp = isset($_POST['use_pgp']) && $_POST['use_pgp'] == '1';
-    $pgp_message = trim($_POST['pgp_message'] ?? '');
-    $pgp_passphrase = trim($_POST['pgp_passphrase'] ?? '');
+// Processar login
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $email = trim($_POST['email'] ?? '');
+    $senha = $_POST['senha'] ?? '';
     
-    // Validação básica
+    // Validações básicas
     if (empty($email) || empty($senha)) {
-        $erro = "Email e senha são obrigatórios.";
+        $erro = "Preencha todos os campos!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erro = "Email inválido!";
     } else {
-        try {
-            // Login normal primeiro
+        // Verificar rate limiting
+        if (!checkLoginAttempts($email)) {
+            $erro = "Muitas tentativas de login. Tente novamente em 5 minutos.";
+        } else {
+            // Tentar login
             $resultado = login($email, $senha);
             
             if ($resultado === true) {
-                $userId = $_SESSION['user_id'];
+                // Login bem-sucedido
                 
-                // Verificar se usuário quer usar PGP
-                if ($use_pgp) {
-                    if (empty($pgp_message) || empty($pgp_passphrase)) {
-                        $erro = "Mensagem PGP e passphrase são obrigatórias quando PGP está habilitado.";
-                    } else {
-                        // Verificar se usuário tem chaves PGP
-                        if (!$pgpSystem->userHasPgpKey($userId)) {
-                            $erro = "Você não possui chaves PGP configuradas. Configure primeiro no dashboard.";
-                        } else {
-                            // Verificar assinatura PGP
-                            $pgpVerification = $pgpSystem->verifySignature(
-                                ['login_attempt' => $email, 'timestamp' => time()],
-                                $pgp_message,
-                                $userId
-                            );
-                            
-                            if (!$pgpVerification['success'] || !$pgpVerification['valid']) {
-                                $erro = "Assinatura PGP inválida. Verifique sua mensagem e passphrase.";
-                                // Fazer logout em caso de falha PGP
-                                session_destroy();
-                            } else {
-                                // Login PGP bem-sucedido
-                                $_SESSION['pgp_authenticated'] = true;
-                                $_SESSION['pgp_login_time'] = time();
-                                $success = "Login com PGP realizado com sucesso!";
-                            }
-                        }
-                    }
-                }
+                // Detectar se está usando Tor
+                $torDetection = checkTorConnection();
+                $_SESSION['is_tor'] = $torDetection['connected'];
+                $_SESSION['tor_confidence'] = $torDetection['confidence'];
                 
-                // Log da atividade de login
-                if (empty($erro)) {
-                    $loginData = [
-                        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-                        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-                        'tor_used' => $torDetection['is_tor'],
-                        'tor_confidence' => $torDetection['confidence'],
-                        'pgp_used' => $use_pgp,
-                        'login_method' => $use_pgp ? 'pgp' : 'standard'
-                    ];
-                    
-                    // Salvar log de login
-                    $stmt = $conn->prepare("
-                        INSERT INTO login_logs 
-                        (user_id, ip_address, user_agent, tor_used, tor_confidence, pgp_used, login_method, created_at) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-                    ");
-                    $stmt->bind_param("isiisss", 
-                        $userId,
-                        $loginData['ip'],
-                        $loginData['user_agent'],
-                        $loginData['tor_used'],
-                        $loginData['tor_confidence'],
-                        $loginData['pgp_used'],
-                        $loginData['login_method']
-                    );
-                    $stmt->execute();
-                    
-                    // Redirecionar após sucesso
-                    if (empty($erro)) {
-                        header("Location: dashboard.php");
-                        exit();
-                    }
-                }
+                // Log da atividade
+                logActivity($_SESSION['user_id'], 'login', [
+                    'method' => 'standard',
+                    'tor_detected' => $torDetection['connected'],
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
+                ]);
+                
+                // Redirecionar
+                $redirectUrl = $_SESSION['redirect_after_login'] ?? 'index.php';
+                unset($_SESSION['redirect_after_login']);
+                
+                header("Location: " . $redirectUrl);
+                exit();
             } else {
-                $erro = "Email ou senha incorretos, ou email não cadastrado.";
+                // Login falhou
+                $erro = $resultado;
+                error_log("Falha no login para: " . $email . " - " . $resultado);
             }
-            
-        } catch (Exception $e) {
-            error_log("Erro no login: " . $e->getMessage());
-            $erro = "Erro interno. Tente novamente.";
         }
     }
 }
 
-// Verificar status do Tor
-$torStatus = false;
-try {
-    $torStatusCheck = $torSystem->checkTorStatus();
-    $torStatus = $torStatusCheck['running'] ?? false;
-} catch (Exception $e) {
-    error_log("Erro ao verificar status Tor: " . $e->getMessage());
+// Processar cadastro
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
+    $nome = trim($_POST['nome'] ?? '');
+    $email = trim($_POST['email_cadastro'] ?? '');
+    $senha = $_POST['senha_cadastro'] ?? '';
+    $confirmar_senha = $_POST['confirmar_senha'] ?? '';
+    
+    // Validações
+    if (empty($nome) || empty($email) || empty($senha)) {
+        $erro = "Preencha todos os campos!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erro = "Email inválido!";
+    } elseif (strlen($senha) < 8) {
+        $erro = "Senha deve ter pelo menos 8 caracteres!";
+    } elseif ($senha !== $confirmar_senha) {
+        $erro = "Senhas não coincidem!";
+    } else {
+        $resultado = cadastrarUsuario($nome, $email, $senha);
+        
+        if ($resultado === true) {
+            $sucesso = "Cadastro realizado com sucesso! Faça login.";
+        } else {
+            $erro = $resultado;
+        }
+    }
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
-    <title>Login Seguro - ZeeMarket</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/signup.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ZeeMarket</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="/js/login.js" defer></script>
     <style>
-        .security-indicators {
-            margin-bottom: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            background: #f8f9fa;
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d30 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .indicator {
-            display: inline-block;
-            margin: 5px;
-            padding: 5px 10px;
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-card {
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid #555;
             border-radius: 15px;
-            font-size: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 100%;
         }
-        .indicator.active { background: #28a745; color: white; }
-        .indicator.inactive { background: #6c757d; color: white; }
-        .pgp-section {
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            background: #f8f9fa;
+        
+        .login-header {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            padding: 2rem;
         }
-        .hidden { display: none; }
-        .success-message {
-            color: #28a745;
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
+        
+        .login-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .login-body {
+            padding: 2rem;
+        }
+        
+        .form-control {
+            background: rgba(60, 60, 60, 0.8);
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .form-control:focus {
+            background: rgba(70, 70, 70, 0.9);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+            color: #fff;
+        }
+        
+        .form-control::placeholder {
+            color: #aaa;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-outline-light {
+            border-color: #6c757d;
+            color: #adb5bd;
+        }
+        
+        .btn-outline-light:hover {
+            background: #6c757d;
+            border-color: #6c757d;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid #444;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #aaa;
+            border: none;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #6366f1;
+            background: none;
+            border-bottom-color: #6366f1;
+        }
+        
+        .security-info {
+            background: rgba(25, 135, 84, 0.1);
+            border: 1px solid rgba(25, 135, 84, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tor-status {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        .alert {
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <div id="menu">
-        <a href="index.php">home</a>
-        <a href="signup.php">registro</a>
-        <a href="FAQ.html">faq</a>
-    </div>
-    
-    <div id="loginContainer">
-        <div class="container-login">
-            <img src="assets/images/perfil.png" alt="Imagem de perfil">
-            <h1>Login Seguro</h1>
-            
-            <!-- Indicadores de Segurança -->
-            <div class="security-indicators">
-                <div class="indicator <?= $torDetection['is_tor'] ? 'active' : 'inactive' ?>">
-                    <i class="fas fa-user-secret"></i> 
-                    Tor: <?= $torDetection['is_tor'] ? 'Ativo' : 'Inativo' ?>
-                    <?php if ($torDetection['is_tor']): ?>
-                        (<?= $torDetection['confidence'] ?>% confiança)
-                    <?php endif; ?>
-                </div>
-                <div class="indicator <?= $torStatus ? 'active' : 'inactive' ?>">
-                    <i class="fas fa-shield-alt"></i> 
-                    Serviço Tor: <?= $torStatus ? 'Online' : 'Offline' ?>
-                </div>
-                <div class="indicator active">
-                    <i class="fas fa-lock"></i> 
-                    HTTPS: Ativo
-                </div>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2><i class="fas fa-shield-alt"></i> ZeeMarket</h2>
+                <p class="mb-0">Acesso Seguro</p>
             </div>
             
-            <form id="loginForm" method="post">
-                <div>
-                    <input class="form-control input-btn" type="text" name="email" id="user" placeholder="Email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"><br>
-                    <input class="form-control input-btn" type="password" name="senha" id="password" placeholder="Digite sua senha" required><br>
-                    
-                    <!-- Opção PGP -->
-                    <div class="form-check text-start my-3">
-                        <input type="checkbox" class="form-check-input" id="usePgp" name="use_pgp" value="1" 
-                               <?= isset($_POST['use_pgp']) ? 'checked' : '' ?> onchange="togglePgpSection()">
-                        <label class="form-check-label" for="usePgp">
-                            <i class="fas fa-key"></i> Usar Autenticação PGP
-                        </label>
+            <div class="login-body">
+                <!-- Mostrar status do Tor -->
+                <?php
+                $torStatus = checkTorConnection();
+                if ($torStatus['connected']): ?>
+                    <div class="alert alert-success">
+                        <i class="fas fa-shield-alt"></i> 
+                        <strong>Conexão Tor Detectada</strong><br>
+                        <small>Confiança: <?= $torStatus['confidence'] ?>%</small>
                     </div>
-                    
-                    <!-- Seção PGP -->
-                    <div class="pgp-section <?= !isset($_POST['use_pgp']) ? 'hidden' : '' ?>" id="pgpSection">
-                        <h6><i class="fas fa-signature"></i> Autenticação PGP</h6>
-                        <div class="mb-2">
-                            <label class="form-label" style="font-size: 12px;">Mensagem/Assinatura PGP:</label>
-                            <textarea class="form-control" name="pgp_message" rows="4" 
-                                      placeholder="Cole aqui sua mensagem assinada PGP..."><?= htmlspecialchars($_POST['pgp_message'] ?? '') ?></textarea>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label" style="font-size: 12px;">Passphrase da Chave:</label>
-                            <input type="password" class="form-control" name="pgp_passphrase" 
-                                   placeholder="Senha da sua chave PGP">
-                        </div>
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle"></i> 
-                            A autenticação PGP adiciona uma camada extra de segurança ao seu login.
-                        </small>
+                <?php else: ?>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>Tor não detectado</strong><br>
+                        <small>Recomendamos usar Tor Browser para maior segurança</small>
                     </div>
-                    
-                    <div class="form-check text-start my-3">
-                        <input type="checkbox" class="form-check-input" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">Lembre-se de Mim</label>
+                <?php endif; ?>
+                
+                <!-- Mensagens de erro/sucesso -->
+                <?php if ($erro): ?>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($erro) ?>
                     </div>
-
-                    <input class="submit btn btn-primary w-100" type="submit" value="Login Seguro">
-                </div>
-            </form>
-            
-            <!-- Mensagens de Status -->
-            <?php if (!empty($success)): ?>
-                <div class="success-message">
-                    <i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (!empty($erro)): ?>
-                <div id="errorContainer" style="color: red; margin-top: 10px;">
-                    <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($erro) ?>
-                </div>
-            <?php endif; ?>
-            
-            <!-- Dicas de Segurança -->
-            <div style="margin-top: 20px; font-size: 12px; color: #6c757d;">
-                <h6>Dicas de Segurança:</h6>
-                <ul style="text-align: left; padding-left: 20px;">
-                    <?php if (!$torDetection['is_tor']): ?>
-                        <li>Use Tor Browser para maior privacidade</li>
-                    <?php endif; ?>
-                    <li>Configure chaves PGP para autenticação segura</li>
-                    <li>Sempre verifique o endereço .onion</li>
-                    <li>Nunca compartilhe suas credenciais</li>
+                <?php endif; ?>
+                
+                <?php if ($sucesso): ?>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <?= htmlspecialchars($sucesso) ?>
+                    </div>
+                <?php endif; ?>
+                
+                <!-- Abas de Login e Cadastro -->
+                <ul class="nav nav-tabs mb-4" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button">
+                            <i class="fas fa-user-plus"></i> Cadastrar
+                        </button>
+                    </li>
                 </ul>
+                
+                <div class="tab-content">
+                    <!-- Formulário de Login -->
+                    <div class="tab-pane fade show active" id="login" role="tabpanel">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope"></i> Email
+                                </label>
+                                <input type="email" name="email" class="form-control" 
+                                       placeholder="seu@email.com" required
+                                       value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-lock"></i> Senha
+                                </label>
+                                <input type="password" name="senha" class="form-control" 
+                                       placeholder="Sua senha" required>
+                            </div>
+                            
+                            <button type="submit" name="login" class="btn btn-primary w-100">
+                                <i class="fas fa-sign-in-alt"></i> Entrar
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Formulário de Cadastro -->
+                    <div class="tab-pane fade" id="register" role="tabpanel">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-user"></i> Nome
+                                </label>
+                                <input type="text" name="nome" class="form-control" 
+                                       placeholder="Seu nome" required
+                                       value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope"></i> Email
+                                </label>
+                                <input type="email" name="email_cadastro" class="form-control" 
+                                       placeholder="seu@email.com" required
+                                       value="<?= htmlspecialchars($_POST['email_cadastro'] ?? '') ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-lock"></i> Senha
+                                </label>
+                                <input type="password" name="senha_cadastro" class="form-control" 
+                                       placeholder="Mínimo 8 caracteres" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-lock"></i> Confirmar Senha
+                                </label>
+                                <input type="password" name="confirmar_senha" class="form-control" 
+                                       placeholder="Confirme sua senha" required>
+                            </div>
+                            
+                            <button type="submit" name="cadastrar" class="btn btn-primary w-100">
+                                <i class="fas fa-user-plus"></i> Cadastrar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Informações de Segurança -->
+                <div class="security-info">
+                    <h6><i class="fas fa-info-circle"></i> Comunicação Segura</h6>
+                    <p class="mb-2">Para enviar mensagens criptografadas, use nossa página de contato com PGP.</p>
+                    <a href="contact.php" class="btn btn-sm btn-outline-light">
+                        <i class="fas fa-key"></i> Contato PGP
+                    </a>
+                </div>
+                
+                <!-- Status do sistema -->
+                <div class="tor-status text-center text-muted">
+                    <small>
+                        <i class="fas fa-server"></i> Sistema Online | 
+                        <i class="fas fa-shield-alt"></i> Conexão Segura
+                    </small>
+                </div>
             </div>
         </div>
     </div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        function togglePgpSection() {
-            const pgpSection = document.getElementById('pgpSection');
-            const usePgp = document.getElementById('usePgp');
-            
-            if (usePgp.checked) {
-                pgpSection.classList.remove('hidden');
-            } else {
-                pgpSection.classList.add('hidden');
-            }
+        // Detectar se está no Tor (básico)
+        if (navigator.userAgent.includes('Firefox') && 
+            !navigator.userAgent.includes('Chrome') && 
+            !navigator.userAgent.includes('Safari')) {
+            console.log('Possível Tor Browser detectado');
         }
         
-        // Inicializar na carga da página
+        // Auto-focus no primeiro campo
         document.addEventListener('DOMContentLoaded', function() {
-            togglePgpSection();
-            
-            // Auto-hide success message
-            const successMsg = document.querySelector('.success-message');
-            if (successMsg) {
-                setTimeout(() => {
-                    successMsg.style.display = 'none';
-                }, 5000);
-            }
-        });
-        
-        // Validação do formulário
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const usePgp = document.getElementById('usePgp').checked;
-            const pgpMessage = document.querySelector('textarea[name="pgp_message"]').value;
-            const pgpPassphrase = document.querySelector('input[name="pgp_passphrase"]').value;
-            
-            if (usePgp && (!pgpMessage.trim() || !pgpPassphrase.trim())) {
-                e.preventDefault();
-                alert('Para usar PGP, você deve preencher a mensagem e a passphrase.');
-                return false;
+            const firstInput = document.querySelector('input[name="email"]');
+            if (firstInput) {
+                firstInput.focus();
             }
         });
     </script>

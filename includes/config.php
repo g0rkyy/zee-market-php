@@ -29,7 +29,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Configurações do Banco de Dados
 $host = "localhost";
 $user = "root";
-$pass = ""; 
+$pass = "123456"; 
 $db = "zee_market";
 
 // Conexão com MySQL

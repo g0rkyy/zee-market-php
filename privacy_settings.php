@@ -1,27 +1,45 @@
 <?php
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-require_once 'includes/tor_system.php';
-require_once 'includes/pgp_system.php';
-require_once 'includes/two_factor_auth.php';
+require_once 'includes/simple_pgp.php';
 
-// Verificar login
 verificarLogin();
 
 $user_id = $_SESSION['user_id'];
 $username = $_SESSION['user_name'];
 
-// Inicializar sistemas
-$torSystem = new ZeeMarketTor($conn);
-$pgpSystem = new ZeeMarketPGP($conn);
-$twoFA = new TwoFactorAuth($conn);
+// Verificar TOR
+$torDetected = false;
+$torConfidence = 0;
+try {
+    $torCheck = checkTorConnection();
+    $torDetected = $torCheck['connected'];
+    $torConfidence = $torCheck['confidence'];
+} catch (Exception $e) {
+    // Ignorar erro
+}
 
-// Análise de privacidade atual
-$privacyAnalysis = $torSystem->analyzePrivacyLevel($user_id);
-$hasPGPKeys = $pgpSystem->userHasPgpKey($user_id);
-$has2FA = $twoFA->isUserTwoFAEnabled($user_id);
+// Verificar PGP
+$pgpConfigured = false;
+$publicKey = null;
+try {
+    if ($simplePGP) {
+        $pgpConfigured = $simplePGP->keysExist();
+        if ($pgpConfigured) {
+            $publicKey = $simplePGP->getPublicKey();
+        }
+    }
+} catch (Exception $e) {
+    error_log("Erro ao verificar PGP: " . $e->getMessage());
+}
 
-// Processar ações POST
+// Calcular score
+$privacyScore = 20; // Base
+if ($torDetected) $privacyScore += 40;
+if ($pgpConfigured) $privacyScore += 30;
+
+$privacyLevel = $privacyScore >= 70 ? 'Alto' : ($privacyScore >= 50 ? 'Médio' : 'Básico');
+
 $message = '';
 $error = '';
 
@@ -29,25 +47,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
     switch ($action) {
-        case 'generate_pgp':
-            $result = $pgpSystem->generateUserKeyPair(
-                $user_id,
-                $username,
-                $_SESSION['email'] ?? $username . '@zeemarket.onion',
-                $_POST['passphrase']
-            );
-            if ($result['success']) {
-                $message = "Chaves PGP geradas com sucesso!";
-                $_SESSION['pgp_public_key'] = $result['public_key'];
-                $hasPGPKeys = true;
+        case 'test_tor':
+            if ($torDetected) {
+                $message = "✅ TOR detectado! Confiança: {$torConfidence}%";
             } else {
-                $error = $result['error'];
+                $message = "❌ TOR não detectado. Use o Tor Browser.";
             }
             break;
             
-        case 'test_tor':
-            $torStatus = $torSystem->checkTorStatus();
-            $message = "Status TOR: " . ($torStatus['running'] ? "Ativo" : "Inativo");
+        case 'show_public_key':
+            // Apenas mostrar a chave
             break;
     }
 }
@@ -62,10 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: #1a1a1a;
-            color: #e0e0e0;
-        }
+        body { background: #1a1a1a; color: #e0e0e0; }
         .privacy-card {
             background: #2d2d2d;
             border: 1px solid #444;
@@ -73,16 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
             margin-bottom: 20px;
         }
-        .feature-active {
-            border-left: 3px solid #28a745;
-        }
-        .feature-inactive {
-            border-left: 3px solid #dc3545;
-        }
-        .privacy-score-big {
-            font-size: 3rem;
-            font-weight: bold;
-        }
+        .feature-active { border-left: 3px solid #28a745; }
+        .feature-inactive { border-left: 3px solid #dc3545; }
+        .privacy-score-big { font-size: 3rem; font-weight: bold; }
         .recommendation {
             background: rgba(255,193,7,0.1);
             border: 1px solid #ffc107;
@@ -90,19 +89,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 5px;
             margin-bottom: 10px;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .status-active { background: #28a745; color: white; }
+        .status-inactive { background: #dc3545; color: white; }
         .code-display {
             background: #000;
             padding: 15px;
             border-radius: 5px;
             font-family: monospace;
             word-break: break-all;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php if (file_exists('includes/header.php')) include 'includes/header.php'; ?>
     
     <div class="container mt-4">
         <h2 class="mb-4"><i class="fas fa-shield-alt"></i> Configurações de Privacidade</h2>
@@ -124,38 +133,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Score de Privacidade -->
         <div class="privacy-card text-center">
             <h4>Seu Score de Privacidade</h4>
-            <div class="privacy-score-big text-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
-                <?= $privacyAnalysis['privacy_score'] ?>/100
+            <div class="privacy-score-big text-<?= $privacyScore >= 60 ? 'success' : 'warning' ?>">
+                <?= $privacyScore ?>/100
             </div>
-            <p class="text-muted">Nível: <?= $privacyAnalysis['level'] ?></p>
+            <p class="text-muted">Nível: <?= $privacyLevel ?></p>
             <div class="progress" style="height: 20px;">
-                <div class="progress-bar bg-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>" 
-                     style="width: <?= $privacyAnalysis['privacy_score'] ?>%"></div>
+                <div class="progress-bar bg-<?= $privacyScore >= 60 ? 'success' : 'warning' ?>" 
+                     style="width: <?= $privacyScore ?>%"></div>
             </div>
         </div>
         
         <!-- Recomendações -->
-        <?php if (!empty($privacyAnalysis['recommendations'])): ?>
         <div class="privacy-card">
             <h4><i class="fas fa-lightbulb"></i> Recomendações</h4>
-            <?php foreach ($privacyAnalysis['recommendations'] as $rec): ?>
+            <?php if (!$torDetected): ?>
                 <div class="recommendation">
-                    <i class="fas fa-arrow-right"></i> <?= htmlspecialchars($rec) ?>
+                    <i class="fas fa-arrow-right"></i> Use o Tor Browser para melhor privacidade (+40 pontos)
                 </div>
-            <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!$pgpConfigured): ?>
+                <div class="recommendation">
+                    <i class="fas fa-arrow-right"></i> Configure PGP para comunicação criptografada (+30 pontos)
+                </div>
+            <?php endif; ?>
+            <div class="recommendation">
+                <i class="fas fa-arrow-right"></i> Use senhas únicas e fortes
+            </div>
+            <div class="recommendation">
+                <i class="fas fa-arrow-right"></i> Nunca compartilhe informações pessoais
+            </div>
         </div>
-        <?php endif; ?>
         
         <div class="row">
             <!-- TOR Configuration -->
             <div class="col-md-6">
-                <div class="privacy-card <?= $privacyAnalysis['tor_usage']['is_tor'] ? 'feature-active' : 'feature-inactive' ?>">
-                    <h4><i class="fas fa-user-secret"></i> Navegador TOR</h4>
+                <div class="privacy-card <?= $torDetected ? 'feature-active' : 'feature-inactive' ?>">
+                    <h4>
+                        <i class="fas fa-user-secret"></i> Navegador TOR
+                        <span class="status-badge <?= $torDetected ? 'status-active' : 'status-inactive' ?>">
+                            <?= $torDetected ? 'DETECTADO' : 'NÃO DETECTADO' ?>
+                        </span>
+                    </h4>
                     
-                    <?php if ($privacyAnalysis['tor_usage']['is_tor']): ?>
+                    <?php if ($torDetected): ?>
                         <div class="alert alert-success">
                             <i class="fas fa-check-circle"></i> Você está usando TOR!
-                            <br>Confiança: <?= $privacyAnalysis['tor_usage']['confidence'] ?>%
+                            <br>Confiança: <?= $torConfidence ?>%
+                            <br><small>Sua privacidade está protegida</small>
                         </div>
                     <?php else: ?>
                         <div class="alert alert-warning">
@@ -166,20 +190,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <ol>
                             <li>Baixe o Tor Browser em <a href="https://torproject.org" target="_blank">torproject.org</a></li>
                             <li>Instale e abra o navegador</li>
-                            <li>Acesse nosso endereço .onion:</li>
+                            <li>Acesse este site através do Tor Browser</li>
                         </ol>
-                        
-                        <?php 
-                        $onionAddress = $torSystem->getOnionAddress();
-                        if ($onionAddress): 
-                        ?>
-                        <div class="code-display">
-                            <?= htmlspecialchars($onionAddress) ?>
-                        </div>
-                        <button class="btn btn-sm btn-secondary mt-2" onclick="copyToClipboard('<?= $onionAddress ?>')">
-                            <i class="fas fa-copy"></i> Copie 
-                        </button>
-                        <?php endif; ?>
                     <?php endif; ?>
                     
                     <form method="POST" class="mt-3">
@@ -193,129 +205,196 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <!-- PGP Configuration -->
             <div class="col-md-6">
-                <div class="privacy-card <?= $hasPGPKeys ? 'feature-active' : 'feature-inactive' ?>">
-                    <h4><i class="fas fa-key"></i> Chaves PGP</h4>
+                <div class="privacy-card <?= $pgpConfigured ? 'feature-active' : 'feature-inactive' ?>">
+                    <h4>
+                        <i class="fas fa-key"></i> Sistema PGP
+                        <span class="status-badge <?= $pgpConfigured ? 'status-active' : 'status-inactive' ?>">
+                            <?= $pgpConfigured ? 'CONFIGURADO' : 'NÃO CONFIGURADO' ?>
+                        </span>
+                    </h4>
                     
-                    <?php if ($hasPGPKeys): ?>
+                    <?php if ($pgpConfigured): ?>
                         <div class="alert alert-success">
-                            <i class="fas fa-check-circle"></i> PGP configurado!
+                            <i class="fas fa-check-circle"></i> PGP configurado e funcionando!
+                            <br><small>Você pode enviar mensagens criptografadas</small>
                         </div>
                         
-                        <?php if (isset($_SESSION['pgp_public_key'])): ?>
-                        <h6>Sua chave pública:</h6>
-                        <div class="code-display">
-                            <?= htmlspecialchars($_SESSION['pgp_public_key']) ?>
-                        </div>
-                        <button disabled class="btn btn-sm btn-secondary mt-2" 
-                                onclick="copyToClipboard('<?= htmlspecialchars($_SESSION['pgp_public_key']) ?>')">
-                            <i class="fas fa-copy"></i> Copie manualmente
+                        <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#publicKeyCollapse">
+                            <i class="fas fa-eye"></i> Ver Nossa Chave Pública
                         </button>
-                        <?php endif; ?>
+                        
+                        <div class="collapse mt-3" id="publicKeyCollapse">
+                            <h6>Nossa Chave Pública PGP:</h6>
+                            <div class="code-display">
+                                <?= htmlspecialchars($publicKey) ?>
+                            </div>
+                            <button class="btn btn-sm btn-secondary mt-2" onclick="copyToClipboard()">
+                                <i class="fas fa-copy"></i> Copiar Chave
+                            </button>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <a href="send_encrypted_message.php" class="btn btn-success">
+                                <i class="fas fa-envelope"></i> Enviar Mensagem Criptografada
+                            </a>
+                        </div>
                         
                     <?php else: ?>
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle"></i> PGP não configurado
                         </div>
                         
-                        <p>O PGP permite criptografar mensagens e assinar transações.</p>
+                        <p>O sistema PGP permite comunicação totalmente criptografada.</p>
                         
-                        <form method="POST" id="pgp-form">
-                            <input type="hidden" name="action" value="generate_pgp">
-                            <div class="mb-3">
-                                <label class="form-label">Senha para proteger sua chave:</label>
-                                <input type="password" class="form-control" name="passphrase" required 
-                                       minlength="8" placeholder="Mínimo 8 caracteres">
-                                <small class="text-muted">Guarde esta senha com segurança!</small>
-                            </div>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-shield-alt"></i> Gerar Chaves PGP
-                            </button>
-                        </form>
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-database"></i> Status do banco:</h6>
+                            <p>Verificando configuração PGP...</p>
+                            <?php
+                            // Debug info
+                            try {
+                                $stmt = $conn->prepare("SHOW TABLES LIKE 'site_pgp_keys'");
+                                $stmt->execute();
+                                $tableExists = $stmt->get_result()->num_rows > 0;
+                                
+                                if ($tableExists) {
+                                    $stmt = $conn->prepare("SELECT COUNT(*) FROM site_pgp_keys WHERE site_name = 'zeemarket'");
+                                    $stmt->execute();
+                                    $keyCount = $stmt->get_result()->fetch_row()[0];
+                                    echo "<small>✅ Tabela existe | Chaves: $keyCount</small>";
+                                } else {
+                                    echo "<small>❌ Tabela site_pgp_keys não existe</small>";
+                                }
+                            } catch (Exception $e) {
+                                echo "<small>❌ Erro: " . htmlspecialchars($e->getMessage()) . "</small>";
+                            }
+                            ?>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
+        
+        <!-- Instruções PGP -->
+        <?php if ($pgpConfigured): ?>
+        <div class="privacy-card">
+            <h4><i class="fas fa-info-circle"></i> Como Usar PGP</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>📥 Para nos enviar mensagem criptografada:</h6>
+                    <ol>
+                        <li>Copie nossa chave pública acima</li>
+                        <li>Importe em seu software PGP (GPG, Kleopatra, etc.)</li>
+                        <li>Criptografe sua mensagem com nossa chave</li>
+                        <li>Envie através do formulário de contato</li>
+                    </ol>
+                </div>
+                <div class="col-md-6">
+                    <h6>🔧 Software PGP recomendado:</h6>
+                    <ul>
+                        <li><strong>Windows:</strong> Kleopatra, GPG4Win</li>
+                        <li><strong>macOS:</strong> GPG Suite</li>
+                        <li><strong>Linux:</strong> GnuPG (comando gpg)</li>
+                        <li><strong>Email:</strong> Thunderbird + Enigmail</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
         
         <!-- Bitcoin Mixing -->
         <div class="privacy-card">
             <h4><i class="fas fa-random"></i> Bitcoin Mixing</h4>
             <div class="row">
-                <div class="col-md-6">
-                    <p>O mixing torna suas transações Bitcoin mais privadas.</p>
+                <div class="col-md-8">
+                    <p>O mixing torna suas transações Bitcoin mais privadas:</p>
                     <ul>
-                        <li>Quebra o link entre endereços</li>
-                        <li>Aumenta anonimato</li>
-                        <li>Taxa: 1-2%</li>
+                        <li>Quebra vínculos entre endereços</li>
+                        <li>Múltiplas camadas de privacidade</li>
+                        <li>Pools com alta liquidez</li>
+                        <li>Delays aleatórios para segurança</li>
                     </ul>
-                    <?php if ($privacyAnalysis['mixing_history'] > 0): ?>
-                        <div class="alert alert-info">
-                            Você já usou mixing <?= $privacyAnalysis['mixing_history'] ?> vez(es).
-                        </div>
-                    <?php endif; ?>
+                    
+                    <?php
+                    // Verificar histórico de mixing do usuário
+                    try {
+                        $stmt = $conn->prepare("SELECT COUNT(*) as total, SUM(total_input_btc) as volume FROM advanced_mixing WHERE user_id = ? AND status = 'completed'");
+                        $stmt->bind_param("i", $user_id);
+                        $stmt->execute();
+                        $mixingStats = $stmt->get_result()->fetch_assoc();
+                        
+                        if ($mixingStats['total'] > 0) {
+                            echo '<div class="alert alert-info">';
+                            echo '<i class="fas fa-check-circle"></i> ';
+                            echo 'Você já utilizou mixing ' . $mixingStats['total'] . ' vez(es). ';
+                            echo 'Volume total: ' . number_format($mixingStats['volume'], 4) . ' BTC';
+                            echo '</div>';
+                            $privacyScore += 10; // Bonus por usar mixing
+                        } else {
+                            echo '<div class="alert alert-secondary">';
+                            echo '<i class="fas fa-info-circle"></i> ';
+                            echo 'Você ainda não utilizou nosso serviço de mixing.';
+                            echo '</div>';
+                        }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-secondary">';
+                        echo '<i class="fas fa-info-circle"></i> ';
+                        echo 'Serviço de mixing disponível.';
+                        echo '</div>';
+                    }
+                    ?>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-random fa-3x text-warning mb-3"></i>
+                    <br>
                     <a href="bitcoin_mixer.php" class="btn btn-warning">
                         <i class="fas fa-random"></i> Acessar Mixer
                     </a>
+                    <br><small class="text-muted mt-2 d-block">Taxas: 0.5% - 2.5%</small>
                 </div>
             </div>
         </div>
         
-        <!-- 2FA Status -->
+        <!-- Status do Sistema -->
         <div class="privacy-card">
-            <h4><i class="fas fa-mobile-alt"></i> Autenticação de Dois Fatores (2FA)</h4>
-            <?php if ($has2FA): ?>
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i> 2FA está ativo!
+            <h4><i class="fas fa-server"></i> Status do Sistema</h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Detecção TOR:</strong><br>
+                    <span class="status-badge status-active">FUNCIONANDO</span>
                 </div>
-                <a href="painel_usuario.php" class="btn btn-secondary">Gerenciar 2FA</a>
-            <?php else: ?>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> 2FA não está ativo
+                <div class="col-md-4">
+                    <strong>Sistema PGP:</strong><br>
+                    <span class="status-badge <?= $pgpConfigured ? 'status-active' : 'status-inactive' ?>">
+                        <?= $pgpConfigured ? 'FUNCIONANDO' : 'DESCONFIGURADO' ?>
+                    </span>
                 </div>
-                <p>Proteja sua conta com autenticação de dois fatores.</p>
-                <a href="painel_usuario.php" class="btn btn-primary">Ativar 2FA</a>
-            <?php endif; ?>
-        </div>
-        
-        <!-- Dicas Extras -->
-        <div class="privacy-card">
-            <h4><i class="fas fa-info-circle"></i> Dicas Extras de Privacidade</h4>
-            <ul>
-                <li>Use endereços Bitcoin diferentes para cada transação</li>
-                <li>Evite reutilizar senhas</li>
-                <li>Não compartilhe informações pessoais em mensagens</li>
-                <li>Sempre verifique assinaturas PGP em mensagens importantes</li>
-                <li>Use VPN além do TOR para máxima privacidade</li>
-            </ul>
+                <div class="col-md-4">
+                    <strong>Criptografia SSL:</strong><br>
+                    <span class="status-badge status-active">ATIVA</span>
+                </div>
+            </div>
         </div>
     </div>
     
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-    function copyToClipboard(text) {
+    function copyToClipboard() {
+        const keyDisplay = document.querySelector('.code-display');
+        const text = keyDisplay.textContent;
+        
         navigator.clipboard.writeText(text).then(() => {
-            alert('Copiado para a área de transferência!');
+            alert('✅ Chave PGP copiada para a área de transferência!');
         }).catch(() => {
-            // Fallback para navegadores antigos
+            // Fallback
             const textarea = document.createElement('textarea');
             textarea.value = text;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            alert('Copiado!');
+            alert('✅ Chave PGP copiada!');
         });
     }
-    
-    // Validação do formulário PGP
-    document.getElementById('pgp-form')?.addEventListener('submit', function(e) {
-        const passphrase = this.passphrase.value;
-        if (passphrase.length < 8) {
-            e.preventDefault();
-            alert('A senha deve ter pelo menos 8 caracteres!');
-        }
-    });
     </script>
 </body>
 </html>

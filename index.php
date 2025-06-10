@@ -1,23 +1,23 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php'; 
+// ✅ CORREÇÃO: Comentar require problemáticos
+// require_once __DIR__ . '/vendor/autoload.php'; 
 
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-require_once 'includes/tor_system.php';
-require_once 'includes/pgp_system.php';
+// ❌ COMENTADOS: Arquivos que causam erro
+// require_once 'includes/tor_system.php';
+// require_once 'includes/pgp_system.php';
 
-// Inicializar sistemas de privacidade
-$torSystem = new ZeeMarketTor($conn);
-$torMiddleware = new TorMiddleware($torSystem);
-$torDetection = $torMiddleware->handle(); // Detecta e configura headers automaticamente
+// ✅ DETECÇÃO TOR SIMPLES (usando função do functions.php)
+$torDetection = checkTorConnection();
+$isTorUser = $torDetection['connected'];
 
-// ✅ BONUS PARA USUÁRIOS TOR
-$isTorUser = $torDetection['is_tor'];
-$torBonus = $isTorUser ? 0.02 : 0; // 2% desconto para usuários TOR
-// Configuração de PGP
-$pgpSystem = new ZeeMarketPGP($conn);
-$pgpMiddleware = new PGPMiddleware($pgpSystem);
-$pgpDetection = $pgpMiddleware->handle(); // Detecta e configura headers automaticamente
+
+// ❌ COMENTADOS: Sistemas que não existem ainda
+// $torSystem = new ZeeMarketTor($conn);
+// $torMiddleware = new TorMiddleware($torSystem);
+// $pgpSystem = new ZeeMarketPGP($conn);
+// $pgpMiddleware = new PGPMiddleware($pgpSystem);
 
 // Inicializa variáveis para evitar erros
 $produtos = null;
@@ -65,6 +65,7 @@ try {
 }
 ?>
 <!DOCTYPE html>
+<html lang="pt-BR">
     <head>
         <title>ZeeMarket</title>
         <link rel="icon" href="assets/images/capsule.png" type="image/x-icon">
@@ -90,37 +91,53 @@ try {
                 fill: white;
             }
             .crypto-price {
-            display: flex;
-            align-items: center;
-            margin: 2px 0;
-            font-size: 0.8em;
-            padding: 2px;
-            border-radius: 3px;
-        }
-        .crypto-price img {
-            width: 30px;
-            height: 30px;
-            margin-right: 4px;
+                display: flex;
+                align-items: center;
+                margin: 2px 0;
+                font-size: 0.8em;
+                padding: 2px;
+                border-radius: 3px;
+            }
+            .crypto-price img {
+                width: 30px;
+                height: 30px;
+                margin-right: 4px;
+            }
             
-        }
-        
+            /* ✅ NOVO: Indicador Tor */
+            .tor-indicator {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-size: 0.8em;
+                z-index: 1000;
+            }
+            .tor-connected {
+                background: rgba(40, 167, 69, 0.9);
+                color: white;
+            }
+            .tor-disconnected {
+                background: rgba(220, 53, 69, 0.9);
+                color: white;
+            }
         </style>
     </head>
     <body>
+
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <!-- Brand/logo -->
             <a class="navbar-brand ms-5" href="#">
                 <span><img src="assets/icons2/zebra_branca.svg" class="zee_icon" alt=""></span>
                 <span class="title">[Zee-Market]</span><br>
-
             </a>
             <!-- Navegação -->
              <ul class="navbar-nav ">
                 <li class="nav-item">
-                    <a class="nav-link gap-2 align-items-center" href="index.html">
-                    
-                    <span>Home</span>
-                </a>
+                    <a class="nav-link gap-2 align-items-center" href="index.php">
+                        <span>Home</span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="FAQ.html">FAQ</a>
@@ -142,9 +159,7 @@ try {
                         <span class="bi bi-shield-lock"></span>
                         <span>Segurança</span>
                     </a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="vendedores.php">
-                            <span>Vender</span>
+                </li>
              </ul>
              <div class="dropdown">
                 <button class="btn btn-secondary btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -163,30 +178,9 @@ try {
                     <button id="search-button" class="btn btn-outline-success" type="button">
                         <span class="bi bi-search"></span>
                     </button>
+                </form>
        </nav>
 
-
-        <!--  AREA DE ALERTAS 
-<div class="alert-overlay">
-    
-    <div class="alert alert-warning alert-dismissible fade show mb-0 rounded-0" role="alert">
-      <strong>Atenção!</strong> O site ainda esta em construção, algumas funcionalidades podem não funcionar corretamente.
-      <br>Estamos trabalhando para melhorar a experiência de compra e venda.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    
-    <div class="alert alert-warning alert-dismissible fade show rounded-0" role="alert">
-      <strong>Atenção!</strong> O site não esta bem otimizado para dispositivos moveis, 
-      utilize um computador para uma melhor experiência.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div class="alert alert-success alert-dismissible fade show rounded-0" role="alert">
-      <strong>Atenção!</strong> Use VPN para utilizar e fazer compras, para que sua
-      experiência seja individual e o mais segura possível.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-    </div>
-  </div> -->
         <!--  AREA DE PERFIL  -->
         <div id="conteudo-principal">
            <div id="side-bar">
@@ -204,10 +198,16 @@ try {
                         <span class="text-black">Produtos</span>
                     </a>
                 </div>
-                <div class="nav-item">
-                    <a href="side-bar/vendedores.html">
+                <div class="nav-item bg-warning">
+                    <a href="vendedores.php">
                         <span class="bi bi-coin"></span>
-                        <span>Vendedores</span>
+                        <span>Vender</span>
+                    </a>
+                </div>
+                <div class="nav-item bg-outline-info">
+                    <a href="contact.php">
+                    <span class="bi bi-key"></span>
+                        <span>Contact PGP</span>
                     </a>
                 </div>
                 <div class="nav-item">
@@ -228,12 +228,19 @@ try {
                         <span>Afiliado</span>
                     </a>
                 </div>
-        
         </div>
 
         <!-- AREA DE PAGINAÇÃO -->
         <div id="paginationProducts">
                 <h2>Bem-Vindo ao Zee-Market, seu site libertário predileto!</h2>
+                
+                <!-- ✅ NOVO: Aviso sobre erro de banco -->
+                <?php if ($erro_bd): ?>
+                    <div class="alert alert-warning">
+                        <strong>Aviso:</strong> Alguns produtos podem não estar sendo exibidos devido a problemas no banco de dados.
+                    </div>
+                <?php endif; ?>
+
                 <div id="cardContainer" class="items">
                     <?php if ($produtos && $produtos->num_rows > 0): ?>
                         <?php while ($produto = $produtos->fetch_assoc()): ?> 
@@ -247,19 +254,28 @@ try {
                                         <div class="crypto-price">
                                             <span><img src="assets/images/btc.svg"></span>
                                             <span><?= number_format($produto['preco_btc'], 8) ?> BTC</span>
+                                            <?php if ($torBonus > 0): ?>
+                                                <small class="text-success">(-<?= ($torBonus * 100) ?>%)</small>
+                                            <?php endif; ?>
                                         </div>
                                         
                                         <div class="crypto-price">
-                                        <span><img src="assets/images/eth.svg"></span>
+                                            <span><img src="assets/images/eth.svg"></span>
                                             <span><?= number_format($produto['preco_eth'], 8) ?> ETH</span>
+                                            <?php if ($torBonus > 0): ?>
+                                                <small class="text-success">(-<?= ($torBonus * 100) ?>%)</small>
+                                            <?php endif; ?>
                                         </div>
                                         
                                         <div class="crypto-price">
-                                        <span><img src="assets/images/xmr.svg"></span>
+                                            <span><img src="assets/images/xmr.svg"></span>
                                             <span><?= number_format($produto['preco_xmr'], 8) ?> XMR</span>
+                                            <?php if ($torBonus > 0): ?>
+                                                <small class="text-success">(-<?= ($torBonus * 100) ?>%)</small>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                                                        <div class="mt-2">
+                                    <div class="mt-2">
                                         <small class="text-muted">
                                             Vendedor: <?= htmlspecialchars($produto['vendedor_nome'] ?? 'Anônimo') ?>
                                         </small>
@@ -270,11 +286,13 @@ try {
                     <?php else: ?>
                         <div id="no_results">
                             <p>Nenhum produto encontrado</p>
+                            <?php if ($erro_bd): ?>
+                                <p class="text-muted">Verifique a conexão com o banco de dados.</p>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>
             </div>
-        </div>  
 
             <!-- Paginação Dinâmica -->
             <?php if ($total_paginas > 1): ?>
@@ -305,10 +323,18 @@ try {
                 <a href="">Apoie a nossa causa</a>
             </div>
         </div>
-    </div>
 
     <script src="assets/bootstrap5/js/bootstrap.bundle.js"></script>
-    <script src="assets/js/my_script.js" defer></script>
-    <script src="assets/js/item.js" defer></script>
+    <script src="assets/js/my_script.js"></script>
+    <script src="assets/js/item.js"></script>
+    
+    <!-- ✅ NOVO: Script para atualizar status Tor -->
+    <script>
+        // Atualizar indicador Tor a cada 30 segundos
+        setInterval(function() {
+            // Aqui poderia fazer uma requisição AJAX para verificar status atualizado
+            console.log('Tor Status: <?= $isTorUser ? "Connected" : "Disconnected" ?>');
+        }, 30000);
+    </script>
 </body>
 </html>

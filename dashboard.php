@@ -2,29 +2,11 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
-
 // IMPORTANTE: Incluir config.php PRIMEIRO
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-// ✅ ADICIONAR SISTEMAS DE PRIVACIDADE
-require_once 'includes/tor_system.php';
-require_once 'includes/pgp_system.php';
 
-// ✅ INICIALIZAR SISTEMAS
-$torSystem = new ZeeMarketTor($conn);
-$pgpSystem = new ZeeMarketPGP($conn);
-
-// Analisar privacidade do usuário
-$privacyAnalysis = $torSystem->analyzePrivacyLevel($user_id);
-$hasPGPKeys = $pgpSystem->userHasPgpKey($user_id);
-
-// Gerar token CSRF se não existir
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
-// Verificar login
+// Verificar login ANTES de qualquer coisa
 verificarLogin();
 
 // Se chegou aqui, o usuário está logado
@@ -33,6 +15,34 @@ $user_id = $_SESSION['user_id'];
 // Gerar token CSRF se não existir
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// ✅ SISTEMAS DE PRIVACIDADE - COM VERIFICAÇÃO DE ERRO
+$torSystem = null;
+$pgpSystem = null;
+$privacyAnalysis = null;
+$hasPGPKeys = false;
+
+try {
+    // Tentar incluir e inicializar sistemas de privacidade
+    if (file_exists('includes/tor_system.php')) {
+        require_once 'includes/tor_system.php';
+        if (class_exists('ZeeMarketTor')) {
+            $torSystem = new ZeeMarketTor($conn);
+            $privacyAnalysis = $torSystem->analyzePrivacyLevel($user_id);
+        }
+    }
+    
+    if (file_exists('includes/pgp_system.php')) {
+        require_once 'includes/pgp_system.php';
+        if (class_exists('ZeeMarketPGP')) {
+            $pgpSystem = new ZeeMarketPGP($conn);
+            $hasPGPKeys = $pgpSystem->userHasPgpKey($user_id);
+        }
+    }
+} catch (Exception $e) {
+    error_log("Erro ao inicializar sistemas de privacidade: " . $e->getMessage());
+    // Continuar sem os sistemas de privacidade
 }
 
 // Query modificada para incluir múltiplas criptomoedas
@@ -93,7 +103,7 @@ try {
     $recent_transactions = [];
 }
 
-// Buscar cotações atuais
+// Buscar cotações atuais - considere usar uma API real aqui
 try {
     $crypto_rates = [
         'bitcoin' => ['usd' => 45000, 'brl' => 240000],
@@ -108,6 +118,15 @@ try {
         'monero' => ['usd' => 180, 'brl' => 950]
     ];
 }
+
+// Status de privacidade para exibição
+$privacy_status = [
+    'tor_connected' => $privacyAnalysis['connected'] ?? false,
+    'tor_confidence' => $privacyAnalysis['confidence'] ?? 0,
+    'pgp_enabled' => $hasPGPKeys,
+    'security_level' => getSecurityLevel()
+];
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

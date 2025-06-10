@@ -3852,3 +3852,13 @@ Stack trace:
 [08-Jun-2025 19:50:47 America/Sao_Paulo] [WARNING] Undefined array key "action" in C:\xampp\htdocs\ecommerceZEE\includes\tor_system.php on line 785
 [08-Jun-2025 19:50:49 America/Sao_Paulo] Erro na requisição Tor: Erro cURL: Failed to connect to 127.0.0.1 port 9050 after 2047 ms: Couldn't connect to server
 [08-Jun-2025 19:50:50 America/Sao_Paulo] Login bem-sucedido para usuário ID: 12
+[10-Jun-2025 19:43:16 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'passphrase' in 'field list' in /var/www/html/zee-market-php/insert_keys.php:25
+Stack trace:
+#0 /var/www/html/zee-market-php/insert_keys.php(25): mysqli->prepare()
+#1 {main}
+  thrown in /var/www/html/zee-market-php/insert_keys.php on line 25
+[10-Jun-2025 19:56:07 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'passphrase' in 'field list' in /var/www/html/zee-market-php/fix_pgp_db.php:20
+Stack trace:
+#0 /var/www/html/zee-market-php/fix_pgp_db.php(20): mysqli->prepare()
+#1 {main}
+  thrown in /var/www/html/zee-market-php/fix_pgp_db.php on line 20
