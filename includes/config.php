@@ -26,11 +26,15 @@ if (!file_exists(__DIR__ . '/logs')) {
 }
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+
 // Configurações do Banco de Dados
-$host = "localhost";
-$user = "root";
-$pass = "123456"; 
-$db = "zee_market";
+$host = "DB_HOST";
+$user = "DB_USER";
+$pass = "DB_PASS"; 
+$db = "DB_NAME";
 
 // Conexão com MySQL
 try {

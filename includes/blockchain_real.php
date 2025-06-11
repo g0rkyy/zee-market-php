@@ -7,6 +7,8 @@
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 use kornrunner\Keccak;
 
 class ZeeMarketBlockchain {
@@ -19,11 +21,11 @@ class ZeeMarketBlockchain {
         
         $this->config = [
             // SUAS CHAVES DE API REAIS
-            'blockcypher_token' => '1a406e8d527943418bd99f7afaf3d461',
-            'etherscan_token' => 'D43Q7D5AAG2V4YSVXMVHEQ2NUDECJMFKKJ',
+            'blockcypher_token' => 'BLOCKCYPHER_API_KEY',
+            'etherscan_token' => 'ETHERSCAN_API_KEY',
             
             // CONFIGURAÇÕES DE PRODUÇÃO
-            'platform_wallet' => 'bc1qxvkeglgc745f7ekah7w4evkjg65j5qm0n3ex9m',
+            'platform_wallet' => 'PLATFORM_API_KEY',
             'platform_fee' => 0.025, // 2.5%
             'min_confirmations' => 1,
             

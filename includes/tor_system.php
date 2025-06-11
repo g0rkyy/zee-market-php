@@ -7,6 +7,9 @@
 
 require_once __DIR__ . '/config.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 class ZeeMarketTor {
     private $conn;
     private $torConfig;
@@ -23,7 +26,7 @@ class ZeeMarketTor {
         $this->torConfig = [
             'socks_proxy' => '127.0.0.1:9050',
             'control_port' => '127.0.0.1:9051',
-            'control_password' => 'zee_tor_control_2024',
+            'control_password' => 'TOR_CONTROL_PASSWORD',
             'hidden_service_dir' => '/var/lib/tor/zeemarket/',
             'hidden_service_port' => '80 127.0.0.1:8080',
             'data_directory' => '/var/lib/tor/',

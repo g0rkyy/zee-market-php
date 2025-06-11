@@ -1,8 +1,0 @@
-{
-    "timestamp": "2025-06-03 21:18:13",
-    "platform_wallet": "bc1qxvkeglgc745f7ekah7w4evkjg65j5qm0n3ex9m",
-    "webhook_url": "https:\/\/localhost\/btc\/webhook.php",
-    "webhook_secret": "ae7b7ef93c4f4fdeea1a3000785afc7fd047587ede5f9ab4ab9e499be4c1f2d4",
-    "fee_percentage": "2.5%",
-    "mode": "REAL - Transa\u00e7\u00f5es com blockchain"
-}

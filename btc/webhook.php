@@ -1,9 +1,4 @@
 <?php
-/**
- * WEBHOOK REAL PARA PROCESSAR PAGAMENTOS
- * Local: btc/webhook.php ou webhook.php
- */
-// Adicione no início do arquivo
 $webhookSecret = hash('sha256', 'ZeeMarket_' . $_SERVER['HTTP_HOST'] . '_2024');
 
 // Verificar assinatura

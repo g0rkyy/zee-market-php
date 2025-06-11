@@ -6,10 +6,12 @@
  */
 
 require_once '../includes/config.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 class RealBlockchainAPI {
-    private $btc_api_key = '1a406e8d527943418bd99f7afaf3d461'; // Coloque sua chave do BlockCypher aqui
-    private $eth_api_key = 'D43Q7D5AAG2V4YSVXMVHEQ2NUDECJMFKKJ'; // Coloque sua chave do Etherscan aqui
+    private $btc_api_key = 'BLOCKCYPHER_API_KEY'; // BlockCypher --- KEY
+    private $eth_api_key = 'ETHERSCAN_API_KEY'; // Etherscan --- KEY 
     
     /**
      * Verificar depósitos Bitcoin REAIS
