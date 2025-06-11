@@ -52,6 +52,16 @@ try {
     die("Sistema temporariamente indisponível. Tente novamente em alguns minutos.");
 }
 
+    // =============================================
+// CONFIGURAÇÕES GERAIS DO SITE
+// =============================================
+define('SITE_NAME', 'Zee-Market');
+define('SITE_URL', 'http://localhost'); // Futuramente, nosso endereço .onion
+define('DEBUG_MODE', true);              // Mudar para false em produção
+
+// CHAVE PÚBLICA MESTRA (XPUB) PARA CARTEIRA DE DEPÓSITOS BTC
+define('MASTER_PUBLIC_KEY', 'zpub6nMVW3iQ5Sq3VNdjEhFcKYXiNZWW7RCiMydEyPMZ82PKnKaCursZUgCwtYQadRtjonR3Vg3uDn2ZuTGZpdNKcWyNPXtvK7P2oSdsaZXDAax'); // <-- COLE SUA XPUB REAL AQUI
+
 // Configurações Bitcoin
 $blockchainConfig = [
     // BlockCypher API - Gratuita até 3 requests/segundo

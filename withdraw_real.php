@@ -1,341 +1,118 @@
 <?php
-/**
- * GUIA DE INTEGRAÇÃO - SISTEMA DE SAQUE REAL
- * Como integrar o secure_withdrawal.php no seu projeto ZeeMarket
- */
+// Zee-Market - Sistema de Saque Seguro (Modelo Semi-Manual)
+// Versão 2.0 - Hardened
 
-// ============================================
-// 1. SUBSTITUIR O REQUIRE QUEBRADO
-// ============================================
+session_start();
 
-// ❌ NO ARQUIVO paste.txt você tem isto (QUEBRADO):
-// require_once __DIR__ . '/real_withdrawal_system.php';
-
-// ✅ SUBSTITUA POR:
-require_once __DIR__ . '/includes/secure_withdrawal_v2.php';
-
-// ============================================
-// 2. CRIAR PÁGINA DE SAQUE (withdraw_real.php)
-// ============================================
-?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Saque de Criptomoedas - ZeeMarket</title>
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <style>
-        /* Adicione isso no seu arquivo CSS existente ou crie um novo */
-:root {
-  --primary: #6c5ce7;
-  --secondary: #a29bfe;
-  --dark: #1e272e;
-  --darker: #0f1519;
-  --light: #f5f6fa;
-  --success: #00b894;
-  --danger: #d63031;
-  --warning: #fdcb6e;
-  --info: #0984e3;
-}
-
-body {
-  background-color: var(--darker);
-  color: var(--light);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.container {
-  max-width: 1200px;
-}
-
-.card {
-  background-color: var(--dark);
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-  margin-bottom: 20px;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card-header {
-  background-color: rgba(108, 92, 231, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 600;
-}
-
-.card-body {
-  padding: 1.5rem;
-}
-
-h2, h3, h4, h5 {
-  color: var(--light);
-  font-weight: 600;
-}
-
-h2 {
-  margin-bottom: 1.5rem;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 50px;
-  height: 3px;
-  background: var(--primary);
-}
-
-.form-control, .form-select {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--light);
-  padding: 10px 15px;
-}
-
-.form-control:focus, .form-select:focus {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: var(--primary);
-  color: var(--light);
-  box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
-}
-
-.form-text {
-  color: rgba(255, 255, 255, 0.6) !important;
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  border: none;
-  padding: 10px 25px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #5649c0;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
-}
-
-.alert {
-  border: none;
-  border-left: 4px solid;
-}
-
-.alert-success {
-  background-color: rgba(0, 184, 148, 0.1);
-  border-left-color: var(--success);
-  color: #b8f2e6;
-}
-
-.alert-danger {
-  background-color: rgba(214, 48, 49, 0.1);
-  border-left-color: var(--danger);
-  color: #f8c3c3;
-}
-
-.alert-info {
-  background-color: rgba(9, 132, 227, 0.1);
-  border-left-color: var(--info);
-  color: #c3e3f8;
-}
-
-.alert-warning {
-  background-color: rgba(253, 203, 110, 0.1);
-  border-left-color: var(--warning);
-  color: #f8e8c3;
-}
-
-/* Efeitos para os cards de saldo */
-.card .card-body {
-  transition: all 0.3s ease;
-}
-
-.card .card-body:hover {
-  background-color: rgba(108, 92, 231, 0.05);
-}
-
-/* Animação suave para o formulário */
-form {
-  animation: fadeIn 0.5s ease;
-}
-.form-label{
-    color: white;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .card {
-    margin-bottom: 15px;
-  }
-  
-  h2 {
-    font-size: 1.8rem;
-  }
-}
-    </style>
-</head>
-<body>
-<?php
+// Inclui nossos arquivos de configuração e funções essenciais.
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-require_once 'includes/secure_withdrawal_v2.php';
+require_once 'includes/SecurityLogger.php';
 
-// Verificar se está logado
-verificarLogin();
-
-$message = '';
-$messageType = 'info';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $userId = $_SESSION['user_id'];
-        $crypto = sanitizeInput($_POST['crypto']);
-        $toAddress = sanitizeInput($_POST['to_address']);
-        $amount = floatval($_POST['amount']);
-        
-        // Processar saque real
-        $secureWithdrawal = new SecureWithdrawalSystemV2($conn);
-        $result = $secureWithdrawal->processSecureWithdrawal(
-            $userId,
-            $toAddress,
-            $amount,
-            $crypto,
-            $_POST['2fa_code'] // Adicione campo 2FA no formulário
-        );
-        
-        if ($result['success']) {
-            $message = "✅ " . $result['message'] . "<br>";
-            $message .= "🔗 <a href='" . $result['explorer_url'] . "' target='_blank'>Ver na Blockchain</a><br>";
-            $message .= "⏱️ Confirmação estimada: " . $result['estimated_confirmation'];
-            $messageType = 'success';
-        } else {
-            $message = "❌ " . $result['error'];
-            $messageType = 'danger';
-        }
-        
-    } catch (Exception $e) {
-        $message = "❌ Erro: " . $e->getMessage();
-        $messageType = 'danger';
-    }
+// Redireciona para o login se o usuário não estiver autenticado. A segurança começa aqui.
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
 }
 
-// Obter saldos do usuário
-$userBalance = getUserWalletInfo($_SESSION['user_id']);
+$user_id = $_SESSION['user_id'];
+$securityLogger = new SecurityLogger();
+
+// Apenas processa se o método for POST, para evitar acessos diretos ao script.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    // Validamos e sanitizamos as entradas do usuário. Nunca confie nos dados recebidos.
+    $amount_str = $_POST['amount'] ?? '0';
+    $address = trim($_POST['address'] ?? '');
+
+    // Converte o valor para um formato numérico padronizado.
+    $amount = (float) str_replace(',', '.', $amount_str);
+
+    // Validação rigorosa dos dados de entrada.
+    if ($amount <= 0) {
+        header("Location: dashboard.php?error=" . urlencode("Valor de saque inválido."));
+        exit();
+    }
+
+    if (empty($address) || strlen($address) > 255) { // Validação básica de endereço. Idealmente, usaríamos uma regex mais completa.
+        header("Location: dashboard.php?error=" . urlencode("Endereço de destino inválido."));
+        exit();
+    }
+
+    // =================================================================================
+    // INÍCIO DA ZONA CRÍTICA - TRANSAÇÃO COM O BANCO DE DADOS
+    // Usamos uma transação para garantir que as operações sejam atômicas (ou tudo funciona, ou nada é alterado).
+    // =================================================================================
+
+    $mysqli->begin_transaction();
+
+    try {
+        // Passo 1: Obter o saldo do usuário com um bloqueio de escrita (FOR UPDATE).
+        // Isso impede que o usuário faça duas solicitações de saque ao mesmo tempo (condição de corrida),
+        // gastando o mesmo saldo duas vezes.
+        $stmt_get_balance = $mysqli->prepare("SELECT btc_balance FROM users WHERE id = ? FOR UPDATE");
+        $stmt_get_balance->bind_param("i", $user_id);
+        $stmt_get_balance->execute();
+        $result = $stmt_get_balance->get_result();
+        $user = $result->fetch_assoc();
+        
+        if (!$user) {
+            throw new Exception("Usuário não encontrado.");
+        }
+
+        $current_balance = (float) $user['btc_balance'];
+
+        // Passo 2: Verificar se o saldo é suficiente.
+        if ($current_balance < $amount) {
+            header("Location: dashboard.php?error=" . urlencode("Saldo insuficiente para completar o saque."));
+            $mysqli->rollback(); // Reverte a transação mesmo que nada tenha sido alterado. Boa prática.
+            exit();
+        }
+
+        // Passo 3: Debitar o valor do saldo INTERNO do usuário.
+        $new_balance = $current_balance - $amount;
+        $stmt_update_balance = $mysqli->prepare("UPDATE users SET btc_balance = ? WHERE id = ?");
+        $stmt_update_balance->bind_param("di", $new_balance, $user_id);
+        $stmt_update_balance->execute();
+
+        // Passo 4: Inserir o registro do pedido de saque na nossa nova tabela 'pedidos_saque'.
+        // O status 'pendente' sinaliza para nós (administradores) que esta solicitação precisa ser processada manualmente.
+        $stmt_insert_request = $mysqli->prepare("INSERT INTO pedidos_saque (user_id, valor_btc, endereco_destino, status) VALUES (?, ?, ?, 'pendente')");
+        $stmt_insert_request->bind_param("ids", $user_id, $amount, $address);
+        $stmt_insert_request->execute();
+        
+        // Passo 5: Se todas as operações no banco de dados foram bem-sucedidas, nós confirmamos as alterações.
+        $mysqli->commit();
+
+        // Logamos o evento de segurança para nosso controle.
+        $securityLogger->logSecurityEvent('Pedido de Saque Criado', $user_id, 'INFO', $_SERVER['REMOTE_ADDR']);
+
+        // Redireciona o usuário com uma mensagem de sucesso.
+        header("Location: dashboard.php?success=" . urlencode("Seu pedido de saque foi recebido e está sendo processado. Os fundos serão enviados em breve."));
+        exit();
+
+    } catch (Exception $e) {
+        // Em caso de QUALQUER erro durante o processo, revertemos TODAS as alterações no banco de dados.
+        $mysqli->rollback();
+
+        // Logamos o erro para investigação posterior.
+        $securityLogger->logSecurityEvent('Falha Crítica no Pedido de Saque', $user_id, 'CRITICAL', $_SERVER['REMOTE_ADDR'], $e->getMessage());
+
+        // Informa o usuário sobre o erro.
+        header("Location: dashboard.php?error=" . urlencode("Ocorreu um erro inesperado ao processar sua solicitação. Por favor, tente novamente mais tarde."));
+        exit();
+    }
+
+} else {
+    // Se alguém tentar acessar o script diretamente via GET, redireciona.
+    header("Location: dashboard.php");
+    exit();
+}
+
+// =================================================================================
+// FIM DO SCRIPT
+// Observe que toda a lógica perigosa de chamar APIs de blockchain,
+// manusear chaves privadas ou assinar transações foi COMPLETAMENTE REMOVIDA.
+// A responsabilidade do servidor agora é apenas gerenciar o banco de dados de forma segura.
+// =================================================================================
 ?>
-
-<div class="container mt-4">
-    <h2>Saque de Criptomoedas</h2>
-    
-    <?php if ($message): ?>
-    <div class="alert alert-<?= $messageType ?>" role="alert">
-        <?= $message ?>
-    </div>
-    <?php endif; ?>
-    
-    <!-- Saldos Disponíveis -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5>Bitcoin (BTC)</h5>
-                    <h3><?= number_format($userBalance['btc_balance'], 8) ?> BTC</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5>Ethereum (ETH)</h5>
-                    <h3><?= number_format($userBalance['eth_balance'], 6) ?> ETH</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5>Monero (XMR)</h5>
-                    <h3><?= number_format($userBalance['xmr_balance'], 6) ?> XMR</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Formulário de Saque -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Realizar Saque</h4>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="crypto" class="form-label">Criptomoeda</label>
-                            <select class="form-select" id="crypto" name="crypto" required>
-                                <option value="BTC">Bitcoin (BTC)</option>
-                                <option value="ETH">Ethereum (ETH)</option>
-                                <option value="XMR">Monero (XMR)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Valor</label>
-                            <input type="number" step="0.00000001" class="form-control" 
-                                   id="amount" name="amount" required>
-                            <div class="form-text">
-                                Mínimo: BTC 0.0001, ETH 0.001, XMR 0.01
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="to_address" class="form-label">Endereço de Destino</label>
-                    <input type="text" class="form-control" id="to_address" 
-                           name="to_address" required 
-                           placeholder="Digite o endereço da carteira de destino">
-                </div>
-                <div class="mb-3">
-    <label for="2fa_code" class="form-label">Código 2FA</label>
-    <input type="text" class="form-control" id="2fa_code" 
-           name="2fa_code" required 
-           placeholder="Digite o código do seu autenticador">
-</div>
-                
-                <div class="alert alert-warning">
-                    <h6>⚠️ Importante:</h6>
-                    <ul class="mb-0">
-                        <li>Verifique o endereço com cuidado - transações são irreversíveis</li>
-                        <li>Taxa de rede será deduzida automaticamente</li>
-                        <li>Limite: 5 saques por hora</li>
-                        <li>Processamento pode levar alguns minutos</li>
-                    </ul>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-lg">
-                    Processar Saque
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script src="assets/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-<?php
