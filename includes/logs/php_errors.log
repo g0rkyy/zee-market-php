@@ -303,3 +303,9 @@ Stack trace:
 [14-Jun-2025 15:04:34 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
 [14-Jun-2025 15:04:34 America/Sao_Paulo] [NOTICE] session_start(): Ignoring session_start() because a session is already active (started from /var/www/html/zee-market-php/includes/functions.php on line 6) in /var/www/html/zee-market-php/login.php on line 8
 [14-Jun-2025 15:04:41 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
+[14-Jun-2025 15:24:11 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
+[14-Jun-2025 15:24:15 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
+[14-Jun-2025 15:24:17 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
+[14-Jun-2025 15:24:18 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
+[14-Jun-2025 15:24:22 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
+[14-Jun-2025 15:25:26 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
