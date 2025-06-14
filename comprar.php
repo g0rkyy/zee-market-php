@@ -29,16 +29,25 @@ if ($user_logged_in) {
 }
 
 // Obter cotação atual do Bitcoin
-function getBitcoinRate() {
+function getBitcoinRate($db_connection) {
+    if (!$db_connection) {
+        return 1; // Retorna 1 para evitar divisão por zero se a conexão for inválida
+    }
     
-    $stmt = $conn->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
+    $stmt = $db_connection->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
+    if (!$stmt) return 1;
+
     $stmt->execute();
     $result = $stmt->get_result();
     $rate = $result->fetch_assoc();
     $stmt->close();
+    
+    // Retorna o valor encontrado ou 1 para evitar divisão por zero
+    return $rate ? (float)$rate['btc_usd'] : 1; 
 }
 
-$btc_rate = getBitcoinRate();
+// Corrigido: removida a chamada duplicada e inconsistente
+$btc_rate = getBitcoinRate($conn);
 $preco_btc_atual = $produto['preco'] / $btc_rate;
 ?>
 

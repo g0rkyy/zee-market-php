@@ -11,7 +11,8 @@
     "require": {
         "phpseclib/phpseclib": "^3.0",
         "sonata-project/google-authenticator": "^2.0",
-        "kornrunner/keccak": "^1.1"
+        "kornrunner/keccak": "^1.1",
+        "vlucas/phpdotenv": "^5.6"
     },
     "config": {
         "allow-plugins": {

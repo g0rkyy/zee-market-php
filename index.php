@@ -5,7 +5,7 @@
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 
-// ✅ DETECÇÃO TOR SIMPLES E SEGURA
+// ✅ DETECÇÃO TOR SIMPLES E SEGURA (apenas para indicador visual)
 $torDetection = checkTorConnection();
 $isTorUser = $torDetection['connected'];
 
@@ -178,9 +178,6 @@ try {
     error_log("Erro no sistema de listagem: " . $e->getMessage());
 }
 
-// ✅ CALCULAR BÔNUS TOR (se aplicável)
-$torBonus = $isTorUser ? 0.05 : 0; // 5% de desconto para usuários Tor
-
 // ✅ SANITIZAR DADOS PARA URL DE PAGINAÇÃO
 function buildPaginationUrl($page) {
     global $search_term, $categoria_filter;
@@ -327,7 +324,7 @@ function buildPaginationUrl($page) {
             🛡️ XSS-PROOF
         </div>
 
-        <!-- ✅ INDICADOR TOR SEGURO -->
+        <!-- ✅ INDICADOR TOR SEGURO (apenas visual) -->
         <div class="tor-indicator <?= $isTorUser ? 'tor-connected' : 'tor-disconnected' ?>">
             <?= $isTorUser ? '🔒 TOR ATIVO' : '⚠️ TOR INATIVO' ?>
         </div>
@@ -348,9 +345,6 @@ function buildPaginationUrl($page) {
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="FAQ.html">FAQ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="signup.php">Signup</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="login.php">Login</a>
@@ -511,16 +505,11 @@ function buildPaginationUrl($page) {
                                                     $icon_crypto = 'xmr.svg';
                                                     break;
                                             }
-                                            
-                                            $preco_final = $preco_crypto * (1 - $torBonus);
                                             ?>
                                             
                                             <div class="crypto-price">
                                                 <span><img src="assets/images/<?= htmlspecialchars($icon_crypto) ?>" alt="<?= $cripto ?>"></span>
-                                                <span><?= htmlspecialchars(number_format($preco_final, 8)) ?> <?= $cripto ?></span>
-                                                <?php if ($torBonus > 0): ?>
-                                                    <small class="text-success">(-<?= htmlspecialchars($torBonus * 100) ?>%)</small>
-                                                <?php endif; ?>
+                                                <span><?= htmlspecialchars(number_format($preco_crypto, 8)) ?> <?= $cripto ?></span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
@@ -535,7 +524,7 @@ function buildPaginationUrl($page) {
                                     <div class="mt-1">
                                         <span class="badge bg-success">✓ Verificado</span>
                                         <?php if ($isTorUser): ?>
-                                            <span class="badge bg-info">🔒 Desconto TOR</span>
+                                            <span class="badge bg-info">🔒 TOR Seguro</span>
                                         <?php endif; ?>
                                     </div>
                                 </div>

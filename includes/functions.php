@@ -54,38 +54,6 @@ function login($email, $senha) {
     return "Email ou senha incorretos!";
 }
 
-// ====== FUNÇÃO DE VERIFICAÇÃO DE LOGIN ====== //
-function verificarLogin() {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    
-    if (!isset($_SESSION['user_id']) || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-        error_log("Usuário não logado - redirecionando para login");
-        
-        $_SESSION = array();
-        
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
-        
-        session_destroy();
-        header("Location: login.php");
-        exit();
-    }
-    
-    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 3600) {
-        error_log("Sessão expirada para usuário ID: " . $_SESSION['user_id']);
-        logout();
-    }
-    
-    $_SESSION['login_time'] = time();
-}
-
 // ====== FUNÇÃO DE LOGOUT ====== //
 function logout() {
     if (session_status() === PHP_SESSION_NONE) {
@@ -342,31 +310,7 @@ function emailExists($email) {
     return $stmt->num_rows > 0;
 }
 
-function checkRateLimit($userId, $action, $maxAttempts, $timeWindow = 3600) {
-    global $conn;
-    
-    $stmt = $conn->prepare("
-        SELECT COUNT(*) as attempts 
-        FROM rate_limits 
-        WHERE user_id = ? AND action = ? 
-        AND created_at > DATE_SUB(NOW(), INTERVAL ? SECOND)
-    ");
-    $stmt->bind_param("isi", $userId, $action, $timeWindow);
-    $stmt->execute();
-    
-    $result = $stmt->get_result()->fetch_assoc();
-    
-    if ($result['attempts'] >= $maxAttempts) {
-        throw new Exception("Rate limit excedido para $action");
-    }
-    
-    $stmt = $conn->prepare("
-        INSERT INTO rate_limits (user_id, action, created_at) 
-        VALUES (?, ?, NOW())
-    ");
-    $stmt->bind_param("is", $userId, $action);
-    $stmt->execute();
-}
+
 
 // ====== FUNÇÕES TOR ====== //
 
@@ -549,4 +493,413 @@ function validateSecureCSRFToken($token) {
     
     return hash_equals($_SESSION['csrf_token'], $token);
 }
+
+function createLoginAttemptsTable() {
+    global $conn;
+    
+    $sql = "CREATE TABLE IF NOT EXISTS login_attempts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        identifier VARCHAR(255) NOT NULL,
+        ip_address VARCHAR(45),
+        email VARCHAR(255),
+        success BOOLEAN DEFAULT FALSE,
+        reason VARCHAR(100),
+        attempt_time INT NOT NULL,
+        user_agent TEXT,
+        INDEX idx_identifier_time (identifier, attempt_time),
+        INDEX idx_email_time (email, attempt_time)
+    ) ENGINE=InnoDB";
+    
+    try {
+        $conn->query($sql);
+        error_log("Tabela login_attempts criada com sucesso");
+    } catch (Exception $e) {
+        error_log("Erro ao criar tabela login_attempts: " . $e->getMessage());
+    }
+}
+
+function checkRateLimitAdvanced($identifier, $max_attempts = 5, $time_window = 900) {
+    global $conn;
+    
+    try {
+        // Verificar se a tabela existe, se não, criar
+        $table_check = $conn->query("SHOW TABLES LIKE 'login_attempts'");
+        if ($table_check->num_rows == 0) {
+            createLoginAttemptsTable();
+        }
+        
+        // Limpar tentativas antigas
+        $cleanup_time = time() - $time_window;
+        $stmt = $conn->prepare("DELETE FROM login_attempts WHERE attempt_time < ? AND identifier = ?");
+        if ($stmt) {
+            $stmt->bind_param("is", $cleanup_time, $identifier);
+            $stmt->execute();
+            $stmt->close();
+        }
+        
+        // Contar tentativas recentes
+        $stmt = $conn->prepare("SELECT COUNT(*) as attempts FROM login_attempts WHERE identifier = ? AND attempt_time > ?");
+        if ($stmt) {
+            $stmt->bind_param("si", $identifier, $cleanup_time);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            
+            return (int)$result['attempts'] < $max_attempts;
+        }
+        
+        return true;
+        
+    } catch (Exception $e) {
+        error_log("Erro no rate limiting: " . $e->getMessage());
+        return true; // Em caso de erro, não bloquear
+    }
+}
+
+
+
+function detectSuspiciousActivity($email) {
+    global $conn;
+    
+    try {
+        // Verificar se a tabela existe
+        $table_check = $conn->query("SHOW TABLES LIKE 'login_attempts'");
+        if ($table_check->num_rows == 0) {
+            return ['suspicious' => false, 'reason' => ''];
+        }
+        
+        // Verificar múltiplos IPs para mesmo email em pouco tempo
+        $stmt = $conn->prepare("
+            SELECT COUNT(DISTINCT ip_address) as ip_count 
+            FROM login_attempts 
+            WHERE email = ? AND attempt_time > ? AND success = 0
+        ");
+        $recent_time = time() - 3600; // Última hora
+        $stmt->bind_param("si", $email, $recent_time);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        
+        // Se mais de 3 IPs diferentes tentaram o mesmo email, é suspeito
+        if ((int)$result['ip_count'] > 3) {
+            return ['suspicious' => true, 'reason' => 'multiple_ips'];
+        }
+        
+        return ['suspicious' => false, 'reason' => ''];
+        
+    } catch (Exception $e) {
+        error_log("Erro na detecção de atividade suspeita: " . $e->getMessage());
+        return ['suspicious' => false, 'reason' => ''];
+    }
+}
+
+// ====== SISTEMA DE AUTENTICAÇÃO APRIMORADA ====== //
+
+function loginSecure($email, $senha) {
+    global $conn;
+    
+    try {
+        // ✅ Buscar usuário com campos de segurança
+        $stmt = $conn->prepare("SELECT id, name, email, password, failed_login_attempts, last_failed_login, account_locked_until FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        
+        if ($user) {
+            // ✅ Verificar se conta está bloqueada
+            if (!empty($user['account_locked_until']) && time() < $user['account_locked_until']) {
+                $unlock_time = date('H:i', $user['account_locked_until']);
+                return "Conta bloqueada até {$unlock_time} devido a múltiplas tentativas falhadas.";
+            }
+            
+            // ✅ Verificar senha
+            if (password_verify($senha, $user['password'])) {
+                // Login bem-sucedido
+                
+                // ✅ Resetar contador de tentativas falhadas
+                $stmt = $conn->prepare("UPDATE users SET failed_login_attempts = 0, last_failed_login = NULL, account_locked_until = NULL WHERE id = ?");
+                $stmt->bind_param("i", $user['id']);
+                $stmt->execute();
+                $stmt->close();
+                
+                // ✅ Configurar sessão segura
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = (int)$user['id'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_email'] = $email;
+                $_SESSION['login_time'] = time();
+                $_SESSION['last_activity'] = time();
+                $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+                $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+                $_SESSION['logged_in'] = true;
+                
+                // ✅ Detectar TOR
+                $torDetection = checkTorConnection();
+                $_SESSION['is_tor'] = $torDetection['connected'];
+                $_SESSION['tor_confidence'] = $torDetection['confidence'];
+                
+                // ✅ Atualizar último login
+                $stmt = $conn->prepare("UPDATE users SET last_login = ?, last_ip = ? WHERE id = ?");
+                $current_time = time();
+                $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+                $stmt->bind_param("isi", $current_time, $client_ip, $user['id']);
+                $stmt->execute();
+                $stmt->close();
+                
+                return true;
+                
+            } else {
+                // ✅ Incrementar contador de tentativas falhadas
+                $failed_attempts = (int)$user['failed_login_attempts'] + 1;
+                $lock_until = null;
+                
+                // Bloquear conta após 10 tentativas falhadas
+                if ($failed_attempts >= 10) {
+                    $lock_until = time() + 3600; // Bloquear por 1 hora
+                    $error_message = "Conta bloqueada por 1 hora devido a múltiplas tentativas falhadas.";
+                } else {
+                    $remaining = 10 - $failed_attempts;
+                    $error_message = "Email ou senha incorretos. Restam {$remaining} tentativas.";
+                }
+                
+                $stmt = $conn->prepare("UPDATE users SET failed_login_attempts = ?, last_failed_login = ?, account_locked_until = ? WHERE id = ?");
+                $current_time = time();
+                $stmt->bind_param("isii", $failed_attempts, $current_time, $lock_until, $user['id']);
+                $stmt->execute();
+                $stmt->close();
+                
+                return $error_message;
+            }
+        } else {
+            // ✅ Usuário não encontrado - manter tempo consistente
+            $dummy_hash = '$2y$12$' . str_repeat('a', 53);
+            password_verify($senha, $dummy_hash);
+            
+            return "Email ou senha incorretos.";
+        }
+        
+    } catch (Exception $e) {
+        error_log("Erro crítico no login seguro: " . $e->getMessage());
+        return "Erro interno do sistema. Tente novamente em alguns minutos.";
+    }
+}
+
+// ====== SISTEMA DE CADASTRO SEGURO ====== //
+
+function cadastrarUsuarioSeguro($nome, $email, $senha) {
+    global $conn;
+    
+    try {
+        // ✅ Verificar se email já existe
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $existing_user = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        
+        if ($existing_user) {
+            return "Email já está em uso!";
+        }
+        
+        // ✅ Criar hash seguro da senha
+        $password_hash = password_hash($senha, PASSWORD_ARGON2ID, [
+            'memory_cost' => 65536, // 64 MB
+            'time_cost' => 4,       // 4 iterações
+            'threads' => 3          // 3 threads
+        ]);
+        
+        // ✅ Inserir usuário
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password, created_at, last_ip, failed_login_attempts) VALUES (?, ?, ?, ?, ?, 0)");
+        $created_at = time();
+        $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $stmt->bind_param("sssis", $nome, $email, $password_hash, $created_at, $client_ip);
+        
+        if ($stmt->execute()) {
+            $stmt->close();
+            error_log("Novo usuário cadastrado com segurança: " . $email);
+            return true;
+        } else {
+            $stmt->close();
+            error_log("Erro ao criar usuário seguro: " . $conn->error);
+            return "Erro ao criar conta. Tente novamente.";
+        }
+        
+    } catch (Exception $e) {
+        error_log("Erro no cadastro seguro: " . $e->getMessage());
+        return "Erro interno do sistema. Tente novamente em alguns minutos.";
+    }
+}
+
+// ====== FUNÇÕES DE FINGERPRINTING ====== //
+
+function getClientFingerprint() {
+    $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+    return hash('sha256', $client_ip . '|' . $user_agent);
+}
+
+function getSecureClientInfo() {
+    return [
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+        'fingerprint' => getClientFingerprint(),
+        'tor_detected' => checkTorConnection()['connected']
+    ];
+}
+
+// ====== SISTEMA DE VALIDAÇÃO APRIMORADA ====== //
+
+function validateEmailSecure($email) {
+    if (empty($email)) {
+        return false;
+    }
+    
+    if (strlen($email) > 255) {
+        return false;
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+    
+    // Verificar domínios suspeitos básicos
+    $suspicious_domains = ['tempmail.com', '10minutemail.com', 'guerrillamail.com'];
+    $domain = substr(strrchr($email, "@"), 1);
+    
+    if (in_array($domain, $suspicious_domains)) {
+        return false;
+    }
+    
+    return true;
+}
+
+function validatePasswordStrength($password) {
+    if (strlen($password) < 8 || strlen($password) > 255) {
+        return ['valid' => false, 'message' => 'Senha deve ter entre 8 e 255 caracteres'];
+    }
+    
+    if (!preg_match('/[a-z]/', $password)) {
+        return ['valid' => false, 'message' => 'Senha deve conter pelo menos uma letra minúscula'];
+    }
+    
+    if (!preg_match('/[A-Z]/', $password)) {
+        return ['valid' => false, 'message' => 'Senha deve conter pelo menos uma letra maiúscula'];
+    }
+    
+    if (!preg_match('/[0-9]/', $password)) {
+        return ['valid' => false, 'message' => 'Senha deve conter pelo menos um número'];
+    }
+    
+    return ['valid' => true, 'message' => 'Senha válida'];
+}
+
+function validateNameSecure($name) {
+    if (empty($name)) {
+        return false;
+    }
+    
+    if (strlen($name) < 2 || strlen($name) > 100) {
+        return false;
+    }
+    
+    // Apenas letras, espaços e alguns caracteres especiais
+    if (!preg_match('/^[A-Za-zÀ-ÿ\s\-\'\.]+$/', $name)) {
+        return false;
+    }
+    
+    return true;
+}
+
+// ====== FUNÇÕES DE TIMING ATTACK PROTECTION ====== //
+
+function secureTimingDelay($min_time = 0.5) {
+    static $start_time;
+    
+    if ($start_time === null) {
+        $start_time = microtime(true);
+    }
+    
+    $elapsed_time = microtime(true) - $start_time;
+    
+    if ($elapsed_time < $min_time) {
+        usleep(($min_time - $elapsed_time) * 1000000);
+    }
+    
+    $start_time = null; // Reset para próxima chamada
+}
+
+// ====== FUNÇÕES DE AUDITORIA E LOG ====== //
+
+function logSecurityEvent($event_type, $details = []) {
+    $log_data = [
+        'timestamp' => date('Y-m-d H:i:s'),
+        'event_type' => $event_type,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        'user_agent' => substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255),
+        'details' => $details
+    ];
+    
+    error_log("SECURITY_EVENT: " . json_encode($log_data));
+}
+
+// ====== VERIFICAÇÃO DE TABELAS DO SISTEMA ====== //
+
+function ensureSecurityTablesExist() {
+    global $conn;
+    
+    // Criar tabela login_attempts se não existir
+    $table_check = $conn->query("SHOW TABLES LIKE 'login_attempts'");
+    if ($table_check->num_rows == 0) {
+        createLoginAttemptsTable();
+    }
+    
+    // Verificar se users tem campos de segurança
+    $columns_check = $conn->query("SHOW COLUMNS FROM users LIKE 'failed_login_attempts'");
+    if ($columns_check->num_rows == 0) {
+        $conn->query("ALTER TABLE users ADD COLUMN failed_login_attempts INT DEFAULT 0");
+        $conn->query("ALTER TABLE users ADD COLUMN last_failed_login INT DEFAULT NULL");
+        $conn->query("ALTER TABLE users ADD COLUMN account_locked_until INT DEFAULT NULL");
+        $conn->query("ALTER TABLE users ADD COLUMN last_login INT DEFAULT NULL");
+        $conn->query("ALTER TABLE users ADD COLUMN last_ip VARCHAR(45) DEFAULT NULL");
+        error_log("Campos de segurança adicionados à tabela users");
+    }
+}
+
+// ====== VERIFICAÇÃO DE SESSÃO APRIMORADA ====== //
+
+function verificarLoginSeguro() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    if (!isset($_SESSION['user_id']) || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+        logSecurityEvent('unauthorized_access', ['page' => $_SERVER['REQUEST_URI'] ?? 'unknown']);
+        
+        $_SESSION = array();
+        session_destroy();
+        header("Location: login.php");
+        exit();
+    }
+    
+    // Verificar timeout de sessão
+    if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 3600) {
+        logSecurityEvent('session_timeout', ['user_id' => $_SESSION['user_id']]);
+        logout();
+    }
+    
+    // Verificar consistência de IP (opcional - pode causar problemas com proxies)
+    if (isset($_SESSION['ip_address']) && 
+        $_SESSION['ip_address'] !== ($_SERVER['REMOTE_ADDR'] ?? 'unknown')) {
+        // Log but don't logout (users may have dynamic IPs)
+        logSecurityEvent('ip_change', [
+            'user_id' => $_SESSION['user_id'],
+            'old_ip' => $_SESSION['ip_address'],
+            'new_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+        ]);
+    }
+    
+    $_SESSION['last_activity'] = time();
+}
+
 ?>
