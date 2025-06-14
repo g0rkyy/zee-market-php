@@ -30,10 +30,12 @@ if ($user_logged_in) {
 
 // Obter cotação atual do Bitcoin
 function getBitcoinRate() {
-    global $conn;
-    $stmt = $conn->query("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
-    $rate = $stmt->fetch_assoc();
-    return $rate ? floatval($rate['btc_usd']) : 100000.00;
+    
+    $stmt = $conn->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $rate = $result->fetch_assoc();
+    $stmt->close();
 }
 
 $btc_rate = getBitcoinRate();

@@ -29,23 +29,25 @@ function getBitcoinPrice() {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // ========== VALIDAÇÃO E OBTENÇÃO DOS DADOS ========== //
+    
     $produto_id = (int)$_POST['produto_id'];
-    $nome = trim($_POST['nome']);
-    $endereco = trim($_POST['endereco']);
+    $nome_comprador = trim($_POST['nome']);
+    $endereco_comprador = trim($_POST['endereco']);
     $payment_method = $_POST['payment_method'] ?? 'external';
-    $btc_wallet = trim($_POST['btc_wallet'] ?? '');
+    $btc_wallet_comprador = trim($_POST['btc_wallet'] ?? '');
 
     // Validações básicas
-    if (empty($nome) || empty($endereco)) {
+    if (empty($nome_comprador) || empty($endereco_comprador)) {
         die("Erro: Nome e endereço são obrigatórios!");
     }
 
     // Validar carteira Bitcoin se pagamento externo
     if ($payment_method === 'external') {
-        if (empty($btc_wallet)) {
+        if (empty($btc_wallet_comprador)) {
             die("Erro: Carteira Bitcoin é obrigatória para pagamento externo!");
         }
-        if (!preg_match('/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/', $btc_wallet)) {
+        if (!preg_match('/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/', $btc_wallet_comprador)) {
             die("Erro: Formato de carteira Bitcoin inválido!");
         }
     }
@@ -89,6 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ========== VERIFICAR SALDO SE PAGAMENTO INTERNO ========== //
     
+    $user_id = null;
+    $saldo_usuario = 0;
+    
     if ($payment_method === 'balance') {
         if (!isLoggedIn()) {
             die("Erro: Faça login para usar pagamento com saldo!");
@@ -116,39 +121,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Log para debug
     error_log("Nova compra iniciada - Produto: {$produto['nome']} - Valor: {$produto['preco']} BRL - BTC: {$valor_total_btc} - Método: {$payment_method}");
 
-    // ========== INSERIR COMPRA NO BANCO ========== //
+    // ========== PROCESSAR COMPRA ========== //
     
     $conn->begin_transaction();
     
     try {
-        // Inserir dados da compra
-        $stmt = $conn->prepare("INSERT INTO compras 
-                              (produto_id, vendedor_id, nome, endereco, btc_wallet_comprador, 
-                               valor_btc, taxa_plataforma, wallet_plataforma, data_compra, pago) 
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)");
+        // Dados para inserção
+        $vendedor_id = $produto['vendedor_id'];
+        $is_paid = ($payment_method === 'balance') ? 1 : 0; // Definir se está pago imediatamente
         
-        // Se pagamento com saldo, marcar como pago imediatamente
-        $is_paid = ($payment_method === 'balance') ? 1 : 0;
+        // 1. Inserir compra no banco
+        $sql = "INSERT INTO compras 
+                (produto_id, vendedor_id, nome, endereco, btc_wallet_comprador, 
+                 valor_btc, taxa_plataforma, wallet_plataforma, data_compra, pago) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
         
-        $stmt->bind_param("iisssddssi", 
-                         $produto_id, 
-                         $produto['vendedor_id'], 
-                         $nome, 
-                         $endereco, 
-                         $btc_wallet,
-                         $valor_total_btc,      // Valor total que o cliente paga
-                         $taxa_plataforma,      // Taxa da plataforma (2.5%)
-                         $platform_wallet,      // Carteira da plataforma
-                         $is_paid               // Pago se for saldo interno
-                        );
-
-        if (!$stmt->execute()) {
-            throw new Exception("Erro ao inserir compra: " . $conn->error);
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            error_log("Prepare failed em processar_compra: " . $conn->error);
+            throw new Exception("Erro no sistema de compras. Tente novamente.");
         }
         
-        $compra_id = $conn->insert_id;
+        $stmt->bind_param(
+            "iissdsdsi",
+            $produto_id,
+            $vendedor_id,
+            $nome_comprador,
+            $endereco_comprador,
+            $btc_wallet_comprador,
+            $valor_total_btc,
+            $taxa_plataforma,
+            $platform_wallet,
+            $is_paid
+        );
+        
+        if (!$stmt->execute()) {
+            error_log("Execute failed em processar_compra: " . $stmt->error);
+            throw new Exception("Não foi possível processar sua compra. Por favor, tente novamente.");
+        }
+        
+        $compra_id = $stmt->insert_id;
+        $stmt->close();
 
-        // ========== PROCESSAR PAGAMENTO COM SALDO ========== //
+        // ========== PROCESSAR PAGAMENTO COM SALDO (SE APLICÁVEL) ========== //
+        
+        $tx_hash_interno = null;
         
         if ($payment_method === 'balance') {
             // Deduzir saldo do usuário
@@ -159,31 +176,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Erro ao deduzir saldo: " . $conn->error);
             }
             
+            // Gerar hash interno único
+            $tx_hash_interno = 'internal_' . $compra_id . '_' . time();
+            
             // Registrar transação de débito
             $stmt = $conn->prepare("INSERT INTO btc_transactions 
                                   (user_id, type, amount, status, crypto_type, tx_hash, created_at) 
                                   VALUES (?, 'withdrawal', ?, 'confirmed', 'BTC', ?, NOW())");
-            $tx_hash_interno = 'internal_' . $compra_id . '_' . time();
             $stmt->bind_param("ids", $user_id, $valor_total_btc, $tx_hash_interno);
-            $stmt->execute();
             
-            // Registrar no histórico de saldo
+            if (!$stmt->execute()) {
+                throw new Exception("Erro ao registrar transação: " . $conn->error);
+            }
+            
+            // Obter novo saldo
             $stmt = $conn->prepare("SELECT btc_balance FROM users WHERE id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
             $novo_saldo = $stmt->get_result()->fetch_assoc()['btc_balance'];
             
+            // Registrar no histórico de saldo
             $stmt = $conn->prepare("INSERT INTO btc_balance_history 
                                   (user_id, type, amount, balance_before, balance_after, description, tx_hash, crypto_type) 
                                   VALUES (?, 'debit', ?, ?, ?, 'Compra com saldo interno', ?, 'BTC')");
-            $saldo_anterior = $saldo_usuario;
-            $stmt->bind_param("idddss", $user_id, $valor_total_btc, $saldo_anterior, $novo_saldo, $tx_hash_interno);
-            $stmt->execute();
+            $stmt->bind_param("idddss", $user_id, $valor_total_btc, $saldo_usuario, $novo_saldo, $tx_hash_interno);
             
-            // Marcar compra com hash interno
+            if (!$stmt->execute()) {
+                throw new Exception("Erro ao registrar histórico de saldo: " . $conn->error);
+            }
+            
+            // Marcar compra como paga com hash interno
             $stmt = $conn->prepare("UPDATE compras SET tx_hash = ?, confirmations = 999 WHERE id = ?");
             $stmt->bind_param("si", $tx_hash_interno, $compra_id);
-            $stmt->execute();
+            
+            if (!$stmt->execute()) {
+                throw new Exception("Erro ao atualizar compra com hash: " . $conn->error);
+            }
             
             // Atualizar saldo na sessão
             $_SESSION['btc_balance'] = floatval($novo_saldo);
@@ -205,7 +233,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'taxa_plataforma' => $taxa_plataforma,
             'btc_price_usd' => $btc_price_usd,
             'payment_method' => $payment_method,
-            'paid_immediately' => $is_paid
+            'paid_immediately' => $is_paid,
+            'tx_hash' => $tx_hash_interno
         ]);
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
@@ -214,6 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("isss", $log_user_id, $details, $ip_address, $user_agent);
         $stmt->execute();
         
+        // Confirmar transação
         $conn->commit();
         
         // Log de sucesso

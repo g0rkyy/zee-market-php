@@ -31,10 +31,11 @@ $dotenv->load();
 
 
 // Configurações do Banco de Dados
-$host = "DB_HOST";
-$user = "DB_USER";
-$pass = "DB_PASS"; 
-$db = "DB_NAME";
+$host = $_ENV['DB_HOST'] ?? 'localhost';
+$user = $_ENV['DB_USER'] ?? '';
+$pass = $_ENV['DB_PASS'] ?? '';
+$db   = $_ENV['DB_NAME'] ?? '';
+
 
 // Conexão com MySQL
 try {

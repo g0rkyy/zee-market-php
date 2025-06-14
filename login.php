@@ -1,9 +1,4 @@
 <?php
-/**
- * 🚀 LOGIN SIMPLIFICADO - SEM PGP
- * PGP agora é só para mensagens/contato
- */
-
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 

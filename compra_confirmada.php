@@ -41,10 +41,13 @@ try {
         $user_balance = $stmt->get_result()->fetch_assoc();
     }
 
-    // Buscar cotação atual para conversão
-    $stmt = $conn->query("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
-    $rate = $stmt->fetch_assoc();
+    // CORREÇÃO: Buscar cotação atual com prepared statement
+    $rate_stmt = $conn->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
+    $rate_stmt->execute();
+    $rate_result = $rate_stmt->get_result();
+    $rate = $rate_result->fetch_assoc();
     $btc_rate = $rate ? floatval($rate['btc_usd']) : 100000.00;
+    $rate_stmt->close();
 
 } catch (Exception $e) {
     error_log("Erro na confirmação: " . $e->getMessage());

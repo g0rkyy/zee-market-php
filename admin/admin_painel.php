@@ -1,6 +1,6 @@
 <?php
 /**
- * PAINEL ADMINISTRATIVO COMPLETO
+ * PAINEL ADMINISTRATIVO COMPLETO - VERSÃO ESTERILIZADA
  * Local: admin/admin_panel.php
  */
 
@@ -23,28 +23,71 @@ function isAdmin($userId) {
 }
 
 // Estatísticas do sistema
+$stmt = $conn->prepare("SELECT COUNT(*) FROM users");
+$stmt->execute();
+$total_users = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM vendors");
+$stmt->execute();
+$total_vendors = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM products");
+$stmt->execute();
+$total_products = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM orders");
+$stmt->execute();
+$total_orders = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM payments");
+$stmt->execute();
+$pending_payments = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM btc_balance");
+$stmt->execute();
+$total_btc_balance = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM eth_baance");
+$stmt->execute();
+$total_eth_baance = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM transactions");
+$stmt->execute();
+$recent_transactions = $stmt->get_result()->fetch_row()[0];
+$stmt->close();
+
 $stats = [
-    'total_users' => $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0],
-    'total_vendors' => $conn->query("SELECT COUNT(*) FROM vendedores")->fetch_row()[0],
-    'total_products' => $conn->query("SELECT COUNT(*) FROM produtos")->fetch_row()[0],
-    'total_orders' => $conn->query("SELECT COUNT(*) FROM compras")->fetch_row()[0],
-    'pending_payments' => $conn->query("SELECT COUNT(*) FROM compras WHERE pago = 0")->fetch_row()[0],
-    'total_btc_balance' => $conn->query("SELECT SUM(btc_balance) FROM users")->fetch_row()[0] ?? 0,
-    'total_eth_balance' => $conn->query("SELECT SUM(eth_balance) FROM users")->fetch_row()[0] ?? 0,
-    'recent_transactions' => $conn->query("SELECT COUNT(*) FROM btc_transactions WHERE created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)")->fetch_row()[0]
+    'total_users' => $total_users,
+    'total_vendors' => $total_vendors,
+    'total_products' => $total_products,
+    'total_orders' => $total_orders,
+    'pending_payments' => $pending_payments,
+    'total_btc_balance' => $total_btc_balance,
+    'total_eth_balance' => $total_eth_baance,
+    'recent_transactions' => $recent_transactions
 ];
 
-// Transações recentes
-$recent_txs = $conn->query("
+// CORREÇÃO 1: Transações recentes com prepared statement
+$stmt = $conn->prepare("
     SELECT bt.*, u.username, u.email 
     FROM btc_transactions bt 
     JOIN users u ON bt.user_id = u.id 
     ORDER BY bt.created_at DESC 
     LIMIT 20
-")->fetch_all(MYSQLI_ASSOC);
+");
+$stmt->execute();
+$recent_txs = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
-// Usuários suspeitos
-$suspicious_users = $conn->query("
+// CORREÇÃO 2: Usuários suspeitos com prepared statement
+$stmt = $conn->prepare("
     SELECT u.*, COUNT(bt.id) as tx_count, SUM(bt.amount) as total_amount
     FROM users u 
     LEFT JOIN btc_transactions bt ON u.id = bt.user_id 
@@ -52,7 +95,10 @@ $suspicious_users = $conn->query("
     GROUP BY u.id 
     HAVING tx_count > 10 OR total_amount > 1.0
     ORDER BY total_amount DESC
-")->fetch_all(MYSQLI_ASSOC);
+");
+$stmt->execute();
+$suspicious_users = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
 // Processar ações do admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -65,21 +111,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newMode = ($_POST['real_mode'] === '1') ? '1' : '0';
             $stmt->bind_param("s", $newMode);
             $stmt->execute();
+            $stmt->close();
             $message = $newMode ? "Modo real ATIVADO!" : "Modo simulado ativado";
             break;
             
         case 'manual_confirm':
             // Confirmar transação manualmente
-            $tx_id = (int)$_POST['tx_id'];
-            $conn->query("UPDATE btc_transactions SET status = 'confirmed' WHERE id = $tx_id");
-            $message = "Transação confirmada manualmente";
+            if (isset($_POST['tx_id'])) {
+                // 1. Pegue a entrada e garanta que é um número inteiro
+                $tx_id = (int)$_POST['tx_id'];
+
+                // 2. Crie o SQL com o marcador de posição (?)
+                $sql = "UPDATE btc_transactions SET status = 'confirmed' WHERE id = ?";
+
+                // 3. Prepare a consulta
+                $stmt = $conn->prepare($sql);
+
+                // 4. Verifique se a preparação falhou (importante para debug)
+                if ($stmt === false) {
+                    error_log("Admin Panel - Prepare failed for manual_confirm: " . $conn->error);
+                    $message = "Erro ao preparar a confirmação.";
+                    break; // Sai do switch
+                }
+
+                // 5. Vincule (BIND) a variável ao marcador
+                $stmt->bind_param("i", $tx_id);
+
+                // 6. Execute e verifique o resultado
+                if ($stmt->execute()) {
+                    $message = "Transação ID: " . htmlspecialchars($tx_id) . " confirmada manualmente com sucesso.";
+                } else {
+                    error_log("Admin Panel - Execute failed for manual_confirm: " . $stmt->error);
+                    $message = "Falha ao confirmar a transação ID: " . htmlspecialchars($tx_id) . ".";
+                }
+                
+                // 7. Feche a declaração
+                $stmt->close();
+            } else {
+                // Se o formulário foi enviado de forma incorreta
+                $message = "Requisição inválida para confirmar transação.";
+            }
             break;
             
         case 'block_user':
-            // Bloquear usuário
-            $user_id = (int)$_POST['user_id'];
-            $conn->query("UPDATE users SET is_blocked = 1 WHERE id = $user_id");
-            $message = "Usuário bloqueado";
+            // Verificamos se a requisição é um POST e se o ID do usuário a ser bloqueado foi enviado
+            if (isset($_POST['user_id'])) {
+                // 1. Pegue a entrada e converta para o tipo correto por segurança extra
+                $user_to_block_id = (int)$_POST['user_id'];
+
+                // 2. Crie o SQL com o MARCADOR DE POSIÇÃO (?)
+                $sql = "UPDATE users SET is_blocked = 1 WHERE id = ?";
+
+                // 3. Prepare a consulta
+                $stmt = $conn->prepare($sql);
+
+                // 4. Verifique se a preparação falhou
+                if ($stmt === false) {
+                    error_log('Admin Panel - Prepare failed for block_user: ' . $conn->error);
+                    $message = 'Erro no sistema ao bloquear usuário.';
+                    break;
+                }
+
+                // 5. VINCULE (BIND) a variável ao marcador de posição.
+                $stmt->bind_param("i", $user_to_block_id);
+
+                // 6. EXECUTE a consulta
+                if ($stmt->execute()) {
+                    $message = "Usuário ID: " . htmlspecialchars($user_to_block_id) . " bloqueado com sucesso.";
+                } else {
+                    error_log('Admin Panel - Execute failed for block_user: ' . $stmt->error);
+                    $message = "Falha ao bloquear usuário ID: " . htmlspecialchars($user_to_block_id) . ".";
+                }
+                
+                // 7. FECHE a declaração para liberar recursos
+                $stmt->close();
+            } else {
+                $message = "ID do usuário não fornecido para bloqueio.";
+            }
             break;
     }
     
@@ -90,8 +198,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Verificar modo atual
-$real_mode = $conn->query("SELECT config_value FROM system_config WHERE config_key = 'real_mode'")->fetch_row()[0] ?? '0';
+// CORREÇÃO 3: Verificar modo atual com prepared statement
+$stmt = $conn->prepare("SELECT config_value FROM system_config WHERE config_key = 'real_mode'");
+$stmt->execute();
+$result = $stmt->get_result();
+$real_mode_data = $result->fetch_row();
+$real_mode = $real_mode_data ? $real_mode_data[0] : '0';
+$stmt->close();
 ?>
 
 <!DOCTYPE html>

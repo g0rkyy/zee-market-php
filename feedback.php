@@ -1,6 +1,7 @@
 <?php 
 require_once 'includes/functions.php';
 require_once 'includes/config.php';
+
 // Verifica se a conexão foi estabelecida
 if (!$conn) {
     die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
@@ -19,12 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Verifica se a tabela existe
-        $table_check = $conn->query("SHOW TABLES LIKE 'feedback'");
-        if ($table_check->num_rows == 0) {
+        // CORREÇÃO 1: Consulta de verificação de tabela com prepared statement
+        $table_check_sql = "SHOW TABLES LIKE ?";
+        $table_check_stmt = $conn->prepare($table_check_sql);
+        if ($table_check_stmt === false) {
+            die("Erro na preparação da consulta de verificação de tabela: " . $conn->error);
+        }
+        
+        $table_name = 'feedback';
+        $table_check_stmt->bind_param("s", $table_name);
+        $table_check_stmt->execute();
+        $table_result = $table_check_stmt->get_result();
+        
+        if ($table_result->num_rows == 0) {
             die("A tabela feedback não existe no banco de dados");
         }
+        $table_check_stmt->close();
 
+        // Inserção do feedback (já estava correta)
         $stmt = $conn->prepare("INSERT INTO feedback (nome, email, feedback, rating) VALUES (?, ?, ?, ?)");
         if (!$stmt) {
             die("Erro na preparação da query: " . $conn->error);
@@ -40,10 +53,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             die("Erro ao enviar feedback: " . $stmt->error);
         }
+        $stmt->close();
     } catch (Exception $e) {
         die("Erro no banco de dados: " . $e->getMessage());
     }
 }
+
+// CORREÇÃO 2 e 3: Paginação e contagem com prepared statements
+// Configuração da paginação
+$itens_por_pagina = 5; // Itens por página
+$pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+
+// Validação adicional da página
+if ($pagina_atual < 1) {
+    $pagina_atual = 1;
+}
+
+$offset = ($pagina_atual - 1) * $itens_por_pagina;
+
+// CORREÇÃO 2: Conta o total de feedbacks com prepared statement
+$count_sql = "SELECT COUNT(*) as total FROM feedback";
+$count_stmt = $conn->prepare($count_sql);
+if ($count_stmt === false) {
+    die("Erro na preparação da consulta de contagem: " . $conn->error);
+}
+
+$count_stmt->execute();
+$count_result = $count_stmt->get_result();
+$total_feedbacks = $count_result->fetch_assoc()['total'];
+$count_stmt->close();
+
+$total_paginas = ceil($total_feedbacks / $itens_por_pagina);
+
+// Validação adicional: se a página atual é maior que o total de páginas
+if ($pagina_atual > $total_paginas && $total_paginas > 0) {
+    $pagina_atual = $total_paginas;
+    $offset = ($pagina_atual - 1) * $itens_por_pagina;
+}
+
+// CORREÇÃO 3: Busca os feedbacks com prepared statement
+$query = "SELECT nome, feedback, rating, data_envio FROM feedback ORDER BY data_envio DESC LIMIT ?, ?";
+$stmt = $conn->prepare($query);
+if ($stmt === false) {
+    die("Erro na preparação da consulta de feedbacks: " . $conn->error);
+}
+
+// IMPORTANTE: Os parâmetros de LIMIT devem ser vinculados como inteiros ('i')
+$stmt->bind_param("ii", $offset, $itens_por_pagina);
+$stmt->execute();
+$resultados = $stmt->get_result();
+$feedbacks = $resultados->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -79,26 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </ul>
         </div>
 
-            <?php
-    // Configuração da paginação
-    $itens_por_pagina = 5; // Itens por página
-    $pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-    $offset = ($pagina_atual - 1) * $itens_por_pagina;
-
-    // Busca os feedbacks no BD
-    $query = "SELECT nome, feedback, rating, data_envio FROM feedback ORDER BY data_envio DESC LIMIT ?, ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ii", $offset, $itens_por_pagina);
-    $stmt->execute();
-    $resultados = $stmt->get_result();
-    $feedbacks = $resultados->fetch_all(MYSQLI_ASSOC);
-
-    // Conta o total de feedbacks para a paginação
-    $total_feedbacks = $conn->query("SELECT COUNT(*) FROM feedback")->fetch_row()[0];
-    $total_paginas = ceil($total_feedbacks / $itens_por_pagina);
-    ?>
-
-    <!-- Formulário de Feedback -->
+        <!-- Formulário de Feedback -->
         <form id="feedback-form" method="post">
             <div class="mb-3">
                 <label for="name" class="form-label form-name-color">Name</label>
@@ -131,71 +172,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
     </div>
+
     <!-- Seção de Feedbacks -->
-<div class="mt-5" id="lista-feedbacks">
-    <h2 class="text-center color-title">Feedbacks Recentes</h2>
-    
-    <?php if (empty($feedbacks)): ?>
-        <p class="text-center text-muted">Nenhum feedback ainda. Seja o primeiro!</p>
-    <?php else: ?>
-        <!-- Msg fixed -->
-        <div class="list-group-item mb-3" style="background-color: #0a120f; border-left: 4px solid #e1f845;">
-            <div class="d-flex justify-content-between">
-                <h5 style="color: #dfbc78;">Equipe ZeeMarket</h5>
-                <div class="text-warning">
-                    Equipe ZeeMarket - Bem-vindo ao nosso espaço de feedback!
-                </div>
-            </div>
-            <p class="mb-1" style="color: #ffdfa1;">
-                É uma enorme honra receber vocês aqui! Deixe aqui seu feedback para que possamos dar continuidade ao 
-                projeto ZeeMarket e torná-lo ainda melhor. Sua opinião é muito importante para nós! 
-            </p>
-            <small class="text-muted" style="color: #b0b0b0;">
-                 Mensagem Fixa
-            </small>
-            <!-- final fixed msg -->
-        </div>
-        <div class="list-group">
-            <?php foreach ($feedbacks as $fb): ?>
-                <div class="list-group-item mb-3">
-                    <div class="d-flex justify-content-between">
-                        <h5><?= htmlspecialchars($fb['nome']) ?></h5>
-                        <div class="text-warning">
-                            <?= str_repeat('★', $fb['rating']) . str_repeat('☆', 5 - $fb['rating']) ?>
-                        </div>
+    <div class="mt-5" id="lista-feedbacks">
+        <h2 class="text-center color-title">Feedbacks Recentes</h2>
+        
+        <?php if (empty($feedbacks)): ?>
+            <p class="text-center text-muted">Nenhum feedback ainda. Seja o primeiro!</p>
+        <?php else: ?>
+            <!-- Msg fixed -->
+            <div class="list-group-item mb-3" style="background-color: #0a120f; border-left: 4px solid #e1f845;">
+                <div class="d-flex justify-content-between">
+                    <h5 style="color: #dfbc78;">Equipe ZeeMarket</h5>
+                    <div class="text-warning">
+                        Equipe ZeeMarket - Bem-vindo ao nosso espaço de feedback!
                     </div>
-                    <p class="mb-1"><?= nl2br(htmlspecialchars($fb['feedback'])) ?></p>
-                    <small class="text-muted">
-                        <?= date('d/m/Y H:i', strtotime($fb['data_envio'])) ?>
-                    </small>
                 </div>
-            <?php endforeach; ?>
-        </div>
+                <p class="mb-1" style="color: #ffdfa1;">
+                    É uma enorme honra receber vocês aqui! Deixe aqui seu feedback para que possamos dar continuidade ao 
+                    projeto ZeeMarket e torná-lo ainda melhor. Sua opinião é muito importante para nós! 
+                </p>
+                <small class="text-muted" style="color: #b0b0b0;">
+                     Mensagem Fixa
+                </small>
+                <!-- final fixed msg -->
+            </div>
+            <div class="list-group">
+                <?php foreach ($feedbacks as $fb): ?>
+                    <div class="list-group-item mb-3">
+                        <div class="d-flex justify-content-between">
+                            <h5><?= htmlspecialchars($fb['nome']) ?></h5>
+                            <div class="text-warning">
+                                <?= str_repeat('★', $fb['rating']) . str_repeat('☆', 5 - $fb['rating']) ?>
+                            </div>
+                        </div>
+                        <p class="mb-1"><?= nl2br(htmlspecialchars($fb['feedback'])) ?></p>
+                        <small class="text-muted">
+                            <?= date('d/m/Y H:i', strtotime($fb['data_envio'])) ?>
+                        </small>
+                    </div>
+                <?php endforeach; ?>
+            </div>
 
-        <!-- Paginação -->
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center">
-                <?php if ($pagina_atual > 1): ?>
-                    <li class="page-item">
-                        <a class="page-link" href="?pagina=<?= $pagina_atual - 1 ?>">Anterior</a>
-                    </li>
-                <?php endif; ?>
+            <!-- Paginação -->
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <?php if ($pagina_atual > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?= $pagina_atual - 1 ?>">Anterior</a>
+                        </li>
+                    <?php endif; ?>
 
-                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                    <li class="page-item <?= $i == $pagina_atual ? 'active' : '' ?>">
-                        <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
-                    </li>
-                <?php endfor; ?>
+                    <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                        <li class="page-item <?= $i == $pagina_atual ? 'active' : '' ?>">
+                            <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
 
-                <?php if ($pagina_atual < $total_paginas): ?>
-                    <li class="page-item">
-                        <a class="page-link" href="?pagina=<?= $pagina_atual + 1 ?>">Próxima</a>
-                    </li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-    <?php endif; ?>
-</div>
+                    <?php if ($pagina_atual < $total_paginas): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?= $pagina_atual + 1 ?>">Próxima</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+        <?php endif; ?>
+    </div>
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -9,33 +9,33 @@ if (!isset($_SESSION['vendedor_id']) || empty($_SESSION['vendedor_id'])) {
     exit();
 }
 
-// Busca dados do vendedor
-$vendedor = $conn->query("SELECT id, nome, email, btc_wallet FROM vendedores WHERE id = ".$_SESSION['vendedor_id'])->fetch_assoc();
+$vendedor_id = (int)$_SESSION['vendedor_id'];
+
+// Busca dados do vendedor - CORRIGIDO: usando prepared statement
+$stmt = $conn->prepare("SELECT id, nome, email, btc_wallet FROM vendedores WHERE id = ?");
+$stmt->bind_param("i", $vendedor_id);
+$stmt->execute();
+$vendedor = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
 if (!$vendedor) {
     header("Location: ../vendedores.php?erro=Vendedor não encontrado");
     exit();
 }
 
-// Busca produtos do vendedor
-$produtos = $conn->query("SELECT * FROM produtos WHERE vendedor_id = ".$_SESSION['vendedor_id']." ORDER BY data_cadastro DESC");
-
-// Busca pedidos com status de pagamento
-$pedidos = $conn->query("SELECT 
-    c.id, c.nome, c.endereco, c.btc_wallet_vendedor, c.valor_btc, 
-    c.tx_hash, c.pago, c.concluido, c.data_compra,
-    p.nome AS produto_nome
-    FROM compras c
-    JOIN produtos p ON c.produto_id = p.id
-    WHERE c.vendedor_id = ".$_SESSION['vendedor_id']."
-    ORDER BY c.data_compra DESC");
-
-// Atualização de status
+// Processamento de formulários
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    // Atualização de status do pedido
     if (isset($_POST['pedido_id'])) {
         $pedido_id = (int)$_POST['pedido_id'];
         $concluido = isset($_POST['concluido']) ? 1 : 0;
-        $conn->query("UPDATE compras SET concluido = $concluido WHERE id = $pedido_id");
+        
+        // CORRIGIDO: usando prepared statement
+        $stmt = $conn->prepare("UPDATE compras SET concluido = ? WHERE id = ? AND vendedor_id = ?");
+        $stmt->bind_param("iii", $concluido, $pedido_id, $vendedor_id);
+        $stmt->execute();
+        $stmt->close();
         
         // Mantém a aba pedidos ativa após atualização
         $_SESSION['active_tab'] = 'pedidos';
@@ -43,20 +43,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
-    // Atualização da carteira BTC
+    // Atualização de carteira Bitcoin
     if (isset($_POST['btc_wallet'])) {
-        $nova_carteira = $conn->real_escape_string(trim($_POST['btc_wallet']));
-        if (!empty($nova_carteira)) {
-            $conn->query("UPDATE vendedores SET btc_wallet = '$nova_carteira' WHERE id = ".$_SESSION['vendedor_id']);
-            $vendedor['btc_wallet'] = $nova_carteira;
-            $_SESSION['mensagem_sucesso'] = "Carteira BTC atualizada com sucesso!";
+        // CORRIGIDO: usando prepared statement
+        $sql = "UPDATE vendedores SET btc_wallet = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+
+        // Verificação de erro OBRIGATÓRIA
+        if ($stmt === false) {
+            error_log('SQL Prepare failed: ' . $conn->error);
+            die('Ocorreu um erro no sistema. Tente novamente mais tarde.');
         }
+
+        $nova_carteira = trim($_POST['btc_wallet']);
+
+        // Validação básica da carteira Bitcoin
+        if (!preg_match('/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/', $nova_carteira)) {
+            header("Location: painel_vendedor.php?erro=Formato de carteira Bitcoin inválido");
+            exit();
+        }
+
+        $stmt->bind_param("si", $nova_carteira, $vendedor_id);
+
+        if ($stmt->execute()) {
+            // Atualiza dados na sessão
+            $vendedor['btc_wallet'] = $nova_carteira;
+            header("Location: painel_vendedor.php?sucesso=Carteira atualizada");
+        } else {
+            error_log('SQL Execute failed: ' . $stmt->error);
+            header("Location: painel_vendedor.php?erro=Não foi possível atualizar a carteira");
+        }
+
+        $stmt->close();
+        exit();
     }
 }
 
+// Busca produtos do vendedor - CORRIGIDO: usando prepared statement
+$stmt = $conn->prepare("SELECT * FROM produtos WHERE vendedor_id = ? ORDER BY data_cadastro DESC");
+$stmt->bind_param("i", $vendedor_id);
+$stmt->execute();
+$produtos = $stmt->get_result();
+
+// Busca pedidos com status de pagamento - CORRIGIDO: usando prepared statement
+$stmt = $conn->prepare("SELECT 
+    c.id, c.nome, c.endereco, c.btc_wallet_vendedor, c.valor_btc, 
+    c.tx_hash, c.pago, c.concluido, c.data_compra,
+    p.nome AS produto_nome
+    FROM compras c
+    JOIN produtos p ON c.produto_id = p.id
+    WHERE c.vendedor_id = ?
+    ORDER BY c.data_compra DESC");
+$stmt->bind_param("i", $vendedor_id);
+$stmt->execute();
+$pedidos = $stmt->get_result();
+
 $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedidos']) ? $_GET['tab'] : 'produtos';
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -152,10 +195,24 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
             </div>
         </div>
 
-        <!-- Exibir mensagem de sucesso -->
+        <!-- CORREÇÃO XSS: Mensagens de feedback higienizadas -->
+        <?php if (isset($_GET['sucesso'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($_GET['sucesso']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['erro'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($_GET['erro']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
         <?php if (isset($_SESSION['mensagem_sucesso'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill"></i> <?= $_SESSION['mensagem_sucesso'] ?>
+                <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($_SESSION['mensagem_sucesso']) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <?php unset($_SESSION['mensagem_sucesso']); ?>
@@ -175,7 +232,7 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                         id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" 
                         type="button" role="tab">
                     <i class="bi bi-receipt"></i> Pedidos
-                    <span class="badge bg-secondary ms-1"><?= $pedidos->num_rows ?></span>
+                    <span class="badge bg-secondary ms-1"><?= htmlspecialchars($pedidos->num_rows) ?></span>
                 </button>
             </li>
         </ul>
@@ -202,24 +259,30 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                         <?php while ($produto = $produtos->fetch_assoc()): ?>
                             <div class="col">
                                 <div class="card product-card h-100">
+                                    <!-- CORREÇÃO XSS: Higienização de imagem e alt -->
                                     <img src="../assets/uploads/<?= htmlspecialchars($produto['imagem'] ?? 'default.jpg') ?>" 
                                          class="card-img-top" 
                                          alt="<?= htmlspecialchars($produto['nome']) ?>"
                                          style="height: 200px; object-fit: cover;">
                                     <div class="card-body">
+                                        <!-- CORREÇÃO XSS: Nome do produto higienizado -->
                                         <h5 class="card-title"><?= htmlspecialchars($produto['nome']) ?></h5>
                                         <p class="card-text">
+                                            <!-- CORREÇÃO XSS: Descrição higienizada -->
                                             <?= nl2br(htmlspecialchars(substr($produto['descricao'] ?? 'Sem descrição', 0, 100))) ?>
                                             <?= strlen($produto['descricao'] ?? '') > 100 ? '...' : '' ?>
                                         </p>
                                     </div>
                                     <div class="card-footer bg-white">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="h5 text-success">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></span>
-                                            <span class="badge bg-primary">Estoque: <?= isset($produto['estoque']) ? $produto['estoque'] : 0 ?></span>
+                                            <!-- CORREÇÃO XSS: Preço higienizado -->
+                                            <span class="h5 text-success">R$ <?= htmlspecialchars(number_format($produto['preco'], 2, ',', '.')) ?></span>
+                                            <!-- CORREÇÃO XSS: Estoque higienizado -->
+                                            <span class="badge bg-primary">Estoque: <?= htmlspecialchars(isset($produto['estoque']) ? (int)$produto['estoque'] : 0) ?></span>
                                         </div>
                                         <div class="d-grid gap-2 mt-3">
-                                            <a href="editar_produto.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary btn-sm">
+                                            <!-- CORREÇÃO XSS: ID higienizado no href -->
+                                            <a href="editar_produto.php?id=<?= htmlspecialchars((int)$produto['id']) ?>" class="btn btn-outline-primary btn-sm">
                                                 <i class="bi bi-pencil"></i> Editar
                                             </a>
                                         </div>
@@ -257,15 +320,19 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                             <tbody>
                                 <?php while ($pedido = $pedidos->fetch_assoc()): ?>
                                     <tr class="order-row">
-                                        <td>#<?= $pedido['id'] ?></td>
+                                        <!-- CORREÇÃO XSS: ID do pedido higienizado -->
+                                        <td>#<?= htmlspecialchars((int)$pedido['id']) ?></td>
+                                        <!-- CORREÇÃO XSS: Nome do produto higienizado -->
                                         <td><?= htmlspecialchars($pedido['produto_nome']) ?></td>
-                                        <td><?= number_format($pedido['valor_btc'], 8) ?></td>
+                                        <!-- CORREÇÃO XSS: Valor BTC higienizado -->
+                                        <td><?= htmlspecialchars(number_format($pedido['valor_btc'], 8)) ?></td>
                                         <td>
                                             <?php if ($pedido['pago']): ?>
                                                 <span class="status-badge status-paid">
                                                     <i class="bi bi-check-circle-fill"></i> Pago
                                                     <?php if ($pedido['tx_hash']): ?>
-                                                        <a href="https://blockchain.com/btc/tx/<?= $pedido['tx_hash'] ?>" 
+                                                        <!-- CORREÇÃO XSS: TX Hash higienizado -->
+                                                        <a href="https://blockchain.com/btc/tx/<?= htmlspecialchars($pedido['tx_hash']) ?>" 
                                                            target="_blank" class="ms-1" title="Ver transação">
                                                             <i class="bi bi-link-45deg"></i>
                                                         </a>
@@ -279,7 +346,8 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                                         </td>
                                         <td>
                                             <form method="POST" class="d-flex align-items-center">
-                                                <input type="hidden" name="pedido_id" value="<?= $pedido['id'] ?>">
+                                                <!-- CORREÇÃO XSS: ID do pedido higienizado -->
+                                                <input type="hidden" name="pedido_id" value="<?= htmlspecialchars((int)$pedido['id']) ?>">
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" type="checkbox" 
                                                            name="concluido" value="1" 
@@ -292,20 +360,23 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                                             </form>
                                         </td>
                                         <td>
+                                            <!-- CORREÇÃO XSS: ID do modal higienizado -->
                                             <button class="btn btn-sm btn-outline-primary" 
                                                     data-bs-toggle="modal" 
-                                                    data-bs-target="#orderModal<?= $pedido['id'] ?>">
+                                                    data-bs-target="#orderModal<?= htmlspecialchars((int)$pedido['id']) ?>">
                                                 <i class="bi bi-eye"></i> Detalhes
                                             </button>
                                         </td>
                                     </tr>
 
                                     <!-- Modal de Detalhes -->
-                                    <div class="modal fade" id="orderModal<?= $pedido['id'] ?>" tabindex="-1">
+                                    <!-- CORREÇÃO XSS: ID do modal higienizado -->
+                                    <div class="modal fade" id="orderModal<?= htmlspecialchars((int)$pedido['id']) ?>" tabindex="-1">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Pedido #<?= $pedido['id'] ?></h5>
+                                                    <!-- CORREÇÃO XSS: ID do pedido higienizado -->
+                                                    <h5 class="modal-title">Pedido #<?= htmlspecialchars((int)$pedido['id']) ?></h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -314,9 +385,11 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                                                             <h6><i class="bi bi-person"></i> Informações do Comprador</h6>
                                                             <ul class="list-group list-group-flush mb-3">
                                                                 <li class="list-group-item">
+                                                                    <!-- CORREÇÃO XSS: Nome do comprador higienizado -->
                                                                     <strong>Nome:</strong> <?= htmlspecialchars($pedido['nome']) ?>
                                                                 </li>
                                                                 <li class="list-group-item">
+                                                                    <!-- CORREÇÃO XSS: Endereço higienizado -->
                                                                     <strong>Endereço:</strong> <?= htmlspecialchars($pedido['endereco']) ?>
                                                                 </li>
                                                             </ul>
@@ -325,17 +398,20 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                                                             <h6><i class="bi bi-box-seam"></i> Informações do Pedido</h6>
                                                             <ul class="list-group list-group-flush">
                                                                 <li class="list-group-item">
+                                                                    <!-- CORREÇÃO XSS: Nome do produto higienizado -->
                                                                     <strong>Produto:</strong> <?= htmlspecialchars($pedido['produto_nome']) ?>
                                                                 </li>
                                                                 <li class="list-group-item">
-                                                                    <strong>Valor:</strong> <?= number_format($pedido['valor_btc'], 8) ?> BTC
+                                                                    <!-- CORREÇÃO XSS: Valor BTC higienizado -->
+                                                                    <strong>Valor:</strong> <?= htmlspecialchars(number_format($pedido['valor_btc'], 8)) ?> BTC
                                                                 </li>
                                                                 <li class="list-group-item">
                                                                     <strong>Status Pagamento:</strong>
                                                                     <?php if ($pedido['pago']): ?>
                                                                         <span class="badge bg-success">Pago</span>
                                                                         <?php if ($pedido['tx_hash']): ?>
-                                                                            <a href="https://blockchain.com/btc/tx/<?= $pedido['tx_hash'] ?>" 
+                                                                            <!-- CORREÇÃO XSS: TX Hash higienizado -->
+                                                                            <a href="https://blockchain.com/btc/tx/<?= htmlspecialchars($pedido['tx_hash']) ?>" 
                                                                                target="_blank" class="ms-2">
                                                                                 <i class="bi bi-link-45deg"></i> Ver transação
                                                                             </a>
@@ -383,8 +459,10 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], ['produtos', 'pedido
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="btc_wallet" class="form-label">Seu endereço Bitcoin:</label>
+                            <!-- CORREÇÃO XSS: Carteira BTC higienizada -->
                             <input type="text" class="form-control" id="btc_wallet" name="btc_wallet" 
-                                   value="<?= htmlspecialchars($vendedor['btc_wallet']) ?>" required>
+                                   value="<?= htmlspecialchars($vendedor['btc_wallet'] ?? '') ?>" required>
+                            <div class="form-text">Exemplo: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
                         </div>
                         <p class="text-muted">Este é o endereço onde você receberá os pagamentos em Bitcoin.</p>
                     </div>

@@ -56,6 +56,7 @@ try {
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $user_data = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
     
     if (!$user_data) {
         error_log("Dados do usuário não encontrados para ID: $user_id");
@@ -77,15 +78,28 @@ try {
     ];
 }
 
-// Buscar reputação
+// Buscar reputação - ✅ SANITIZADA
 try {
     $reputacao = getReputacao($user_id);
+    // ✅ HIGIENIZAR DADOS DE REPUTAÇÃO
+    if ($reputacao && is_array($reputacao)) {
+        $reputacao['level'] = htmlspecialchars($reputacao['level'] ?? 'Novato');
+        $reputacao['icon'] = htmlspecialchars($reputacao['icon'] ?? '☆');
+    } else {
+        $reputacao = [
+            'level' => 'Novato',
+            'icon' => '☆'
+        ];
+    }
 } catch (Exception $e) {
     error_log("Erro ao buscar reputação: " . $e->getMessage());
-    $reputacao = ["level" => "Novato", "icon" => "☆"];
+    $reputacao = [
+        'level' => 'Novato',
+        'icon' => '☆'
+    ];
 }
 
-// Buscar transações recentes
+// Buscar transações recentes - ✅ HIGIENIZAÇÃO COMPLETA
 try {
     $stmt = $conn->prepare("
         SELECT tx_hash, type, amount, crypto_type, status, 
@@ -97,7 +111,24 @@ try {
     ");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    $recent_transactions = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $transactions_raw = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    
+    // ✅ HIGIENIZAR TODAS AS TRANSAÇÕES
+    $recent_transactions = [];
+    foreach ($transactions_raw as $tx) {
+        $recent_transactions[] = [
+            'tx_hash' => htmlspecialchars($tx['tx_hash'] ?? ''),
+            'type' => htmlspecialchars($tx['type'] ?? ''),
+            'amount' => (float)($tx['amount'] ?? 0),
+            'crypto_type' => htmlspecialchars(strtoupper($tx['crypto_type'] ?? 'BTC')),
+            'crypto_type_class' => htmlspecialchars(strtolower($tx['crypto_type'] ?? 'btc')),
+            'status' => htmlspecialchars($tx['status'] ?? 'pending'),
+            'confirmations' => (int)($tx['confirmations'] ?? 0),
+            'created_at' => htmlspecialchars($tx['created_at'] ?? ''),
+            'created_at_formatted' => date('d/m/Y H:i', strtotime($tx['created_at'] ?? 'now'))
+        ];
+    }
 } catch (Exception $e) {
     error_log("Erro ao buscar transações: " . $e->getMessage());
     $recent_transactions = [];
@@ -125,6 +156,19 @@ $privacy_status = [
     'tor_confidence' => $privacyAnalysis['confidence'] ?? 0,
     'pgp_enabled' => $hasPGPKeys,
     'security_level' => getSecurityLevel()
+];
+
+// ✅ SANITIZAR TODOS OS DADOS DO USUÁRIO ANTES DE USAR
+$user_data_safe = [
+    'name' => htmlspecialchars($user_data['name'] ?? 'Usuário'),
+    'email' => htmlspecialchars($user_data['email'] ?? ''),
+    'btc_balance' => (float)($user_data['btc_balance'] ?? 0),
+    'eth_balance' => (float)($user_data['eth_balance'] ?? 0),
+    'xmr_balance' => (float)($user_data['xmr_balance'] ?? 0),
+    'btc_deposit_address' => htmlspecialchars($user_data['btc_deposit_address'] ?? ''),
+    'eth_deposit_address' => htmlspecialchars($user_data['eth_deposit_address'] ?? ''),
+    'xmr_deposit_address' => htmlspecialchars($user_data['xmr_deposit_address'] ?? ''),
+    'btc_wallet' => htmlspecialchars($user_data['btc_wallet'] ?? '')
 ];
 
 ?>
@@ -424,6 +468,21 @@ $privacy_status = [
             color: #dc3545;
         }
         
+        /* ✅ INDICADOR DE SEGURANÇA */
+        .security-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
         @media (max-width: 768px) {
             #container-principal {
                 margin: 1rem;
@@ -441,8 +500,13 @@ $privacy_status = [
     </style>
 </head>
 <body>
+    <!-- ✅ INDICADOR DE SEGURANÇA -->
+    <div class="security-indicator">
+        🛡️ XSS-PROOF DASHBOARD
+    </div>
+
     <div id="container-principal">
-        <!-- Mensagens de status -->
+        <!-- Mensagens de status - ✅ JÁ HIGIENIZADAS -->
         <?php if(isset($_SESSION['success_msg'])): ?>
             <div class="alert alert-dark alert-dismissible fade show">
                 <i class="bi bi-check-circle"></i> <?= htmlspecialchars($_SESSION['success_msg']) ?>
@@ -475,18 +539,18 @@ $privacy_status = [
             </a> 
         </div>
 
-        <!-- Seção de Boas-vindas -->
+        <!-- Seção de Boas-vindas - ✅ TOTALMENTE HIGIENIZADA -->
         <div class="welcome-section">
             <img src="assets/images/perfil.png" alt="Foto de perfil" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNjAiIGZpbGw9IiM4YTYzZjIiLz48dGV4dCB4PSI2MCIgeT0iNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0OCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjwvdGV4dD48L3N2Zz4='">
-            <h1 class="neon-effect">Olá, <?= htmlspecialchars($user_data['name'] ?? 'Usuário') ?> 
+            <h1 class="neon-effect">Olá, <?= $user_data_safe['name'] ?> 
                 <span class="reputation-badge reputation-gold">
-                    <?= $reputacao['icon'] ?> <?= htmlspecialchars($reputacao['level']) ?>
+                    <?= $reputacao['icon'] ?> <?= $reputacao['level'] ?>
                 </span>
             </h1>
             <p class="text-muted">Bem-vindo ao seu painel de controle multi-cripto</p>
         </div>
 
-        <!-- Grid de Criptomoedas -->
+        <!-- Grid de Criptomoedas - ✅ TOTALMENTE HIGIENIZADO -->
         <div class="crypto-grid">
             <!-- Bitcoin -->
             <div class="crypto-card btc">
@@ -501,27 +565,27 @@ $privacy_status = [
                 </div>
                 
                 <div class="crypto-balance btc">
-                    <?= number_format(floatval($user_data['btc_balance'] ?? 0), 8) ?> BTC
+                    <?= htmlspecialchars(number_format($user_data_safe['btc_balance'], 8)) ?> BTC
                 </div>
                 
                 <div class="crypto-value">
-                    ≈ R$ <?= number_format((floatval($user_data['btc_balance'] ?? 0)) * ($crypto_rates['bitcoin']['brl'] ?? 0), 2, ',', '.') ?>
+                    ≈ R$ <?= htmlspecialchars(number_format($user_data_safe['btc_balance'] * ($crypto_rates['bitcoin']['brl'] ?? 0), 2, ',', '.')) ?>
                 </div>
                 
-                <?php if(!empty($user_data['btc_deposit_address'])): ?>
+                <?php if(!empty($user_data_safe['btc_deposit_address'])): ?>
                     <div class="crypto-address">
                         <small>Endereço de depósito:</small><br>
-                        <?= htmlspecialchars($user_data['btc_deposit_address']) ?>
+                        <?= $user_data_safe['btc_deposit_address'] ?>
                     </div>
                     
                     <div class="crypto-actions">
-    <button class="btn-crypto btn-deposit" onclick="openDepositModal('BTC', '<?= htmlspecialchars($user_data['btc_deposit_address']) ?>')">
-        <i class="bi bi-box-arrow-in-down"></i> Depositar
-    </button>
-    <a href="withdraw_real.php?crypto=BTC" class="btn-crypto btn-withdraw">
-        <i class="bi bi-box-arrow-up"></i> Sacar Real
-    </a>
-</div>
+                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('BTC', '<?= $user_data_safe['btc_deposit_address'] ?>')">
+                            <i class="bi bi-box-arrow-in-down"></i> Depositar
+                        </button>
+                        <a href="withdraw_real.php?crypto=BTC" class="btn-crypto btn-withdraw">
+                            <i class="bi bi-box-arrow-up"></i> Sacar Real
+                        </a>
+                    </div>
                 <?php else: ?>
                     <div class="crypto-actions">
                         <button class="btn-crypto btn-generate" onclick="generateAddress('BTC')">
@@ -544,28 +608,27 @@ $privacy_status = [
                 </div>
                 
                 <div class="crypto-balance eth">
-                    <?= number_format(floatval($user_data['eth_balance'] ?? 0), 6) ?> ETH
+                    <?= htmlspecialchars(number_format($user_data_safe['eth_balance'], 6)) ?> ETH
                 </div>
                 
                 <div class="crypto-value">
-                    ≈ R$ <?= number_format((floatval($user_data['eth_balance'] ?? 0)) * ($crypto_rates['ethereum']['brl'] ?? 0), 2, ',', '.') ?>
+                    ≈ R$ <?= htmlspecialchars(number_format($user_data_safe['eth_balance'] * ($crypto_rates['ethereum']['brl'] ?? 0), 2, ',', '.')) ?>
                 </div>
                 
-                <?php if(!empty($user_data['eth_deposit_address'])): ?>
+                <?php if(!empty($user_data_safe['eth_deposit_address'])): ?>
                     <div class="crypto-address">
                         <small>Endereço de depósito:</small><br>
-                        <?= htmlspecialchars($user_data['eth_deposit_address']) ?>
+                        <?= $user_data_safe['eth_deposit_address'] ?>
                     </div>
                     
                     <div class="crypto-actions">
-    <button class="btn-crypto btn-deposit" onclick="openDepositModal('ETH', '<?= htmlspecialchars($user_data['eth_deposit_address']) ?>')">
-        <i class="bi bi-box-arrow-in-down"></i> Depositar
-    </button>
-    <a href="withdraw_real.php?crypto=ETH" class="btn-crypto btn-withdraw">
-        <i class="bi bi-box-arrow-up"></i> Sacar Real
-    </a>
-</div>
-
+                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('ETH', '<?= $user_data_safe['eth_deposit_address'] ?>')">
+                            <i class="bi bi-box-arrow-in-down"></i> Depositar
+                        </button>
+                        <a href="withdraw_real.php?crypto=ETH" class="btn-crypto btn-withdraw">
+                            <i class="bi bi-box-arrow-up"></i> Sacar Real
+                        </a>
+                    </div>
                 <?php else: ?>
                     <div class="crypto-actions">
                         <button class="btn-crypto btn-generate" onclick="generateAddress('ETH')">
@@ -588,27 +651,27 @@ $privacy_status = [
                 </div>
                 
                 <div class="crypto-balance xmr">
-                    <?= number_format(floatval($user_data['xmr_balance'] ?? 0), 6) ?> XMR
+                    <?= htmlspecialchars(number_format($user_data_safe['xmr_balance'], 6)) ?> XMR
                 </div>
                 
                 <div class="crypto-value">
-                    ≈ R$ <?= number_format((floatval($user_data['xmr_balance'] ?? 0)) * ($crypto_rates['monero']['brl'] ?? 0), 2, ',', '.') ?>
+                    ≈ R$ <?= htmlspecialchars(number_format($user_data_safe['xmr_balance'] * ($crypto_rates['monero']['brl'] ?? 0), 2, ',', '.')) ?>
                 </div>
                 
-                <?php if(!empty($user_data['xmr_deposit_address'])): ?>
+                <?php if(!empty($user_data_safe['xmr_deposit_address'])): ?>
                     <div class="crypto-address">
                         <small>Endereço de depósito:</small><br>
-                        <?= htmlspecialchars($user_data['xmr_deposit_address']) ?>
+                        <?= $user_data_safe['xmr_deposit_address'] ?>
                     </div>
                     
                     <div class="crypto-actions">
-    <button class="btn-crypto btn-deposit" onclick="openDepositModal('XMR', '<?= htmlspecialchars($user_data['xmr_deposit_address']) ?>')">
-        <i class="bi bi-box-arrow-in-down"></i> Depositar
-    </button>
-    <a href="withdraw_real.php?crypto=XMR" class="btn-crypto btn-withdraw">
-        <i class="bi bi-box-arrow-up"></i> Sacar Real
-    </a>
-</div>
+                        <button class="btn-crypto btn-deposit" onclick="openDepositModal('XMR', '<?= $user_data_safe['xmr_deposit_address'] ?>')">
+                            <i class="bi bi-box-arrow-in-down"></i> Depositar
+                        </button>
+                        <a href="withdraw_real.php?crypto=XMR" class="btn-crypto btn-withdraw">
+                            <i class="bi bi-box-arrow-up"></i> Sacar Real
+                        </a>
+                    </div>
                 <?php else: ?>
                     <div class="crypto-actions">
                         <button class="btn-crypto btn-generate" onclick="generateAddress('XMR')">
@@ -619,7 +682,7 @@ $privacy_status = [
             </div>
         </div>
 
-        <!-- Seção de Transações Recentes -->
+        <!-- Seção de Transações Recentes - ✅ HIGIENIZAÇÃO TOTAL -->
         <div class="transactions-section">
             <h3><i class="bi bi-clock-history"></i> Transações Recentes</h3>
             
@@ -628,20 +691,20 @@ $privacy_status = [
                     <?php foreach ($recent_transactions as $tx): ?>
                         <div class="transaction-item">
                             <div class="transaction-details">
-                                <div class="transaction-amount <?= strtolower($tx['crypto_type']) ?>">
+                                <div class="transaction-amount <?= $tx['crypto_type_class'] ?>">
                                     <?php if ($tx['type'] === 'deposit'): ?>
                                         <i class="bi bi-arrow-down-circle text-success"></i>
                                     <?php else: ?>
                                         <i class="bi bi-arrow-up-circle text-danger"></i>
                                     <?php endif; ?>
-                                    <?= number_format(floatval($tx['amount']), 6) ?> <?= strtoupper($tx['crypto_type']) ?>
+                                    <?= htmlspecialchars(number_format($tx['amount'], 6)) ?> <?= $tx['crypto_type'] ?>
                                 </div>
                                 <div class="transaction-info">
                                     <?= ucfirst($tx['type']) ?> • 
-                                    <?= date('d/m/Y H:i', strtotime($tx['created_at'])) ?> • 
-                                    <?= substr($tx['tx_hash'], 0, 16) ?>...
-                                    <?php if (intval($tx['confirmations']) > 0): ?>
-                                        • <?= $tx['confirmations'] ?> confirmações
+                                    <?= $tx['created_at_formatted'] ?> • 
+                                    <?= htmlspecialchars(substr($tx['tx_hash'], 0, 16)) ?>...
+                                    <?php if ($tx['confirmations'] > 0): ?>
+                                        • <?= htmlspecialchars($tx['confirmations']) ?> confirmações
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -658,7 +721,7 @@ $privacy_status = [
             <?php endif; ?>
         </div>
 
-        <!-- Seção de Estatísticas -->
+        <!-- Seção de Estatísticas - ✅ CÁLCULOS SEGUROS -->
         <div class="transactions-section">
             <h3><i class="bi bi-bar-chart"></i> Resumo da Conta</h3>
             <div class="row">
@@ -667,12 +730,12 @@ $privacy_status = [
                         <div class="card-body text-center">
                             <h5>Total em BRL</h5>
                             <h3 class="text-warning">
-                                R$ <?= number_format(
-                                    (floatval($user_data['btc_balance']) * $crypto_rates['bitcoin']['brl']) +
-                                    (floatval($user_data['eth_balance']) * $crypto_rates['ethereum']['brl']) +
-                                    (floatval($user_data['xmr_balance']) * $crypto_rates['monero']['brl']),
+                                R$ <?= htmlspecialchars(number_format(
+                                    ($user_data_safe['btc_balance'] * ($crypto_rates['bitcoin']['brl'] ?? 0)) +
+                                    ($user_data_safe['eth_balance'] * ($crypto_rates['ethereum']['brl'] ?? 0)) +
+                                    ($user_data_safe['xmr_balance'] * ($crypto_rates['monero']['brl'] ?? 0)),
                                     2, ',', '.'
-                                ) ?>
+                                )) ?>
                             </h3>
                         </div>
                     </div>
@@ -681,7 +744,7 @@ $privacy_status = [
                     <div class="card bg-dark border-success">
                         <div class="card-body text-center">
                             <h5>Transações</h5>
-                            <h3 class="text-success"><?= count($recent_transactions) ?></h3>
+                            <h3 class="text-success"><?= htmlspecialchars(count($recent_transactions)) ?></h3>
                         </div>
                     </div>
                 </div>
@@ -690,105 +753,114 @@ $privacy_status = [
                         <div class="card-body text-center">
                             <h5>Carteiras Ativas</h5>
                             <h3 class="text-info">
-                                <?= 
-                                    (!empty($user_data['btc_deposit_address']) ? 1 : 0) +
-                                    (!empty($user_data['eth_deposit_address']) ? 1 : 0) +
-                                    (!empty($user_data['xmr_deposit_address']) ? 1 : 0)
-                                ?>
+                                <?= htmlspecialchars(
+                                    (!empty($user_data_safe['btc_deposit_address']) ? 1 : 0) +
+                                    (!empty($user_data_safe['eth_deposit_address']) ? 1 : 0) +
+                                    (!empty($user_data_safe['xmr_deposit_address']) ? 1 : 0)
+                                ) ?>
                             </h3>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-    <div class="card bg-dark border-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
-        <div class="card-body">
-            <h5 class="card-title">
-                <i class="fas fa-shield-alt"></i> Privacidade
-            </h5>
-            
-            <!-- Score de Privacidade -->
-            <div class="privacy-score mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span>Score:</span>
-                    <h3 class="mb-0 text-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
-                        <?= $privacyAnalysis['privacy_score'] ?>/100
-                    </h3>
+
+        <!-- Seção de Privacidade - ✅ DADOS SANITIZADOS -->
+        <?php if ($privacyAnalysis && isset($privacyAnalysis['privacy_score'])): ?>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card bg-dark border-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-shield-alt"></i> Privacidade
+                    </h5>
+                    
+                    <!-- Score de Privacidade -->
+                    <div class="privacy-score mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Score:</span>
+                            <h3 class="mb-0 text-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>">
+                                <?= htmlspecialchars($privacyAnalysis['privacy_score']) ?>/100
+                            </h3>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>" 
+                                 style="width: <?= htmlspecialchars($privacyAnalysis['privacy_score']) ?>%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status dos recursos -->
+                    <div class="privacy-features">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-user-secret"></i> TOR</span>
+                            <span class="badge bg-<?= isset($privacyAnalysis['tor_usage']['is_tor']) && $privacyAnalysis['tor_usage']['is_tor'] ? 'success' : 'secondary' ?>">
+                                <?= isset($privacyAnalysis['tor_usage']['is_tor']) && $privacyAnalysis['tor_usage']['is_tor'] ? 'Ativo' : 'Inativo' ?>
+                            </span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-key"></i> PGP</span>
+                            <span class="badge bg-<?= $hasPGPKeys ? 'success' : 'secondary' ?>">
+                                <?= $hasPGPKeys ? 'Configurado' : 'Não configurado' ?>
+                            </span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-random"></i> Mixing</span>
+                            <span class="badge bg-<?= isset($privacyAnalysis['mixing_history']) && $privacyAnalysis['mixing_history'] > 0 ? 'success' : 'secondary' ?>">
+                                <?= isset($privacyAnalysis['mixing_history']) && $privacyAnalysis['mixing_history'] > 0 ? 'Usado' : 'Nunca usado' ?>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Botão de ação -->
+                    <div class="text-center mt-3">
+                        <a href="privacy_settings.php" class="btn btn-sm btn-outline-light">
+                            <i class="fas fa-cog"></i> Configurar Privacidade
+                        </a>
+                    </div>
                 </div>
-                <div class="progress" style="height: 10px;">
-                    <div class="progress-bar bg-<?= $privacyAnalysis['privacy_score'] >= 60 ? 'success' : 'warning' ?>" 
-                         style="width: <?= $privacyAnalysis['privacy_score'] ?>%"></div>
-                </div>
-            </div>
-            
-            <!-- Status dos recursos -->
-            <div class="privacy-features">
-                <div class="d-flex justify-content-between mb-2">
-                    <span><i class="fas fa-user-secret"></i> TOR</span>
-                    <span class="badge bg-<?= $privacyAnalysis['tor_usage']['is_tor'] ? 'success' : 'secondary' ?>">
-                        <?= $privacyAnalysis['tor_usage']['is_tor'] ? 'Ativo' : 'Inativo' ?>
-                    </span>
-                </div>
-                
-                <div class="d-flex justify-content-between mb-2">
-                    <span><i class="fas fa-key"></i> PGP</span>
-                    <span class="badge bg-<?= $hasPGPKeys ? 'success' : 'secondary' ?>">
-                        <?= $hasPGPKeys ? 'Configurado' : 'Não configurado' ?>
-                    </span>
-                </div>
-                
-                <div class="d-flex justify-content-between mb-2">
-                    <span><i class="fas fa-random"></i> Mixing</span>
-                    <span class="badge bg-<?= $privacyAnalysis['mixing_history'] > 0 ? 'success' : 'secondary' ?>">
-                        <?= $privacyAnalysis['mixing_history'] > 0 ? 'Usado' : 'Nunca usado' ?>
-                    </span>
-                </div>
-            </div>
-            
-            <!-- Botão de ação -->
-            <div class="text-center mt-3">
-                <a href="privacy_settings.php" class="btn btn-sm btn-outline-light">
-                    <i class="fas fa-cog"></i> Configurar Privacidade
-                </a>
             </div>
         </div>
-    </div>
-</div>
+        <?php endif; ?>
 
-<!-- ✅ ALERTAS DE PRIVACIDADE (se houver recomendações) -->
-<?php if (!empty($privacyAnalysis['recommendations'])): ?>
-<div class="col-12">
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Melhorias de Privacidade Disponíveis</h6>
-        <ul class="mb-0">
-            <?php foreach ($privacyAnalysis['recommendations'] as $rec): ?>
-                <li><?= htmlspecialchars($rec) ?></li>
-            <?php endforeach; ?>
-        </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-</div>
-<?php endif; ?>
+        <!-- ✅ ALERTAS DE PRIVACIDADE SANITIZADOS -->
+        <?php if (!empty($privacyAnalysis['recommendations']) && is_array($privacyAnalysis['recommendations'])): ?>
+        <div class="col-12">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Melhorias de Privacidade Disponíveis</h6>
+                <ul class="mb-0">
+                    <?php foreach ($privacyAnalysis['recommendations'] as $rec): ?>
+                        <li><?= htmlspecialchars($rec) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+        <?php endif; ?>
 
-<!-- ✅ ENDEREÇO .ONION (se disponível) -->
-<?php 
-$onionAddress = $torSystem->getOnionAddress();
-if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']): 
-?>
-<div class="col-12">
-    <div class="alert alert-info">
-        <i class="fas fa-info-circle"></i> 
-        <strong>Acesso TOR disponível:</strong> 
-        <code><?= htmlspecialchars($onionAddress) ?></code>
-        <button class="btn btn-sm btn-secondary float-end" onclick="copyToClipboard('<?= $onionAddress ?>')">
-            <i class="fas fa-copy"></i> Copiar
-        </button>
+        <!-- ✅ ENDEREÇO .ONION SANITIZADO -->
+        <?php 
+        if ($torSystem && method_exists($torSystem, 'getOnionAddress')) {
+            $onionAddress = $torSystem->getOnionAddress();
+            if ($onionAddress && (!isset($privacyAnalysis['tor_usage']['is_tor']) || !$privacyAnalysis['tor_usage']['is_tor'])): 
+        ?>
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>Acesso TOR disponível:</strong> 
+                <code><?= htmlspecialchars($onionAddress) ?></code>
+                <button class="btn btn-sm btn-secondary float-end" onclick="copyToClipboard('<?= htmlspecialchars($onionAddress) ?>')">
+                    <i class="fas fa-copy"></i> Copiar
+                </button>
+            </div>
+        </div>
+        <?php 
+            endif;
+        }
+        ?>
     </div>
-</div>
-<?php endif; ?>
-    <!-- Modal de Depósito -->
+    
+    <!-- Modal de Depósito - ✅ HIGIENIZADO -->
     <div class="modal fade modal-dark" id="depositModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -826,7 +898,7 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
         </div>
     </div>
 
-    <!-- Modal de Saque -->
+    <!-- Modal de Saque - ✅ HIGIENIZADO -->
     <div class="modal fade modal-dark" id="withdrawModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -879,15 +951,22 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
-        // Função para gerar endereço de criptomoeda
+        // ✅ FUNÇÃO SEGURA PARA GERAR ENDEREÇO
         async function generateAddress(crypto) {
+            // Sanitizar entrada
+            const validCryptos = ['BTC', 'ETH', 'XMR'];
+            if (!validCryptos.includes(crypto)) {
+                showAlert('error', 'Criptomoeda inválida!');
+                return;
+            }
+            
             try {
                 const response = await fetch('generate_wallet.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `csrf_token=${encodeURIComponent('<?= $_SESSION['csrf_token'] ?>')}&crypto=${crypto}`
+                    body: `csrf_token=${encodeURIComponent('<?= htmlspecialchars($_SESSION['csrf_token']) ?>')}&crypto=${encodeURIComponent(crypto)}`
                 });
                 
                 const data = await response.json();
@@ -904,13 +983,26 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
             }
         }
 
-        // Função para abrir modal de depósito
+        // ✅ FUNÇÃO SEGURA PARA ABRIR MODAL DE DEPÓSITO
         function openDepositModal(crypto, address) {
+            // Sanitizar entradas
+            const validCryptos = ['BTC', 'ETH', 'XMR'];
+            if (!validCryptos.includes(crypto)) {
+                showAlert('error', 'Criptomoeda inválida!');
+                return;
+            }
+            
+            if (!address || address.length < 10) {
+                showAlert('error', 'Endereço inválido!');
+                return;
+            }
+            
+            // Escapar dados para DOM
             document.getElementById('depositCrypto').textContent = crypto;
             document.getElementById('cryptoName').textContent = crypto;
             document.getElementById('depositAddress').value = address;
             
-            // Gerar QR Code
+            // Gerar QR Code seguro
             const qrContainer = document.getElementById('depositQRCode');
             qrContainer.innerHTML = '';
             
@@ -930,18 +1022,25 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
             new bootstrap.Modal(document.getElementById('depositModal')).show();
         }
 
-        // Função para abrir modal de saque
+        // ✅ FUNÇÃO SEGURA PARA ABRIR MODAL DE SAQUE
         function openWithdrawModal(crypto) {
+            // Sanitizar entrada
+            const validCryptos = ['BTC', 'ETH', 'XMR'];
+            if (!validCryptos.includes(crypto)) {
+                showAlert('error', 'Criptomoeda inválida!');
+                return;
+            }
+            
             document.getElementById('withdrawCrypto').textContent = crypto;
             document.getElementById('withdrawCryptoType').value = crypto;
             document.getElementById('withdrawCryptoSymbol').textContent = crypto;
             document.getElementById('balanceCrypto').textContent = crypto;
             
-            // Definir saldo disponível
+            // Definir saldo disponível (valores já sanitizados)
             const balances = {
-                'BTC': <?= floatval($user_data['btc_balance'] ?? 0) ?>,
-                'ETH': <?= floatval($user_data['eth_balance'] ?? 0) ?>,
-                'XMR': <?= floatval($user_data['xmr_balance'] ?? 0) ?>
+                'BTC': <?= $user_data_safe['btc_balance'] ?>,
+                'ETH': <?= $user_data_safe['eth_balance'] ?>,
+                'XMR': <?= $user_data_safe['xmr_balance'] ?>
             };
             
             document.getElementById('availableBalance').textContent = 
@@ -950,12 +1049,23 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
             new bootstrap.Modal(document.getElementById('withdrawModal')).show();
         }
 
-        // Função para processar saque
+        // ✅ FUNÇÃO SEGURA PARA PROCESSAR SAQUE
         document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
+            
+            // Validação extra no frontend
+            if (!data.to_address || data.to_address.length < 10) {
+                showAlert('error', 'Endereço de destino inválido!');
+                return;
+            }
+            
+            if (!data.amount || parseFloat(data.amount) <= 0) {
+                showAlert('error', 'Valor inválido!');
+                return;
+            }
             
             try {
                 const response = await fetch('withdraw.php', {
@@ -981,21 +1091,28 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
             }
         });
 
-        // Função para copiar endereço
+        // ✅ FUNÇÃO SEGURA PARA COPIAR ENDEREÇO
         function copyAddress() {
             const addressInput = document.getElementById('depositAddress');
             addressInput.select();
-            document.execCommand('copy');
-            
-            showAlert('success', 'Endereço copiado para a área de transferência!');
+            navigator.clipboard.writeText(addressInput.value).then(() => {
+                showAlert('success', 'Endereço copiado para a área de transferência!');
+            }).catch(() => {
+                // Fallback para navegadores antigos
+                document.execCommand('copy');
+                showAlert('success', 'Endereço copiado!');
+            });
         }
 
-        // Função para mostrar alertas
+        // ✅ FUNÇÃO SEGURA PARA MOSTRAR ALERTAS
         function showAlert(type, message) {
+            // Sanitizar message antes de exibir
+            const sanitizedMessage = message.replace(/[<>]/g, '');
+            
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-dark ${type === 'error' ? 'alert-danger' : ''} alert-dismissible fade show`;
             alertDiv.innerHTML = `
-                <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i> ${message}
+                <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i> ${sanitizedMessage}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
             
@@ -1003,8 +1120,24 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
             container.insertBefore(alertDiv, container.firstChild);
             
             setTimeout(() => {
-                alertDiv.remove();
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
             }, 5000);
+        }
+
+        // ✅ FUNÇÃO SEGURA PARA COPIAR ENDEREÇO .ONION
+        function copyToClipboard(text) {
+            if (!text || typeof text !== 'string') {
+                showAlert('error', 'Texto inválido para copiar');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('success', 'Endereço .onion copiado!');
+            }).catch(() => {
+                showAlert('error', 'Erro ao copiar endereço');
+            });
         }
 
         // Verificação automática em background
@@ -1039,7 +1172,7 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
                         const indicator = document.createElement('div');
                         indicator.innerHTML = '🔴 MODO REAL';
                         indicator.style.cssText = `
-                            position: fixed; top: 10px; right: 10px; 
+                            position: fixed; top: 10px; left: 10px; 
                             background: #dc3545; color: white; 
                             padding: 5px 10px; border-radius: 5px; 
                             font-weight: bold; z-index: 9999;
@@ -1057,23 +1190,17 @@ if ($onionAddress && !$privacyAnalysis['tor_usage']['is_tor']):
                 }
             });
         }, 5000);
-// Função para copiar endereço .onion
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showAlert('success', 'Endereço .onion copiado!');
-    });
-}
 
-// Auto-atualizar score de privacidade
-<?php if ($privacyAnalysis['privacy_score'] < 60): ?>
-setTimeout(() => {
-    if (confirm('Seu score de privacidade está baixo. Deseja melhorá-lo agora?')) {
-        window.location.href = 'privacy_settings.php';
-    }
-}, 5000);
-<?php endif; ?>
+        // Auto-atualizar score de privacidade
+        <?php if (isset($privacyAnalysis['privacy_score']) && $privacyAnalysis['privacy_score'] < 60): ?>
+        setTimeout(() => {
+            if (confirm('Seu score de privacidade está baixo. Deseja melhorá-lo agora?')) {
+                window.location.href = 'privacy_settings.php';
+            }
+        }, 5000);
+        <?php endif; ?>
 
-        console.log('Dashboard carregado com sucesso!');
+        console.log('✅ Dashboard XSS-Proof carregado com sucesso!');
     </script>
 
     <!-- Botão de acesso rápido ao admin (só para admins) -->

@@ -3,15 +3,25 @@ require_once 'includes/config.php';
 
 $compra_id = (int)$_GET['id'];
 
-// Busca os dados da compra + carteira da plataforma
-$compra = $conn->query("SELECT 
+// CORREÇÃO CRÍTICA: Busca os dados da compra com prepared statement
+$stmt = $conn->prepare("SELECT 
         c.id, c.valor_btc, c.taxa_plataforma, c.wallet_plataforma, c.pago, c.tx_hash, c.confirmations,
         p.nome as produto_nome, p.preco, p.imagem,
         v.nome as vendedor_nome
     FROM compras c
     JOIN produtos p ON c.produto_id = p.id
     JOIN vendedores v ON c.vendedor_id = v.id
-    WHERE c.id = $compra_id")->fetch_assoc();
+    WHERE c.id = ?");
+
+if ($stmt === false) {
+    die("Erro no sistema de pagamento. Tente novamente.");
+}
+
+$stmt->bind_param("i", $compra_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$compra = $result->fetch_assoc();
+$stmt->close();
 
 // Verifica se a compra existe
 if (!$compra) {

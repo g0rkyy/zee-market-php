@@ -32,9 +32,6 @@ $stmt->bind_param("si", $_POST['btc_wallet'], $_SESSION['user_id']);
 
 if ($stmt->execute()) {
     $_SESSION['success_msg'] = 'Carteira Bitcoin configurada com sucesso!';
-    
-    // Registra a mudança via trigger
-    $conn->query("UPDATE users SET btc_wallet = btc_wallet WHERE id = " . $_SESSION['user_id']);
 } else {
     $_SESSION['error_msg'] = 'Erro ao salvar carteira: ' . $stmt->error;
 }
