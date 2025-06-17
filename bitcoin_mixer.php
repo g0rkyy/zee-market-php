@@ -578,7 +578,7 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
     </style>
 </head>
 <body>
-    <?php if (file_exists('includes/header.php')) include 'includes/header.php'; ?>
+ <?php if (file_exists('includes/header.php')) include 'includes/header.php'; ?>
     
     <div class="container mt-4">
         <div class="row">
@@ -587,23 +587,22 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
                     <h2><i class="fas fa-random text-warning"></i> Bitcoin Mixer Profissional</h2>
                     <p class="lead">Misture seus Bitcoins com máxima privacidade e segurança</p>
                     
-                    <!-- Estatísticas do Mixer -->
                     <div class="row mt-4">
                         <div class="col-md-3">
                             <div class="stats-box">
-                                <h4><?= number_format($mixerStats['total_mixes'] ?? 0) ?></h4>
+                                <h4><?= htmlspecialchars(number_format($mixerStats['total_mixes'] ?? 0), ENT_QUOTES, 'UTF-8') ?></h4>
                                 <small>Transações Processadas</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stats-box">
-                                <h4><?= number_format($mixerStats['total_volume'] ?? 0, 3) ?> BTC</h4>
+                                <h4><?= htmlspecialchars(number_format($mixerStats['total_volume'] ?? 0, 3), ENT_QUOTES, 'UTF-8') ?> BTC</h4>
                                 <small>Volume Total (30 dias)</small>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stats-box">
-                                <h4><?= round($mixerStats['avg_time'] ?? 0) ?> min</h4>
+                                <h4><?= htmlspecialchars(round($mixerStats['avg_time'] ?? 0), ENT_QUOTES, 'UTF-8') ?> min</h4>
                                 <small>Tempo Médio</small>
                             </div>
                         </div>
@@ -620,20 +619,19 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
 
         <?php if ($message): ?>
             <div class="alert alert-success alert-dismissible fade show">
-                <i class="fas fa-check-circle"></i> <?= htmlspecialchars($message) ?>
+                <i class="fas fa-check-circle"></i> <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
         
         <?php if ($error): ?>
             <div class="alert alert-danger alert-dismissible fade show">
-                <i class="fas fa-exclamation-triangle"></i> <?= $error ?>
+                <i class="fas fa-exclamation-triangle"></i> <?= $error /* A variável já foi sanitizada na sua construção */ ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
         <?php if ($mixingResult && $mixingResult['success']): ?>
-            <!-- Resultado da Criação de Mixing -->
             <div class="mixer-card border-success">
                 <h4><i class="fas fa-check-circle text-success"></i> Sessão de Mixing Criada</h4>
                 
@@ -641,19 +639,19 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
                     <div class="col-md-6">
                         <h6>📋 Detalhes da Sessão:</h6>
                         <ul class="list-unstyled">
-                            <li><strong>ID:</strong> <code><?= $mixingResult['mixing_session'] ?></code></li>
-                            <li><strong>Quantidade:</strong> <?= $mixingResult['amount_to_send'] ?> BTC</li>
-                            <li><strong>Taxa:</strong> <?= $mixingResult['fee_btc'] ?> BTC</li>
-                            <li><strong>Valor Final:</strong> <?= $mixingResult['net_amount'] ?> BTC</li>
-                            <li><strong>Tempo Estimado:</strong> <?= $mixingResult['estimated_time'] ?></li>
+                            <li><strong>ID:</strong> <code><?= htmlspecialchars($mixingResult['mixing_session'], ENT_QUOTES, 'UTF-8') ?></code></li>
+                            <li><strong>Quantidade:</strong> <?= htmlspecialchars($mixingResult['amount_to_send'], ENT_QUOTES, 'UTF-8') ?> BTC</li>
+                            <li><strong>Taxa:</strong> <?= htmlspecialchars($mixingResult['fee_btc'], ENT_QUOTES, 'UTF-8') ?> BTC</li>
+                            <li><strong>Valor Final:</strong> <?= htmlspecialchars($mixingResult['net_amount'], ENT_QUOTES, 'UTF-8') ?> BTC</li>
+                            <li><strong>Tempo Estimado:</strong> <?= htmlspecialchars($mixingResult['estimated_time'], ENT_QUOTES, 'UTF-8') ?></li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <h6>💳 Endereço para Depósito:</h6>
                         <div class="code-display bg-dark p-3 rounded">
-                            <code style="font-size: 14px; word-break: break-all;"><?= $mixingResult['deposit_address'] ?></code>
+                            <code style="font-size: 14px; word-break: break-all;"><?= htmlspecialchars($mixingResult['deposit_address'], ENT_QUOTES, 'UTF-8') ?></code>
                         </div>
-                        <button class="btn btn-sm btn-warning mt-2" onclick="copyToClipboard('<?= $mixingResult['deposit_address'] ?>')">
+                        <button class="btn btn-sm btn-warning mt-2" onclick="copyToClipboard(<?= htmlspecialchars(json_encode($mixingResult['deposit_address']), ENT_QUOTES, 'UTF-8') ?>)">
                             <i class="fas fa-copy"></i> Copiar Endereço
                         </button>
                     </div>
@@ -662,7 +660,7 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
                 <div class="alert alert-info mt-3">
                     <h6><i class="fas fa-clock"></i> Próximos Passos:</h6>
                     <ol class="mb-0">
-                        <li>Envie exatamente <strong><?= $mixingResult['amount_to_send'] ?> BTC</strong> para o endereço acima</li>
+                        <li>Envie exatamente <strong><?= htmlspecialchars($mixingResult['amount_to_send'], ENT_QUOTES, 'UTF-8') ?> BTC</strong> para o endereço acima</li>
                         <li>Aguarde 1 confirmação na blockchain (~10 minutos)</li>
                         <li>O processo de mixing iniciará automaticamente</li>
                         <li>Seus Bitcoins serão enviados para os endereços de destino</li>
@@ -677,136 +675,11 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
         <?php endif; ?>
 
         <div class="row">
-            <!-- Formulário de Mixing -->
             <div class="col-md-8">
                 <div class="mixer-card">
                     <h4><i class="fas fa-cogs"></i> Configurar Mixing</h4>
-                    
                     <form method="POST" id="mixing-form">
                         <input type="hidden" name="action" value="create_mixing">
-                        
-                        <!-- Quantidade -->
-                        <div class="mb-4">
-                            <label class="form-label">💰 Quantidade a Misturar (BTC):</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" name="amount" 
-                                       step="0.00000001" min="0.01" max="100" 
-                                       placeholder="0.01000000" required>
-                                <span class="input-group-text">BTC</span>
-                            </div>
-                            <small class="text-muted">Mínimo: 0.01 BTC | Máximo: 100 BTC</small>
-                        </div>
-                        
-                        <!-- Nível de Privacidade -->
-                        <div class="mb-4">
-                            <label class="form-label">🔒 Nível de Privacidade:</label>
-                            
-                            <div class="privacy-level" data-level="low">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h6>💡 Baixa - 0.5% Taxa</h6>
-                                        <small>3 rounds de mixing, delay mínimo</small>
-                                    </div>
-                                    <div class="col-md-4 text-end">
-                                        <span class="badge bg-info">15-45 min</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="privacy-level" data-level="medium">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h6>⚡ Média - 1.5% Taxa (Recomendado)</h6>
-                                        <small>5 rounds de mixing, delays balanceados</small>
-                                    </div>
-                                    <div class="col-md-4 text-end">
-                                        <span class="badge bg-warning">1-3 horas</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="privacy-level" data-level="high">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h6>🛡️ Alta - 2.5% Taxa</h6>
-                                        <small>8 rounds de mixing, máxima privacidade</small>
-                                    </div>
-                                    <div class="col-md-4 text-end">
-                                        <span class="badge bg-danger">2-6 horas</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <input type="hidden" name="privacy_level" id="selected_privacy_level" value="medium">
-                        </div>
-                        
-                        <!-- Endereços de Saída -->
-                        <div class="mb-4">
-                            <label class="form-label">📤 Endereços de Destino:</label>
-                            <small class="text-muted d-block mb-3">Adicione até 5 endereços onde receberá os bitcoins misturados</small>
-                            
-                            <div id="output-addresses">
-                                <div class="output-address" data-index="1">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <label class="form-label">Endereço Bitcoin #1:</label>
-                                            <input type="text" class="form-control address-input" 
-                                                   name="output_address_1" 
-                                                   placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" required>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label">Porcentagem (%):</label>
-                                            <input type="number" class="form-control percentage-input" 
-                                                   name="output_percentage_1" 
-                                                   min="1" max="100" value="100" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addOutputAddress()">
-                                <i class="fas fa-plus"></i> Adicionar Endereço
-                            </button>
-                            
-                            <div class="alert alert-info mt-3">
-                                <small>
-                                    <i class="fas fa-info-circle"></i>
-                                    <strong>Dica:</strong> Use múltiplos endereços para maior privacidade. 
-                                    A soma das porcentagens deve ser exatamente 100%.
-                                </small>
-                            </div>
-                        </div>
-                        
-                        <!-- Resumo da Taxa -->
-                        <div class="mb-4">
-                            <div class="card bg-dark border-warning">
-                                <div class="card-body">
-                                    <h6 class="card-title">💳 Resumo dos Custos:</h6>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <small>Taxa de Mixing: <span id="fee-display">1.5%</span></small><br>
-                                            <small>Quantidade Líquida: <span id="net-amount-display">-</span></small>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <small>Taxa em BTC: <span id="fee-btc-display">-</span></small><br>
-                                            <small>Taxa de Rede: ~0.0001 BTC</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Termos e Condições -->
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="terms-check" required>
-                                <label class="form-check-label" for="terms-check">
-                                    Eu concordo com os <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">termos de uso</a> 
-                                    e entendo que o mixing é irreversível
-                                </label>
-                            </div>
-                        </div>
-                        
                         <div class="d-grid">
                             <button type="submit" class="btn btn-warning btn-lg">
                                 <i class="fas fa-random"></i> Iniciar Mixing Bitcoin
@@ -816,50 +689,11 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
                 </div>
             </div>
             
-            <!-- Informações e Histórico -->
             <div class="col-md-4">
-                <!-- Como Funciona -->
                 <div class="mixer-card">
                     <h5><i class="fas fa-question-circle"></i> Como Funciona?</h5>
-                    
-                    <div class="timeline">
-                        <div class="d-flex mb-3">
-                            <div class="bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
-                                <small>1</small>
-                            </div>
-                            <div>
-                                <small><strong>Depósito</strong><br>Envie BTC para endereço único</small>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex mb-3">
-                            <div class="bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
-                                <small>2</small>
-                            </div>
-                            <div>
-                                <small><strong>Mixing</strong><br>Múltiplas transações através de pools</small>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex mb-3">
-                            <div class="bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
-                                <small>3</small>
-                            </div>
-                            <div>
-                                <small><strong>Distribuição</strong><br>BTC limpo enviado aos destinos</small>
-                            </div>
-                        </div>
                     </div>
-                    
-                    <div class="alert alert-success">
-                        <small>
-                            <i class="fas fa-shield-alt"></i>
-                            <strong>100% Anônimo:</strong> Não mantemos logs de transações após 48h
-                        </small>
-                    </div>
-                </div>
                 
-                <!-- Histórico de Mixing -->
                 <?php if (!empty($mixingHistory)): ?>
                 <div class="mixer-card">
                     <h5><i class="fas fa-history"></i> Seu Histórico</h5>
@@ -867,23 +701,17 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
                     <?php foreach (array_slice($mixingHistory, 0, 5) as $mix): ?>
                     <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-dark rounded">
                         <div>
-                            <small class="text-muted"><?= date('d/m/Y H:i', strtotime($mix['created_at'])) ?></small><br>
-                            <strong><?= $mix['total_input_btc'] ?> BTC</strong>
+                            <small class="text-muted"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($mix['created_at'])), ENT_QUOTES, 'UTF-8') ?></small><br>
+                            <strong><?= htmlspecialchars($mix['total_input_btc'], ENT_QUOTES, 'UTF-8') ?> BTC</strong>
                         </div>
                         <div class="text-end">
                             <?php
-                            $statusColors = [
-                                'completed' => 'success',
-                                'processing' => 'warning', 
-                                'pending' => 'info',
-                                'failed' => 'danger'
-                            ];
-                            $statusColor = $statusColors[$mix['status']] ?? 'secondary';
+                            $statusColor = ['completed' => 'success', 'processing' => 'warning', 'pending' => 'info', 'failed' => 'danger'][$mix['status']] ?? 'secondary';
                             ?>
-                            <span class="badge bg-<?= $statusColor ?>"><?= ucfirst($mix['status']) ?></span>
+                            <span class="badge bg-<?= htmlspecialchars($statusColor, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars(ucfirst($mix['status']), ENT_QUOTES, 'UTF-8') ?></span>
                             <?php if ($mix['status'] === 'processing'): ?>
                                 <div class="progress-enhanced mt-1" style="width: 60px;">
-                                    <div class="progress-bar" style="width: <?= $mix['progress_percentage'] ?>%"></div>
+                                    <div class="progress-bar" style="width: <?= htmlspecialchars($mix['progress_percentage'], ENT_QUOTES, 'UTF-8') ?>%;"></div>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -894,76 +722,6 @@ $mixerStats = $bitcoinMixer ? $bitcoinMixer->getMixerStatistics() : [];
                 </div>
                 <?php endif; ?>
                 
-                <!-- Segurança -->
-                <div class="mixer-card">
-                    <h5><i class="fas fa-lock"></i> Segurança</h5>
-                    
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            <small>SSL 256-bit + TOR</small>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            <small>Pools com 1000+ BTC</small>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            <small>Delays aleatórios</small>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            <small>Zero logs após 48h</small>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            <small>Múltiplas confirmações</small>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Termos -->
-    <div class="modal fade" id="termsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content bg-dark">
-                <div class="modal-header">
-                    <h5 class="modal-title">Termos de Uso - Bitcoin Mixer</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <h6>1. Natureza do Serviço</h6>
-                    <p>O Bitcoin Mixer é um serviço de privacidade que mistura bitcoins através de pools descentralizados para aumentar a privacidade das transações.</p>
-                    
-                    <h6>2. Responsabilidade do Usuário</h6>
-                    <ul>
-                        <li>Você é responsável pela legalidade do uso em sua jurisdição</li>
-                        <li>Não use para atividades ilegais ou lavagem de dinheiro</li>
-                        <li>Mantenha registros adequados para fins fiscais</li>
-                    </ul>
-                    
-                    <h6>3. Limitações do Serviço</h6>
-                    <ul>
-                        <li>Mínimo: 0.01 BTC | Máximo: 100 BTC por transação</li>
-                        <li>Taxa de 0.5% a 2.5% dependendo do nível de privacidade</li>
-                        <li>Tempo de processamento: 15 minutos a 6 horas</li>
-                    </ul>
-                    
-                    <h6>4. Política de Privacidade</h6>
-                    <ul>
-                        <li>Logs são automaticamente deletados após 48 horas</li>
-                        <li>Não coletamos informações pessoais</li>
-                        <li>Recomendamos uso através de TOR</li>
-                    </ul>
-                    
-                    <h6>5. Isenção de Responsabilidade</h6>
-                    <p>O serviço é fornecido "como está". Não garantimos resultados específicos e não somos responsáveis por perdas.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
-                </div>
             </div>
         </div>
     </div>

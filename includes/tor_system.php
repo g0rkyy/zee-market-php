@@ -550,28 +550,78 @@ ExitPolicy reject *:*
     }
     
     private function isKnownTorExitNode($ip) {
-        // Verificar em lista de exit nodes (implementar cache)
-        $torExitNodes = $this->getTorExitNodesList();
-        return in_array($ip, $torExitNodes);
+        // ✅ CORREÇÃO: Verificar se IP é válido
+        if (empty($ip) || $ip === 'unknown') {
+            return false;
+        }
+        
+        try {
+            // Verificar em lista de exit nodes (implementar cache)
+            $torExitNodes = $this->getTorExitNodesList();
+            
+            // ✅ CORREÇÃO: Verificar se retornou array válido
+            if (!is_array($torExitNodes) || empty($torExitNodes)) {
+                return false;
+            }
+            
+            return in_array($ip, $torExitNodes);
+            
+        } catch (Exception $e) {
+            error_log("Erro ao verificar exit node: " . $e->getMessage());
+            return false;
+        }
     }
     
     private function getTorExitNodesList() {
-        // Cache da lista de exit nodes
-        $cacheFile = __DIR__ . '/../cache/tor_exit_nodes.json';
-        
-        if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 3600)) {
-            return json_decode(file_get_contents($cacheFile), true);
+        try {
+            // Cache da lista de exit nodes
+            $cacheDir = __DIR__ . '/../cache';
+            if (!file_exists($cacheDir)) {
+                mkdir($cacheDir, 0755, true);
+            }
+            
+            $cacheFile = $cacheDir . '/tor_exit_nodes.json';
+            
+            // ✅ CORREÇÃO: Verificar se arquivo existe e é válido
+            if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 3600)) {
+                $cached = json_decode(file_get_contents($cacheFile), true);
+                if (is_array($cached)) {
+                    return $cached;
+                }
+            }
+            
+            // ✅ CORREÇÃO: Lista básica hardcoded como fallback
+            $basicExitNodes = [
+                '199.87.154.255',
+                '185.220.101.0',
+                '185.220.100.0',
+                '192.42.116.0',
+                '23.129.64.0'
+            ];
+            
+            // Tentar baixar lista atualizada (com timeout menor)
+            $result = $this->makeRequestViaTor('https://check.torproject.org/torbulkexitlist');
+            if ($result['success'] && !empty($result['response'])) {
+                $exitNodes = explode("\n", trim($result['response']));
+                $exitNodes = array_filter($exitNodes, function($ip) {
+                    return filter_var(trim($ip), FILTER_VALIDATE_IP);
+                });
+                
+                if (!empty($exitNodes)) {
+                    file_put_contents($cacheFile, json_encode($exitNodes));
+                    return $exitNodes;
+                }
+            }
+            
+            // ✅ RETORNAR LISTA BÁSICA SE FALHAR
+            return $basicExitNodes;
+            
+        } catch (Exception $e) {
+            error_log("Erro ao obter lista de exit nodes: " . $e->getMessage());
+            
+            // ✅ RETORNAR ARRAY VAZIO EM CASO DE ERRO
+            return [];
         }
-        
-        // Baixar lista atualizada
-        $result = $this->makeRequestViaTor('https://check.torproject.org/torbulkexitlist');
-        if ($result['success']) {
-            $exitNodes = explode("\n", trim($result['response']));
-            file_put_contents($cacheFile, json_encode($exitNodes));
-            return $exitNodes;
-        }
-        
-        return [];
     }
     
     private function generateMixingId() {

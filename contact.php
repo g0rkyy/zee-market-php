@@ -100,6 +100,7 @@ $isTorUser = $torDetection['connected'];
             overflow-y: auto;
             word-break: break-all;
             position: relative;
+            white-space: pre-wrap;
         }
         
         .key-display::before {
@@ -244,16 +245,14 @@ $isTorUser = $torDetection['connected'];
     </style>
 </head>
 <body>
-    <!-- Status Tor -->
     <div class="tor-status">
         <?php if ($isTorUser): ?>
-            🟢 Tor Ativo (<?= $torDetection['confidence'] ?>%)
+            🟢 Tor Ativo (<?= htmlspecialchars($torDetection['confidence'], ENT_QUOTES, 'UTF-8') ?>%)
         <?php else: ?>
             🔴 Tor Inativo - Use Tor Browser para máxima segurança
         <?php endif; ?>
     </div>
 
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand matrix-text" href="index.php">
@@ -286,7 +285,6 @@ $isTorUser = $torDetection['connected'];
                                 <p>As chaves PGP do servidor ainda não foram geradas. Entre em contato com o administrador.</p>
                             </div>
                         <?php else: ?>
-                            <!-- Chave Pública do Site -->
                             <div class="mb-4">
                                 <h3 class="matrix-text">
                                     <i class="fas fa-download"></i> Nossa Chave Pública PGP
@@ -297,11 +295,10 @@ $isTorUser = $torDetection['connected'];
                                     <button class="copy-button" onclick="copyPublicKey()">
                                         <i class="fas fa-copy"></i> Copiar
                                     </button>
-                                    <?= htmlspecialchars($sitePublicKey) ?>
+                                    <?= htmlspecialchars($sitePublicKey, ENT_QUOTES, 'UTF-8') ?>
                                 </div>
                             </div>
 
-                            <!-- Instruções Detalhadas -->
                             <div class="mb-4">
                                 <h3 class="matrix-text">
                                     <i class="fas fa-terminal"></i> Como Usar PGP
@@ -343,7 +340,6 @@ $isTorUser = $torDetection['connected'];
                                 </div>
                             </div>
 
-                            <!-- Formulário para Mensagem Criptografada -->
                             <div class="mb-4">
                                 <h3 class="matrix-text">
                                     <i class="fas fa-paper-plane"></i> Enviar Mensagem Criptografada
@@ -357,7 +353,7 @@ $isTorUser = $torDetection['connected'];
                                 <?php endif; ?>
                                 
                                 <form method="POST" action="process_encrypted_message.php" class="needs-validation" novalidate>
-                                    <input type="hidden" name="csrf_token" value="<?= generateSecureCSRFToken() ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generateSecureCSRFToken(), ENT_QUOTES, 'UTF-8') ?>">
                                     
                                     <div class="mb-3">
                                         <label class="form-label matrix-text">
@@ -398,7 +394,6 @@ $isTorUser = $torDetection['connected'];
                                 </form>
                             </div>
 
-                            <!-- Informações de Segurança -->
                             <div class="alert alert-darkweb">
                                 <h5><i class="fas fa-shield-alt"></i> Garantias de Segurança</h5>
                                 <ul class="mb-0">
@@ -411,7 +406,6 @@ $isTorUser = $torDetection['connected'];
                             </div>
                         <?php endif; ?>
 
-                        <!-- Exemplos de Uso -->
                         <div class="mt-4">
                             <h4 class="matrix-text">
                                 <i class="fas fa-lightbulb"></i> Para Que Serve o PGP?
@@ -444,7 +438,6 @@ $isTorUser = $torDetection['connected'];
                             </div>
                         </div>
 
-                        <!-- Rodapé -->
                         <div class="text-center mt-4 pt-4 border-top border-secondary">
                             <p class="text-muted">
                                 <i class="fas fa-user-secret"></i> 
@@ -466,10 +459,12 @@ $isTorUser = $torDetection['connected'];
         // Copiar chave pública
         function copyPublicKey() {
             const keyDisplay = document.getElementById('publicKeyDisplay');
-            const textToCopy = keyDisplay.textContent.replace('Copiar', '').trim();
+            // Clona o nó para não modificar o original, remove o botão e pega o texto
+            const clone = keyDisplay.cloneNode(true);
+            clone.removeChild(clone.querySelector('.copy-button'));
+            const textToCopy = clone.textContent.trim();
             
             navigator.clipboard.writeText(textToCopy).then(() => {
-                // Feedback visual
                 const button = keyDisplay.querySelector('.copy-button');
                 const originalText = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
@@ -484,7 +479,7 @@ $isTorUser = $torDetection['connected'];
             });
         }
 
-        // Validação do formulário
+        // Validação do formulário Bootstrap
         (function() {
             'use strict';
             window.addEventListener('load', function() {
@@ -500,57 +495,6 @@ $isTorUser = $torDetection['connected'];
                 });
             }, false);
         })();
-
-        // Verificar se mensagem parece ser PGP
-        document.querySelector('textarea[name="encrypted_message"]').addEventListener('blur', function() {
-            const message = this.value.trim();
-            if (message && !message.includes('-----BEGIN PGP MESSAGE-----')) {
-                this.style.borderColor = '#ff6b6b';
-                this.insertAdjacentHTML('afterend', 
-                    '<div class="text-warning mt-1"><small><i class="fas fa-exclamation-triangle"></i> A mensagem não parece estar criptografada com PGP</small></div>'
-                );
-            } else if (message.includes('-----BEGIN PGP MESSAGE-----')) {
-                this.style.borderColor = '#00ff00';
-                const warning = this.parentNode.querySelector('.text-warning');
-                if (warning) warning.remove();
-            }
-        });
-
-        // Efeito Matrix no background (sutil)
-        function createMatrixEffect() {
-            const chars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01";
-            const matrix = document.createElement('div');
-            matrix.style.cssText = `
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                pointer-events: none; z-index: -1; opacity: 0.05;
-                font-family: monospace; font-size: 10px; color: #00ff00;
-                overflow: hidden;
-            `;
-            
-            for (let i = 0; i < 50; i++) {
-                const column = document.createElement('div');
-                column.style.cssText = `
-                    position: absolute; top: -100px; left: ${i * 2}%;
-                    animation: fall ${Math.random() * 3 + 2}s linear infinite;
-                `;
-                column.textContent = chars.charAt(Math.floor(Math.random() * chars.length));
-                matrix.appendChild(column);
-            }
-            
-            document.body.appendChild(matrix);
-        }
-
-        // Adicionar CSS para animação da Matrix
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fall {
-                to { transform: translateY(100vh); }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Inicializar efeito Matrix
-        createMatrixEffect();
     </script>
 </body>
 </html>

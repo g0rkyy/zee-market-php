@@ -5,7 +5,7 @@ $compra_id = (int)$_GET['id'];
 
 // CORREÇÃO CRÍTICA: Busca os dados da compra com prepared statement
 $stmt = $conn->prepare("SELECT 
-        c.id, c.valor_btc, c.taxa_plataforma, c.wallet_plataforma, c.pago, c.tx_hash, c.confirmations,
+        c.id, c.valor_btc, c.taxa_plataforma, c.wallet_plataforma, c.pago, c.tx_hash, c.confirmations, c.data_compra,
         p.nome as produto_nome, p.preco, p.imagem,
         v.nome as vendedor_nome
     FROM compras c
@@ -35,13 +35,16 @@ $valor_vendedor = $valor_total_btc - $taxa_plataforma;
 $wallet_pagamento = $compra['wallet_plataforma']; // Carteira da plataforma
 
 // Formata os valores
-$valor_btc_formatado = number_format($valor_total_btc, 8);
-$taxa_formatada = number_format($taxa_plataforma, 8);
-$vendedor_formatado = number_format($valor_vendedor, 8);
+$valor_btc_formatado = number_format($valor_total_btc, 8, '.', '');
+$taxa_formatada = number_format($taxa_plataforma, 8, '.', '');
+$vendedor_formatado = number_format($valor_vendedor, 8, '.', '');
 
 // Status da compra
 $status_pago = (bool)$compra['pago'];
 $confirmacoes = (int)$compra['confirmations'];
+
+// URL segura para o QR Code
+$qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bitcoin:" . urlencode($wallet_pagamento) . "?amount=" . urlencode($valor_total_btc);
 ?>
 
 <!DOCTYPE html>
@@ -343,48 +346,44 @@ $confirmacoes = (int)$compra['confirmations'];
             <div class="payment-header">
                 <h1><i class="fab fa-bitcoin"></i> Pagamento Bitcoin</h1>
                 <div class="product-info">
-                    <h4><?= htmlspecialchars($compra['produto_nome']) ?></h4>
-                    <p>Pedido #<?= $compra_id ?> • Vendedor: <?= htmlspecialchars($compra['vendedor_nome']) ?></p>
+                    <h4><?= htmlspecialchars($compra['produto_nome'], ENT_QUOTES, 'UTF-8') ?></h4>
+                    <p>Pedido #<?= htmlspecialchars($compra_id, ENT_QUOTES, 'UTF-8') ?> • Vendedor: <?= htmlspecialchars($compra['vendedor_nome'], ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
             </div>
             
             <div class="payment-body">
-                <!-- Informações do Produto -->
                 <?php if (!empty($compra['imagem'])): ?>
                 <div class="product-mini">
-                    <img src="assets/uploads/<?= htmlspecialchars($compra['imagem']) ?>" alt="Produto">
+                    <img src="assets/uploads/<?= htmlspecialchars($compra['imagem'], ENT_QUOTES, 'UTF-8') ?>" alt="Produto">
                     <div>
-                        <h6><?= htmlspecialchars($compra['produto_nome']) ?></h6>
-                        <small class="text-muted">R$ <?= number_format($compra['preco'], 2, ',', '.') ?></small>
+                        <h6><?= htmlspecialchars($compra['produto_nome'], ENT_QUOTES, 'UTF-8') ?></h6>
+                        <small class="text-muted">R$ <?= htmlspecialchars(number_format($compra['preco'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></small>
                     </div>
                 </div>
                 <?php endif; ?>
                 
-                <!-- Valor a Pagar -->
                 <div class="crypto-amount">
                     <h5>Total a Pagar:</h5>
-                    <h2><?= $valor_btc_formatado ?> BTC</h2>
-                    <p class="mb-0">≈ R$ <?= number_format($compra['preco'], 2, ',', '.') ?></p>
+                    <h2><?= htmlspecialchars($valor_btc_formatado, ENT_QUOTES, 'UTF-8') ?> BTC</h2>
+                    <p class="mb-0">≈ R$ <?= htmlspecialchars(number_format($compra['preco'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
                 
-                <!-- Breakdown dos Valores -->
                 <div class="breakdown">
                     <h6><i class="fas fa-calculator"></i> Detalhamento:</h6>
                     <div class="breakdown-item">
                         <span>Produto:</span>
-                        <span><?= $vendedor_formatado ?> BTC</span>
+                        <span><?= htmlspecialchars($vendedor_formatado, ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     <div class="breakdown-item">
                         <span>Taxa Plataforma (2.5%):</span>
-                        <span><?= $taxa_formatada ?> BTC</span>
+                        <span><?= htmlspecialchars($taxa_formatada, ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     <div class="breakdown-item breakdown-total">
                         <span>Total:</span>
-                        <span><?= $valor_btc_formatado ?> BTC</span>
+                        <span><?= htmlspecialchars($valor_btc_formatado, ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                 </div>
                 
-                <!-- Status do Pagamento -->
                 <div class="status-section">
                     <?php if ($status_pago): ?>
                         <div class="status-paid">
@@ -396,11 +395,11 @@ $confirmacoes = (int)$compra['confirmations'];
                             <?php if (!empty($compra['tx_hash'])): ?>
                                 <div class="tx-hash">
                                     <strong>Hash da Transação:</strong><br>
-                                    <?= htmlspecialchars($compra['tx_hash']) ?>
+                                    <?= htmlspecialchars($compra['tx_hash'], ENT_QUOTES, 'UTF-8') ?>
                                 </div>
                             <?php endif; ?>
                             <?php if ($confirmacoes > 0): ?>
-                                <p class="mt-2"><strong>Confirmações:</strong> <?= $confirmacoes ?></p>
+                                <p class="mt-2"><strong>Confirmações:</strong> <?= htmlspecialchars($confirmacoes, ENT_QUOTES, 'UTF-8') ?></p>
                             <?php endif; ?>
                         </div>
                     <?php else: ?>
@@ -409,18 +408,17 @@ $confirmacoes = (int)$compra['confirmations'];
                                 <i class="fas fa-clock"></i>
                             </div>
                             <h4>Aguardando Pagamento</h4>
-                            <p>Envie <strong><?= $valor_btc_formatado ?> BTC</strong> para o endereço abaixo.</p>
+                            <p>Envie <strong><?= htmlspecialchars($valor_btc_formatado, ENT_QUOTES, 'UTF-8') ?> BTC</strong> para o endereço abaixo.</p>
                             
-                            <!-- QR Code e Endereço -->
                             <div class="qr-section">
                                 <div class="qr-code-container">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bitcoin:<?= urlencode($wallet_pagamento) ?>?amount=<?= $valor_total_btc ?>" 
+                                    <img src="<?= htmlspecialchars($qr_code_url, ENT_QUOTES, 'UTF-8') ?>" 
                                          alt="QR Code Bitcoin" style="width: 200px; height: 200px;">
                                 </div>
                                 
                                 <h6><i class="fas fa-wallet"></i> Endereço de Pagamento:</h6>
                                 <div class="wallet-address" id="wallet-address">
-                                    <?= htmlspecialchars($wallet_pagamento) ?>
+                                    <?= htmlspecialchars($wallet_pagamento, ENT_QUOTES, 'UTF-8') ?>
                                 </div>
                                 <button class="copy-btn" onclick="copyToClipboard()">
                                     <i class="fas fa-copy"></i> Copiar Endereço
@@ -434,13 +432,12 @@ $confirmacoes = (int)$compra['confirmations'];
                     <?php endif; ?>
                 </div>
                 
-                <!-- Instruções -->
                 <div class="instructions">
                     <h5><i class="fas fa-info-circle"></i> Como Pagar:</h5>
                     <ol>
                         <li>Abra sua carteira Bitcoin (Electrum, Blockchain, etc.)</li>
                         <li>Escaneie o QR Code ou copie o endereço acima</li>
-                        <li>Envie <strong>exatamente</strong> <?= $valor_btc_formatado ?> BTC</li>
+                        <li>Envie <strong>exatamente</strong> <?= htmlspecialchars($valor_btc_formatado, ENT_QUOTES, 'UTF-8') ?> BTC</li>
                         <li>Aguarde 1-3 confirmações na blockchain (~10-30 min)</li>
                         <li>O pagamento será processado automaticamente</li>
                     </ol>
@@ -471,6 +468,10 @@ $confirmacoes = (int)$compra['confirmations'];
                 });
         }
         
+        // Variaveis PHP seguras para JS
+        const compraId = <?= json_encode($compra_id, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        const creationDate = <?= json_encode(date("d/m/Y H:i", strtotime($compra["data_compra"] ?? "now")), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+
         // Verificar status do pagamento via AJAX
         function verificarStatus() {
             const btn = document.querySelector('.refresh-btn');
@@ -478,7 +479,7 @@ $confirmacoes = (int)$compra['confirmations'];
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
             btn.disabled = true;
             
-            fetch(`verificar_pagamento.php?id=<?= $compra_id ?>`)
+            fetch(`verificar_pagamento.php?id=${compraId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.pago) {
@@ -509,7 +510,7 @@ $confirmacoes = (int)$compra['confirmations'];
         // Mostrar tempo desde o pedido
         const timeElement = document.createElement('small');
         timeElement.className = 'text-muted d-block mt-2';
-        timeElement.textContent = 'Pedido criado em: <?= date("d/m/Y H:i", strtotime($compra["data_compra"] ?? "now")) ?>';
+        timeElement.textContent = `Pedido criado em: ${creationDate}`;
         document.querySelector('.product-info').appendChild(timeElement);
     </script>
 </body>

@@ -1,311 +1,305 @@
-[14-Jun-2025 13:35:53 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+[15-Jun-2025 04:02:48 America/Sao_Paulo] ✅ LOGIN VENDEDOR - ID: 23 - Email: testedeproduto@gmail.com
+[15-Jun-2025 04:02:51 America/Sao_Paulo] 🚨 ACESSO NÃO AUTORIZADO - cadastrar_produto.php - IP: 127.0.0.1
+[15-Jun-2025 04:03:01 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:03:01 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:03:03 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:03:03 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:03:03 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:03:35 America/Sao_Paulo] ✅ PRODUTO CADASTRADO - ID: 26 - Vendedor: 23 - Nome: cocain teste
+[15-Jun-2025 04:12:53 America/Sao_Paulo] ✅ PRODUTO CADASTRADO - ID: 27 - Vendedor: 23 - Nome: cocain teste
+[15-Jun-2025 04:25:26 America/Sao_Paulo] ✅ PRODUTO CADASTRADO - ID: 28 - Vendedor: 23 - Nome: mdma teste
+[15-Jun-2025 04:25:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:25:30 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:25:32 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:25:32 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:25:32 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:25:32 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[15-Jun-2025 04:25:39 America/Sao_Paulo] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'v.data_cadastro' in 'field list' in /var/www/html/zee-market-php/comprar.php:8
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/comprar.php(8): mysqli->prepare()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:35:54 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/comprar.php on line 8
+[15-Jun-2025 04:29:24 America/Sao_Paulo] ✅ Produto encontrado - ID: 28 - Nome: mdma teste
+[15-Jun-2025 04:29:24 America/Sao_Paulo] ✅ Página de compra carregada - Produto: mdma teste - Preço BTC: 2.8198403970335E-5
+[15-Jun-2025 04:30:27 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=23, is_vendor=1
+[15-Jun-2025 04:30:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:30:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:30:33 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:30:33 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:30:33 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:30:33 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[15-Jun-2025 04:31:18 America/Sao_Paulo] Novo usuário cadastrado com segurança: ofc@gmail.com (ID: 24)
+[15-Jun-2025 04:31:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:31:29 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:31:32 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:31:32 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:31:32 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:32:12 America/Sao_Paulo] ✅ NOVO VENDEDOR REGISTRADO - ID: 24 - Email: ofc@gmail.com
+[15-Jun-2025 04:32:15 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:32:53 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:33:06 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:33:06 America/Sao_Paulo] 🔥 RECEBIDO POST para virar vendedor - user_id: 24
+[15-Jun-2025 04:33:06 America/Sao_Paulo] 🔍 Checkboxes - Termos: SIM, Idade: SIM, Dados: SIM
+[15-Jun-2025 04:33:06 America/Sao_Paulo] ✅ Transação iniciada para user_id: 24
+[15-Jun-2025 04:33:06 America/Sao_Paulo] ✅ UPDATE users executado - Success: SIM, Affected rows: 1
+[15-Jun-2025 04:33:06 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: mysqli_stmt::bind_param(): Argument #5 could not be passed by reference in /var/www/html/zee-market-php/admin/isvendor.php:122
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:35:54 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/admin/isvendor.php on line 122
+[15-Jun-2025 04:36:18 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:37:12 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:37:57 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:38:08 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:38:08 America/Sao_Paulo] 🔥 RECEBIDO POST para virar vendedor - user_id: 24
+[15-Jun-2025 04:38:08 America/Sao_Paulo] 🔍 Checkboxes - Termos: SIM, Idade: SIM, Dados: SIM
+[15-Jun-2025 04:38:08 America/Sao_Paulo] ✅ Transação iniciada para user_id: 24
+[15-Jun-2025 04:38:08 America/Sao_Paulo] ✅ UPDATE users executado - Success: SIM, Affected rows: 1
+[15-Jun-2025 04:38:08 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli::inTransaction() in /var/www/html/zee-market-php/admin/isvendor.php:220
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:35:55 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/admin/isvendor.php on line 220
+[15-Jun-2025 04:38:46 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:39:22 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:40:02 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:40:09 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:40:09 America/Sao_Paulo] 🔥 RECEBIDO POST para virar vendedor - user_id: 24
+[15-Jun-2025 04:40:09 America/Sao_Paulo] 🔍 Checkboxes - Termos: SIM, Idade: SIM, Dados: SIM
+[15-Jun-2025 04:40:09 America/Sao_Paulo] ✅ Transação iniciada para user_id: 24
+[15-Jun-2025 04:40:09 America/Sao_Paulo] ✅ UPDATE users executado - Success: SIM, Affected rows: 1
+[15-Jun-2025 04:40:09 America/Sao_Paulo] 🔄 ROLLBACK executado devido ao erro
+[15-Jun-2025 04:40:09 America/Sao_Paulo] ❌ ERRO ao tornar vendedor user_id 24: Duplicate entry '24' for key 'vendedores.PRIMARY'
+[15-Jun-2025 04:41:12 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:44:38 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=24, is_vendor=0
+[15-Jun-2025 04:44:38 America/Sao_Paulo] 🔍 VERIFICAÇÃO VENDEDOR - user_id: 24, is_vendor: 0, exists_in_vendedores: SIM
+[15-Jun-2025 04:44:38 America/Sao_Paulo] 🔧 SINCRONIZAÇÃO: Registro de vendedor existe mas is_vendor = 0 - atualizando user
+[15-Jun-2025 04:44:38 America/Sao_Paulo] ✅ SINCRONIZAÇÃO CONCLUÍDA - is_vendor atualizado para 1
+[15-Jun-2025 04:44:41 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:44:41 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:44:45 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:44:45 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:44:45 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:45:26 America/Sao_Paulo] Novo usuário cadastrado com segurança: testeofc@gmail.com (ID: 25)
+[15-Jun-2025 04:46:02 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:46:02 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:46:06 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:46:06 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:46:06 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:47:49 America/Sao_Paulo] ✅ NOVO VENDEDOR REGISTRADO - ID: 25 - Email: testeofc@gmail.com
+[15-Jun-2025 04:47:52 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=25, is_vendor=0
+[15-Jun-2025 04:47:52 America/Sao_Paulo] 🔍 VERIFICAÇÃO VENDEDOR - user_id: 25, is_vendor: 0, exists_in_vendedores: SIM
+[15-Jun-2025 04:47:52 America/Sao_Paulo] 🔧 SINCRONIZAÇÃO: Registro de vendedor existe mas is_vendor = 0 - atualizando user
+[15-Jun-2025 04:47:52 America/Sao_Paulo] ✅ SINCRONIZAÇÃO CONCLUÍDA - is_vendor atualizado para 1
+[15-Jun-2025 04:47:55 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:47:55 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:47:58 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:47:58 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:47:58 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:48:26 America/Sao_Paulo] Novo usuário cadastrado com segurança: danilo@gmail.com (ID: 26)
+[15-Jun-2025 04:48:36 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:48:36 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:48:40 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:48:40 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:48:40 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:48:59 America/Sao_Paulo] ✅ NOVO VENDEDOR REGISTRADO - ID: 26 - Email: danilo@gmail.com
+[15-Jun-2025 04:49:01 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=26, is_vendor=0
+[15-Jun-2025 04:49:01 America/Sao_Paulo] 🔍 VERIFICAÇÃO VENDEDOR - user_id: 26, is_vendor: 0, exists_in_vendedores: SIM
+[15-Jun-2025 04:49:01 America/Sao_Paulo] 🔧 SINCRONIZAÇÃO: Registro de vendedor existe mas is_vendor = 0 - atualizando user
+[15-Jun-2025 04:49:01 America/Sao_Paulo] ✅ SINCRONIZAÇÃO CONCLUÍDA - is_vendor atualizado para 1
+[15-Jun-2025 04:49:05 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:49:05 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:49:08 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:49:08 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:49:08 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:49:43 America/Sao_Paulo] ✅ PRODUTO CADASTRADO - ID: 29 - Vendedor: 26 - Nome: MDMA2025
+[15-Jun-2025 04:49:46 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:49:46 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:49:49 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:49:49 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:49:49 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:49:49 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[15-Jun-2025 04:51:02 America/Sao_Paulo] 🔍 DEBUG INICIAL: user_id=26, is_vendor=1
+[15-Jun-2025 04:51:02 America/Sao_Paulo] 🔍 VERIFICAÇÃO VENDEDOR - user_id: 26, is_vendor: 1, exists_in_vendedores: SIM
+[15-Jun-2025 04:51:05 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 04:51:05 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 04:51:08 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 04:51:08 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 04:51:08 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 04:51:08 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[15-Jun-2025 04:52:10 America/Sao_Paulo] Erro no sistema de listagem: Unknown column 'p.categoria' in 'where clause'
+[15-Jun-2025 05:14:45 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 05:14:45 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 05:14:47 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 05:14:47 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 05:14:47 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 05:14:47 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[15-Jun-2025 05:14:50 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:36:16 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:14:57 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:24 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:14:58 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:15:00 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:26 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:15:47 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:15:47 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:27 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:19:47 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:19:47 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:28 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:22:15 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[15-Jun-2025 05:22:15 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[15-Jun-2025 05:22:20 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[15-Jun-2025 05:22:20 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[15-Jun-2025 05:22:20 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[15-Jun-2025 05:22:20 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[15-Jun-2025 05:22:24 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:22:27 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:29 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:22:28 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:30 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:23:20 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:23:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:24:36 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:31 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:24:37 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:32 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:24:39 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function SecurityLogger::__construct(), 0 passed in /var/www/html/zee-market-php/generate_wallet.php on line 30 and exactly 1 expected in /var/www/html/zee-market-php/includes/SecurityLogger.php:5
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
+#0 /var/www/html/zee-market-php/generate_wallet.php(30): SecurityLogger->__construct()
 #1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:32 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+  thrown in /var/www/html/zee-market-php/includes/SecurityLogger.php on line 5
+[15-Jun-2025 05:27:20 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[15-Jun-2025 05:27:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:32 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:11:04 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[16-Jun-2025 18:11:04 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[16-Jun-2025 18:11:06 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[16-Jun-2025 18:11:06 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[16-Jun-2025 18:11:06 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[16-Jun-2025 18:11:07 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[16-Jun-2025 18:12:07 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:12:07 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:32 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:12:48 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[16-Jun-2025 18:12:48 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[16-Jun-2025 18:12:50 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[16-Jun-2025 18:12:50 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[16-Jun-2025 18:12:50 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[16-Jun-2025 18:12:50 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[16-Jun-2025 18:13:55 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:13:55 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:32 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:17:51 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:17:51 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:33 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:22:14 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[16-Jun-2025 18:22:14 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[16-Jun-2025 18:22:18 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[16-Jun-2025 18:22:18 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[16-Jun-2025 18:22:18 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[16-Jun-2025 18:22:18 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[16-Jun-2025 18:23:18 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:23:18 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:33 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:45:35 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 833
+[16-Jun-2025 18:45:35 America/Sao_Paulo] [WARNING] Undefined array key "action" in /var/www/html/zee-market-php/includes/tor_system.php on line 838
+[16-Jun-2025 18:45:43 America/Sao_Paulo] Erro na análise de privacidade: Table 'zee_market.user_pgp_keys' doesn't exist
+[16-Jun-2025 18:45:43 America/Sao_Paulo] ✅ Chaves do site carregadas do banco
+[16-Jun-2025 18:45:43 America/Sao_Paulo] ⚠️ Chaves do site precisam ser geradas!
+[16-Jun-2025 18:45:43 America/Sao_Paulo] Erro ao obter reputação: Unknown column 'feedback_id' in 'field list'
+[16-Jun-2025 18:46:44 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:46:44 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:33 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:50:44 America/Sao_Paulo] [WARNING] require_once(../includes/btc_functions.php): Failed to open stream: No such file or directory in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 18:50:44 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/btc_functions.php' (include_path='.:/usr/share/php') in /var/www/html/zee-market-php/api/cron_checker.php:9
 Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:33 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:33 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:34 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:34 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:34 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:34 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:35 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:40:40 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Class "Dotenv\Dotenv" not found in /var/www/html/zee-market-php/includes/config.php:29
-Stack trace:
-#0 /var/www/html/zee-market-php/index.php(5): require_once()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/includes/config.php on line 29
-[14-Jun-2025 13:44:22 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 13:44:39 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 13:44:39 America/Sao_Paulo] Usuário não logado - redirecionando para login
-[14-Jun-2025 13:44:40 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 13:44:46 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:04 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:08 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:08 America/Sao_Paulo] [WARNING] Undefined variable $conn in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:00:08 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(41): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:00:14 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:16 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:17 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:19 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:00:19 America/Sao_Paulo] [WARNING] Undefined variable $conn in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:00:19 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(41): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:18 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:18 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:19 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:19 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:19 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:19 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:20 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:20 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:21 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:21 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:21 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:21 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:22 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:22 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:22 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:22 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:22 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:22 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:11:23 America/Sao_Paulo] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function getBitcoinRate(), 0 passed in /var/www/html/zee-market-php/comprar.php on line 53 and exactly 1 expected in /var/www/html/zee-market-php/comprar.php:34
-Stack trace:
-#0 /var/www/html/zee-market-php/comprar.php(53): getBitcoinRate()
-#1 {main}
-  thrown in /var/www/html/zee-market-php/comprar.php on line 34
-[14-Jun-2025 14:22:12 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:22:17 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:23:50 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:23:50 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare checkRateLimit() (previously declared in /var/www/html/zee-market-php/login.php:20) in /var/www/html/zee-market-php/includes/functions.php on line 345
-[14-Jun-2025 14:24:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:24:23 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare checkRateLimit() (previously declared in /var/www/html/zee-market-php/login.php:20) in /var/www/html/zee-market-php/includes/functions.php on line 345
-[14-Jun-2025 14:29:26 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:29:26 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:144) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:29:27 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:29:27 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:144) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:29:28 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:29:28 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:144) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:29:28 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:29:28 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:144) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:36:42 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:36:42 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:36:43 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:36:43 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:36:44 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:36:44 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:36:44 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:36:44 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:51:33 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:51:38 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:51:38 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 116
-[14-Jun-2025 14:56:22 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:56:22 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 122
-[14-Jun-2025 14:56:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 14:56:23 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isLoggedIn() (previously declared in /var/www/html/zee-market-php/login.php:166) in /var/www/html/zee-market-php/includes/functions.php on line 122
-[14-Jun-2025 15:00:20 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:00:20 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare verificarLoginSeguro() (previously declared in /var/www/html/zee-market-php/includes/functions.php:59) in /var/www/html/zee-market-php/includes/functions.php on line 934
-[14-Jun-2025 15:00:22 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:00:22 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare verificarLoginSeguro() (previously declared in /var/www/html/zee-market-php/includes/functions.php:59) in /var/www/html/zee-market-php/includes/functions.php on line 934
-[14-Jun-2025 15:00:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:00:23 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare verificarLoginSeguro() (previously declared in /var/www/html/zee-market-php/includes/functions.php:59) in /var/www/html/zee-market-php/includes/functions.php on line 934
-[14-Jun-2025 15:00:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:00:23 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare verificarLoginSeguro() (previously declared in /var/www/html/zee-market-php/includes/functions.php:59) in /var/www/html/zee-market-php/includes/functions.php on line 934
-[14-Jun-2025 15:00:23 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:00:23 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare verificarLoginSeguro() (previously declared in /var/www/html/zee-market-php/includes/functions.php:59) in /var/www/html/zee-market-php/includes/functions.php on line 934
-[14-Jun-2025 15:02:12 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:02:12 America/Sao_Paulo] Tabela login_attempts criada com sucesso
-[14-Jun-2025 15:02:13 America/Sao_Paulo] Campos de segurança adicionados à tabela users
-[14-Jun-2025 15:02:13 America/Sao_Paulo] [NOTICE] session_start(): Ignoring session_start() because a session is already active (started from /var/www/html/zee-market-php/includes/functions.php on line 6) in /var/www/html/zee-market-php/login.php on line 8
-[14-Jun-2025 15:02:27 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:02:30 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:04:30 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:04:34 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:04:34 America/Sao_Paulo] [NOTICE] session_start(): Ignoring session_start() because a session is already active (started from /var/www/html/zee-market-php/includes/functions.php on line 6) in /var/www/html/zee-market-php/login.php on line 8
-[14-Jun-2025 15:04:41 America/Sao_Paulo] PHP Warning:  Constant SITE_URL already defined in /var/www/html/zee-market-php/includes/config.php on line 128
-[14-Jun-2025 15:24:11 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
-[14-Jun-2025 15:24:15 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
-[14-Jun-2025 15:24:17 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
-[14-Jun-2025 15:24:18 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
-[14-Jun-2025 15:24:22 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
-[14-Jun-2025 15:25:26 America/Sao_Paulo] Erro crítico de banco: Access denied for user 'mtfckZeezEEs'@'localhost' (using password: YES)
+#0 {main}
+  thrown in /var/www/html/zee-market-php/api/cron_checker.php on line 9
+[16-Jun-2025 19:13:36 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:40 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:41 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:42 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:42 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:43 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:43 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:13:44 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:14:02 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:14:03 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:17:54 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:17:56 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:13 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:15 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:15 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:16 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:16 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:16 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:16 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:17 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:17 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:17 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:18 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:19 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:19 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:20 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:20 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:20 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:21 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:21 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:21 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 19:24:22 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:13:51 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:37 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:37 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:38 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:38 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[16-Jun-2025 21:17:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497

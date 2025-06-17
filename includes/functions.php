@@ -165,48 +165,6 @@ function atualizarSaldoBTC($user_id, $amount) {
     }
 }
 
-// ====== FUNÇÕES DE USUÁRIO ====== //
-function cadastrarUsuario($nome, $email, $senha) {
-    global $conn;
-    
-    try {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-        if (!$stmt) {
-            error_log("Erro na preparação da consulta de verificação: " . $conn->error);
-            return "Erro interno do servidor";
-        }
-        
-        $stmt->bind_param("s", $email);
-        if (!$stmt->execute()) {
-            error_log("Erro ao verificar e-mail: " . $stmt->error);
-            return "Erro interno do servidor";
-        }
-        
-        if ($stmt->get_result()->num_rows > 0) {
-            return "E-mail já cadastrado!";
-        }
-
-        $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password, btc_balance, eth_balance, xmr_balance, created_at) VALUES (?, ?, ?, 0, 0, 0, NOW())");
-        if (!$stmt) {
-            error_log("Erro na preparação do cadastro: " . $conn->error);
-            return "Erro interno do servidor";
-        }
-        
-        $stmt->bind_param("sss", $nome, $email, $senhaHash);
-        
-        if ($stmt->execute()) {
-            error_log("Novo usuário cadastrado: " . $email);
-            return true;
-        } else {
-            error_log("Erro ao cadastrar usuário: " . $stmt->error);
-            return "Erro ao cadastrar usuário";
-        }
-    } catch (Exception $e) {
-        error_log("Erro no cadastro: " . $e->getMessage());
-        return "Erro interno do servidor";
-    }
-}
 
 function isVendedor($user_id) {
     global $conn;
@@ -453,6 +411,127 @@ function logActivity($userId, $action, $details = []) {
         error_log("Erro ao registrar atividade: " . $e->getMessage());
     }
 }
+
+function generateAndSaveWalletAddress($userId, $crypto) {
+    global $conn;
+
+    $conn->begin_transaction();
+
+    try {
+        // 1. Verificar se o usuário já possui um endereço para essa moeda
+        $addressField = strtolower($crypto) . '_deposit_address';
+        $stmt = $conn->prepare("SELECT $addressField FROM users WHERE id = ? FOR UPDATE");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!empty($result[$addressField])) {
+            throw new Exception("Você já possui um endereço $crypto configurado.");
+        }
+
+        // 2. Gerar um novo endereço
+        $newAddress = generateCryptoAddress($crypto, $userId);
+        if (!$newAddress) {
+            throw new Exception("Falha crítica ao tentar gerar o endereço $crypto.");
+        }
+
+        // 3. Validar o formato do endereço gerado (segurança extra)
+        if (!isValidCryptoAddress($newAddress, $crypto)) {
+            throw new Exception("O endereço $crypto gerado é inválido. Contate o suporte.");
+        }
+
+        // 4. Salvar o novo endereço no banco de dados
+        $stmt = $conn->prepare("UPDATE users SET $addressField = ?, updated_at = NOW() WHERE id = ?");
+        $stmt->bind_param("si", $newAddress, $userId);
+        
+        if (!$stmt->execute() || $stmt->affected_rows === 0) {
+            throw new Exception("Não foi possível salvar o novo endereço no banco de dados.");
+        }
+        $stmt->close();
+        
+        // 5. Se tudo correu bem, confirma a transação
+        $conn->commit();
+        
+        error_log("✅ ENDEREÇO $crypto GERADO - User ID: $userId - Endereço: " . substr($newAddress, 0, 10) . "...");
+        
+        return $newAddress;
+
+    } catch (Exception $e) {
+        // Se qualquer passo falhar, desfaz tudo
+        $conn->rollback();
+        // Lança a exceção novamente para ser capturada pelo script principal
+        throw $e;
+    }
+}
+
+
+/**
+ * Roteador: chama a função de geração correta com base na cripto.
+ */
+function generateCryptoAddress($crypto, $userId) {
+    switch (strtoupper($crypto)) {
+        case 'BTC':
+            return generateBitcoinAddress($userId);
+        case 'ETH':
+            return generateEthereumAddress($userId);
+        case 'XMR':
+            return generateMoneroAddress($userId);
+        default:
+            return false;
+    }
+}
+
+/**
+ * Validador: chama a função de validação correta.
+ */
+function isValidCryptoAddress($address, $crypto) {
+    switch (strtoupper($crypto)) {
+        case 'BTC':
+            return isValidBitcoinAddress($address);
+        case 'ETH':
+            return isValidEthereumAddress($address);
+        case 'XMR':
+            return isValidMoneroAddress($address);
+        default:
+            return false;
+    }
+}
+
+// --- Funções Específicas de Geração e Validação ---
+
+function generateBitcoinAddress($userId) {
+    $seed = hash('sha256', 'zee_btc_v4_' . $userId . microtime() . random_bytes(32));
+    // Simula um endereço Bech32 (bc1)
+    return 'bc1q' . substr(strtolower(preg_replace('/[01io]/', '', $seed)), 0, 38);
+}
+
+function generateEthereumAddress($userId) {
+    $seed = hash('sha256', 'zee_eth_v4_' . $userId . microtime() . random_bytes(32));
+    return '0x' . substr($seed, 0, 40);
+}
+
+function generateMoneroAddress($userId) {
+    $seed = hash('sha256', 'zee_xmr_v4_' . $userId . microtime() . random_bytes(64));
+    return '4' . substr(preg_replace('/[^a-zA-Z0-9]/', '', $seed), 0, 94);
+}
+
+function isValidBitcoinAddress($address) {
+    return preg_match('/^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,61}$/', $address) === 1;
+}
+
+function isValidEthereumAddress($address) {
+    return preg_match('/^0x[a-fA-F0-9]{40}$/', $address) === 1;
+}
+
+function isValidMoneroAddress($address) {
+    // Corrigido: a validação deve estar dentro da função.
+    if (strlen($address) !== 95 || !str_starts_with($address, '4')) {
+        return false;
+    }
+    return ctype_alnum(substr($address, 1)); // Verifica se o resto é alfanumérico
+}
+
 
 function getSecurityLevel() {
     if (!isLoggedIn()) {
@@ -709,19 +788,20 @@ function cadastrarUsuarioSeguro($nome, $email, $senha) {
             'threads' => 3          // 3 threads
         ]);
         
-        // ✅ Inserir usuário
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password, created_at, last_ip, failed_login_attempts) VALUES (?, ?, ?, ?, ?, 0)");
-        $created_at = time();
+        // ✅ Inserir usuário (SEM created_at - vai usar DEFAULT CURRENT_TIMESTAMP)
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password, last_ip, failed_login_attempts) VALUES (?, ?, ?, ?, 0)");
         $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $stmt->bind_param("sssis", $nome, $email, $password_hash, $created_at, $client_ip);
+        $stmt->bind_param("ssss", $nome, $email, $password_hash, $client_ip);
         
         if ($stmt->execute()) {
+            $user_id = $conn->insert_id;
             $stmt->close();
-            error_log("Novo usuário cadastrado com segurança: " . $email);
+            error_log("Novo usuário cadastrado com segurança: " . $email . " (ID: $user_id)");
             return true;
         } else {
+            $error_msg = $conn->error;
             $stmt->close();
-            error_log("Erro ao criar usuário seguro: " . $conn->error);
+            error_log("Erro ao criar usuário seguro: " . $error_msg);
             return "Erro ao criar conta. Tente novamente.";
         }
         
@@ -730,7 +810,6 @@ function cadastrarUsuarioSeguro($nome, $email, $senha) {
         return "Erro interno do sistema. Tente novamente em alguns minutos.";
     }
 }
-
 // ====== FUNÇÕES DE FINGERPRINTING ====== //
 
 function getClientFingerprint() {
@@ -900,6 +979,83 @@ function verificarLoginSeguro() {
     }
     
     $_SESSION['last_activity'] = time();
+}
+
+// ====== FUNÇÃO PARA REGISTRAR TENTATIVAS DE LOGIN ====== //
+
+function recordLoginAttempt($identifier, $email, $success, $reason) {
+    global $conn;
+    
+    try {
+        // Verificar se a tabela existe
+        $table_check = $conn->query("SHOW TABLES LIKE 'login_attempts'");
+        if ($table_check->num_rows == 0) {
+            createLoginAttemptsTable();
+        }
+        
+        // Inserir tentativa de login
+        $stmt = $conn->prepare("INSERT INTO login_attempts (identifier, ip_address, email, success, reason, attempt_time, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $user_agent = substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 255);
+        $attempt_time = time();
+        $success_int = $success ? 1 : 0;
+        
+        $stmt->bind_param("sssisss", $identifier, $ip_address, $email, $success_int, $reason, $attempt_time, $user_agent);
+        
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        } else {
+            error_log("Erro ao registrar tentativa de login: " . $stmt->error);
+            $stmt->close();
+            return false;
+        }
+        
+    } catch (Exception $e) {
+        error_log("Erro na função recordLoginAttempt: " . $e->getMessage());
+        return false;
+    }
+}
+
+// ====== FUNÇÃO DE CADASTRO SIMPLES (FALLBACK) ====== //
+
+function cadastrarUsuario($nome, $email, $senha) {
+    global $conn;
+    
+    try {
+        // Verificar se email já existe
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $existing_user = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        
+        if ($existing_user) {
+            return "Email já está em uso!";
+        }
+        
+        // Criar hash da senha
+        $password_hash = password_hash($senha, PASSWORD_DEFAULT);
+        
+        // Inserir usuário
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $nome, $email, $password_hash);
+        
+        if ($stmt->execute()) {
+            $stmt->close();
+            error_log("Novo usuário cadastrado: " . $email);
+            return true;
+        } else {
+            $stmt->close();
+            error_log("Erro ao cadastrar usuário: " . $conn->error);
+            return "Erro ao cadastrar usuário";
+        }
+        
+    } catch (Exception $e) {
+        error_log("Erro no cadastro: " . $e->getMessage());
+        return "Erro interno do sistema. Tente novamente em alguns minutos.";
+    }
 }
 
 ?>

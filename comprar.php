@@ -1,61 +1,179 @@
 <?php
+/**
+ * PÁGINA DE COMPRA - VERSÃO CORRIGIDA
+ * ✅ Correção de erros 500 e melhorias de segurança
+ */
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// ✅ INICIALIZAR SESSÃO SEGURA
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 
-$id = (int)$_GET['id'];
-
-// Buscar produto com dados do vendedor
-$stmt = $conn->prepare("SELECT p.*, v.nome as vendedor_nome 
-                       FROM produtos p 
-                       JOIN vendedores v ON p.vendedor_id = v.id 
-                       WHERE p.id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$produto = $stmt->get_result()->fetch_assoc();
-
-if (!$produto) {
-    die("Produto não encontrado!");
+// ✅ VALIDAÇÃO SEGURA DO ID DO PRODUTO
+$id = 0;
+if (isset($_GET['id'])) {
+    $id_param = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    if ($id_param !== false && $id_param > 0) {
+        $id = $id_param;
+    }
 }
 
-// Verificar se usuário está logado para mostrar saldo
-$user_logged_in = isLoggedIn();
-$user_balance = null;
-
-if ($user_logged_in) {
-    $stmt = $conn->prepare("SELECT btc_balance, eth_balance, xmr_balance FROM users WHERE id = ?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $user_balance = $stmt->get_result()->fetch_assoc();
+if ($id === 0) {
+    error_log("❌ ID de produto inválido: " . ($_GET['id'] ?? 'null'));
+    die("❌ ID de produto inválido!");
 }
 
-// Obter cotação atual do Bitcoin
-// Obter cotação atual do Bitcoin
-function getBitcoinRate($db_connection) {
-    // Retorna um valor padrão se a conexão for inválida para evitar erros
-    if (!$db_connection) {
-        return 1; 
+// ✅ VERIFICAR CONEXÃO COM BANCO
+if (!$conn || $conn->connect_error) {
+    error_log("❌ Erro de conexão com banco: " . ($conn->connect_error ?? 'Conexão nula'));
+    die("❌ Erro de conexão com o banco de dados!");
+}
+
+// ✅ BUSCAR PRODUTO COM VERIFICAÇÃO ROBUSTA
+$produto = null;
+try {
+    // Corrigir JOIN - usar LEFT JOIN para evitar problemas se vendedor não existir
+    $stmt = $conn->prepare("
+        SELECT p.*, 
+               COALESCE(v.nome, u.name, 'Vendedor Anônimo') as vendedor_nome, 
+               COALESCE(v.created_at, u.created_at, NOW()) as data_cadastro 
+        FROM produtos p 
+        LEFT JOIN vendedores v ON p.vendedor_id = v.id 
+        LEFT JOIN users u ON p.vendedor_id = u.id 
+        WHERE p.id = ?
+    ");
+    
+    if (!$stmt) {
+        throw new Exception("Erro ao preparar query: " . $conn->error);
     }
     
-    // Prepara e executa a consulta de forma segura
-    $stmt = $db_connection->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
-    if (!$stmt) {
-        error_log("Falha ao preparar a consulta para getBitcoinRate.");
-        return 1;
+    $stmt->bind_param("i", $id);
+    if (!$stmt->execute()) {
+        throw new Exception("Erro ao executar query: " . $stmt->error);
     }
-
-    $stmt->execute();
+    
     $result = $stmt->get_result();
-    $rate_data = $result->fetch_assoc();
+    $produto = $result->fetch_assoc();
     $stmt->close();
     
-    // Retorna o valor da cotação ou 1 como padrão para evitar divisão por zero
-    $rate = $rate_data ? (float)$rate_data['btc_usd'] : 1;
-    return ($rate > 0) ? $rate : 1;
+    if (!$produto) {
+        error_log("❌ Produto não encontrado - ID: $id");
+        die("❌ Produto não encontrado!");
+    }
+    
+    error_log("✅ Produto encontrado - ID: $id - Nome: " . $produto['nome']);
+    
+} catch (Exception $e) {
+    error_log("❌ Erro ao buscar produto ID $id: " . $e->getMessage());
+    die("❌ Erro ao carregar produto: " . htmlspecialchars($e->getMessage()));
 }
 
-// Chama a função e calcula o preço
+// ✅ VERIFICAR LOGIN COM TRATAMENTO DE ERRO
+$user_logged_in = false;
+$user_balance = null;
+
+try {
+    $user_logged_in = isLoggedIn();
+    
+    if ($user_logged_in && isset($_SESSION['user_id'])) {
+        $user_id = (int)$_SESSION['user_id'];
+        
+        $stmt = $conn->prepare("SELECT btc_balance, eth_balance, xmr_balance FROM users WHERE id = ?");
+        if ($stmt) {
+            $stmt->bind_param("i", $user_id);
+            if ($stmt->execute()) {
+                $user_balance = $stmt->get_result()->fetch_assoc();
+            }
+            $stmt->close();
+        }
+        
+        // Garantir valores padrão se não encontrar saldos
+        if (!$user_balance) {
+            $user_balance = [
+                'btc_balance' => 0,
+                'eth_balance' => 0,
+                'xmr_balance' => 0
+            ];
+        }
+    }
+} catch (Exception $e) {
+    error_log("⚠️ Erro ao verificar login: " . $e->getMessage());
+    $user_logged_in = false;
+    $user_balance = null;
+}
+
+// ✅ FUNÇÃO PARA OBTER COTAÇÃO BITCOIN COM FALLBACK ROBUSTO
+function getBitcoinRate($db_connection) {
+    try {
+        if (!$db_connection || $db_connection->connect_error) {
+            error_log("⚠️ Conexão de banco inválida para cotação BTC - usando fallback");
+            return 45000; // Fallback padrão
+        }
+        
+        // Verificar se tabela crypto_rates existe
+        $check_table = $db_connection->query("SHOW TABLES LIKE 'crypto_rates'");
+        if (!$check_table || $check_table->num_rows === 0) {
+            error_log("⚠️ Tabela crypto_rates não existe - usando fallback");
+            return 45000;
+        }
+        
+        $stmt = $db_connection->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
+        if (!$stmt) {
+            error_log("⚠️ Erro ao preparar query de cotação - usando fallback");
+            return 45000;
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rate = $result->fetch_assoc();
+        $stmt->close();
+        
+        if ($rate && isset($rate['btc_usd']) && $rate['btc_usd'] > 0) {
+            return (float)$rate['btc_usd'];
+        } else {
+            error_log("⚠️ Cotação BTC não encontrada ou inválida - usando fallback");
+            return 45000;
+        }
+        
+    } catch (Exception $e) {
+        error_log("⚠️ Erro ao obter cotação BTC: " . $e->getMessage() . " - usando fallback");
+        return 45000; // Fallback em caso de erro
+    }
+}
+
+// ✅ CALCULAR PREÇOS COM VALIDAÇÃO
 $btc_rate = getBitcoinRate($conn);
-$preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
+$preco_brl = (float)($produto['preco'] ?? 0);
+$preco_btc_atual = $preco_brl > 0 ? ($preco_brl / $btc_rate) : 0;
+
+// ✅ SANITIZAR DADOS DO PRODUTO
+$produto_safe = [
+    'id' => (int)$produto['id'],
+    'nome' => htmlspecialchars($produto['nome'] ?? 'Produto sem nome', ENT_QUOTES, 'UTF-8'),
+    'descricao' => htmlspecialchars($produto['descricao'] ?? '', ENT_QUOTES, 'UTF-8'),
+    'preco' => $preco_brl,
+    'preco_btc' => $preco_btc_atual,
+    'imagem' => htmlspecialchars($produto['imagem'] ?? '', ENT_QUOTES, 'UTF-8'),
+    'vendedor_nome' => htmlspecialchars($produto['vendedor_nome'] ?? 'Vendedor Anônimo', ENT_QUOTES, 'UTF-8'),
+    'data_cadastro' => $produto['data_cadastro'] ?? date('Y-m-d H:i:s')
+];
+
+// ✅ SANITIZAR DADOS DO USUÁRIO
+$user_data_safe = [
+    'logged_in' => $user_logged_in,
+    'name' => $user_logged_in ? htmlspecialchars($_SESSION['user_name'] ?? '', ENT_QUOTES, 'UTF-8') : '',
+    'btc_balance' => $user_balance ? (float)$user_balance['btc_balance'] : 0,
+    'eth_balance' => $user_balance ? (float)$user_balance['eth_balance'] : 0,
+    'xmr_balance' => $user_balance ? (float)$user_balance['xmr_balance'] : 0
+];
+
+error_log("✅ Página de compra carregada - Produto: {$produto_safe['nome']} - Preço BTC: {$preco_btc_atual}");
 ?>
 
 <!DOCTYPE html>
@@ -63,7 +181,11 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($produto['nome']) ?> - ZeeMarket</title>
+    <meta name="description" content="Comprar <?= $produto_safe['nome'] ?> com Bitcoin - ZeeMarket">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <title><?= $produto_safe['nome'] ?> - ZeeMarket</title>
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -73,7 +195,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             --accent-orange: #f7931a;
             --success-green: #28a745;
             --text-light: #e0e0e0;
-            --text-muted: rgb(255, 255, 255);
+            --text-muted: #b0b0b0;
             --border-dark: #444;
         }
         
@@ -383,6 +505,15 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             background: rgba(247, 147, 26, 0.1);
         }
         
+        .error-notice {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #dc3545;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 margin: 1rem auto;
@@ -409,8 +540,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             <i class="fas fa-arrow-left"></i> Voltar ao Catálogo
         </a>
         
-        <!-- Bloco da Carteira (se logado) -->
-        <?php if ($user_logged_in && $user_balance): ?>
+        <?php if ($user_data_safe['logged_in'] && $user_balance): ?>
         <div class="wallet-card">
             <div class="wallet-header">
                 <h4><i class="fas fa-wallet"></i> Minha Carteira</h4>
@@ -421,7 +551,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                         <i class="fas fa-bitcoin crypto-icon btc"></i>
                         <span>Bitcoin (BTC)</span>
                     </div>
-                    <span class="balance-amount"><?= number_format($user_balance['btc_balance'], 8) ?> BTC</span>
+                    <span class="balance-amount"><?= number_format($user_data_safe['btc_balance'], 8) ?> BTC</span>
                 </div>
                 
                 <div class="wallet-balance">
@@ -429,7 +559,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                         <i class="fab fa-ethereum crypto-icon eth"></i>
                         <span>Ethereum (ETH)</span>
                     </div>
-                    <span class="balance-amount"><?= number_format($user_balance['eth_balance'], 6) ?> ETH</span>
+                    <span class="balance-amount"><?= number_format($user_data_safe['eth_balance'], 6) ?> ETH</span>
                 </div>
                 
                 <div class="wallet-balance">
@@ -437,7 +567,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                         <i class="fas fa-coins crypto-icon xmr"></i>
                         <span>Monero (XMR)</span>
                     </div>
-                    <span class="balance-amount"><?= number_format($user_balance['xmr_balance'], 6) ?> XMR</span>
+                    <span class="balance-amount"><?= number_format($user_data_safe['xmr_balance'], 6) ?> XMR</span>
                 </div>
                 
                 <div class="wallet-actions">
@@ -457,9 +587,9 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
         
         <div class="product-card">
             <div class="product-header">
-                <h1><?= htmlspecialchars($produto['nome']) ?></h1>
+                <h1><?= $produto_safe['nome'] ?></h1>
                 <p class="mb-0">
-                    <i class="fas fa-store"></i> Vendido por: <?= htmlspecialchars($produto['vendedor_nome']) ?>
+                    <i class="fas fa-store"></i> Vendido por: <?= $produto_safe['vendedor_nome'] ?>
                     <span class="crypto-badge">
                         <i class="fab fa-bitcoin"></i> Bitcoin
                     </span>
@@ -467,38 +597,35 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             </div>
             
             <div class="product-body">
-                <!-- Imagem do Produto -->
-                <?php if (!empty($produto['imagem'])): ?>
+                <?php if (!empty($produto_safe['imagem'])): ?>
                 <div class="text-center">
-                    <img src="assets/uploads/<?= htmlspecialchars($produto['imagem']) ?>" 
-                         alt="<?= htmlspecialchars($produto['nome']) ?>" 
-                         class="product-image">
+                    <img src="assets/uploads/<?= $produto_safe['imagem'] ?>" 
+                         alt="<?= $produto_safe['nome'] ?>" 
+                         class="product-image"
+                         onerror="this.src='assets/images/placeholder.jpg'; this.style.opacity='0.6';">
                 </div>
                 <?php endif; ?>
                 
-                <!-- Descrição -->
                 <div class="mb-4">
                     <h5><i class="fas fa-info-circle"></i> Descrição do Produto</h5>
-                    <p class="text-muted"><?= nl2br(htmlspecialchars($produto['descricao'] ?: 'Sem descrição disponível.')) ?></p>
+                    <p class="text-muted"><?= nl2br($produto_safe['descricao'] ?: 'Sem descrição disponível.') ?></p>
                 </div>
                 
-                <!-- Informações do Vendedor -->
                 <div class="vendor-info">
                     <h6><i class="fas fa-user-tie"></i> Informações do Vendedor</h6>
                     <p class="mb-0">
-                        <strong><?= htmlspecialchars($produto['vendedor_nome']) ?></strong><br>
-                        <small class="text-muted">Membro desde <?= date('M/Y', strtotime($produto['data_cadastro'])) ?></small>
+                        <strong><?= $produto_safe['vendedor_nome'] ?></strong><br>
+                        <small class="text-muted">Membro desde <?= date('M/Y', strtotime($produto_safe['data_cadastro'])) ?></small>
                     </p>
                 </div>
                 
-                <!-- Preços -->
                 <div class="price-section">
                     <h3><i class="fas fa-tags"></i> Preço</h3>
                     <div class="btc-price">
-                        <?= number_format($preco_btc_atual, 8) ?> BTC
+                        <?= number_format($produto_safe['preco_btc'], 8) ?> BTC
                     </div>
                     <div class="usd-price">
-                        ≈ R$ <?= number_format($produto['preco'], 2, ',', '.') ?>
+                        ≈ R$ <?= number_format($produto_safe['preco'], 2, ',', '.') ?>
                     </div>
                     <small class="text-muted">
                         Taxa da plataforma: 2.5% • Cotação: $<?= number_format($btc_rate, 2) ?>
@@ -507,21 +634,18 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             </div>
         </div>
 
-        <!-- Formulário de Compra -->
         <div class="purchase-form">
             <h3 class="text-center mb-4">
                 <i class="fas fa-shopping-cart"></i> Finalizar Compra
             </h3>
             
             <form method="POST" action="processar_compra.php" id="purchase-form">
-                <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
+                <input type="hidden" name="produto_id" value="<?= $produto_safe['id'] ?>">
                 
-                <!-- Seletor de Método de Pagamento -->
-                <?php if ($user_logged_in): ?>
+                <?php if ($user_data_safe['logged_in']): ?>
                 <div class="payment-method-selector">
                     <h5><i class="fas fa-credit-card"></i> Método de Pagamento</h5>
                     
-                    <!-- Pagamento com Saldo -->
                     <div class="payment-option" data-method="balance">
                         <input type="radio" name="payment_method" value="balance" id="payment-balance">
                         <div class="payment-icon">
@@ -531,15 +655,14 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                             <div class="payment-title">Pagar com Saldo da Carteira</div>
                             <div class="payment-description">Use seu saldo em Bitcoin</div>
                         </div>
-                        <div class="balance-info <?= floatval($user_balance['btc_balance']) < $preco_btc_atual ? 'insufficient-balance' : '' ?>">
-                            <?= number_format($user_balance['btc_balance'], 8) ?> BTC
-                            <?php if (floatval($user_balance['btc_balance']) < $preco_btc_atual): ?>
+                        <div class="balance-info <?= $user_data_safe['btc_balance'] < $produto_safe['preco_btc'] ? 'insufficient-balance' : '' ?>">
+                            <?= number_format($user_data_safe['btc_balance'], 8) ?> BTC
+                            <?php if ($user_data_safe['btc_balance'] < $produto_safe['preco_btc']): ?>
                                 <br><small>Saldo insuficiente</small>
                             <?php endif; ?>
                         </div>
                     </div>
                     
-                    <!-- Pagamento Externo -->
                     <div class="payment-option active" data-method="external">
                         <input type="radio" name="payment_method" value="external" id="payment-external" checked>
                         <div class="payment-icon">
@@ -550,7 +673,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                             <div class="payment-description">Enviar Bitcoin de sua carteira externa</div>
                         </div>
                         <div class="balance-info">
-                            <?= number_format($preco_btc_atual, 8) ?> BTC
+                            <?= number_format($produto_safe['preco_btc'], 8) ?> BTC
                         </div>
                     </div>
                 </div>
@@ -569,7 +692,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                         </label>
                         <input type="text" id="nome" name="nome" class="form-control" 
                                placeholder="Seu nickname" required maxlength="100"
-                               value="<?= $user_logged_in ? htmlspecialchars($_SESSION['user_name'] ?? '') : '' ?>">
+                               value="<?= $user_data_safe['name'] ?>">
                     </div>
                     
                     <div class="col-md-6 mb-3" id="btc-wallet-field">
@@ -594,13 +717,12 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                 <button type="submit" class="btn-purchase" id="purchase-btn">
                     <i class="fab fa-bitcoin"></i> <span id="purchase-text">Comprar com Bitcoin</span>
                     <div style="font-size: 0.9rem; margin-top: 0.25rem;" id="purchase-amount">
-                        <?= number_format($preco_btc_atual, 8) ?> BTC
+                        <?= number_format($produto_safe['preco_btc'], 8) ?> BTC
                     </div>
                 </button>
             </form>
         </div>
         
-        <!-- Aviso de Segurança -->
         <div class="security-notice">
             <h6><i class="fas fa-shield-alt"></i> Informações de Segurança</h6>
             <ul>
@@ -608,7 +730,7 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
                 <li><strong>Taxa da plataforma:</strong> 2.5% já incluída no preço</li>
                 <li><strong>Confirmação:</strong> 1-3 confirmações (10-30 minutos)</li>
                 <li><strong>Suporte:</strong> Acompanhe sua compra pela página de pagamento</li>
-                <?php if ($user_logged_in): ?>
+                <?php if ($user_data_safe['logged_in']): ?>
                 <li><strong>Saldo interno:</strong> Pagamento instantâneo com saldo da carteira</li>
                 <?php endif; ?>
             </ul>
@@ -617,11 +739,21 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
-        const productPrice = <?= $preco_btc_atual ?>;
-        const userBalance = <?= $user_logged_in ? floatval($user_balance['btc_balance']) : 0 ?>;
-        const isLoggedIn = <?= $user_logged_in ? 'true' : 'false' ?>;
+        // ✅ DADOS SEGUROS DO PHP PARA JAVASCRIPT
+        const productData = {
+            id: <?= json_encode($produto_safe['id'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+            name: <?= json_encode($produto_safe['nome'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+            price_btc: <?= json_encode($produto_safe['preco_btc'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+            price_brl: <?= json_encode($produto_safe['preco'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>
+        };
         
-        // Seletor de método de pagamento
+        const userData = {
+            logged_in: <?= $user_data_safe['logged_in'] ? 'true' : 'false' ?>,
+            btc_balance: <?= json_encode($user_data_safe['btc_balance'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+            name: <?= json_encode($user_data_safe['name'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>
+        };
+        
+        // ✅ SELETOR DE MÉTODO DE PAGAMENTO
         document.querySelectorAll('.payment-option').forEach(option => {
             option.addEventListener('click', function() {
                 // Remove active de todas as opções
@@ -638,19 +770,20 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             });
         });
         
+        // ✅ ATUALIZAR MÉTODO DE PAGAMENTO
         function updatePaymentMethod() {
-            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'external';
             const btcWalletField = document.getElementById('btc-wallet-field');
             const btcWalletInput = document.getElementById('btc_wallet');
             const purchaseBtn = document.getElementById('purchase-btn');
             const purchaseText = document.getElementById('purchase-text');
             
-            if (selectedMethod === 'balance') {
+            if (selectedMethod === 'balance' && userData.logged_in) {
                 // Pagamento com saldo
                 btcWalletField.style.display = 'none';
                 btcWalletInput.required = false;
                 
-                if (userBalance >= productPrice) {
+                if (userData.btc_balance >= productData.price_btc) {
                     purchaseBtn.disabled = false;
                     purchaseText.textContent = 'Comprar com Saldo';
                     purchaseBtn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
@@ -669,49 +802,69 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             }
         }
         
-        // Inicializar com método selecionado
-        if (isLoggedIn) {
-            updatePaymentMethod();
-        }
+        // ✅ INICIALIZAR COM MÉTODO SELECIONADO
+        document.addEventListener('DOMContentLoaded', function() {
+            if (userData.logged_in) {
+                updatePaymentMethod();
+            }
+            
+            console.log('✅ Página de compra carregada:', productData.name);
+        });
         
-        // Validação do formulário
+        // ✅ VALIDAÇÃO DO FORMULÁRIO
         document.getElementById('purchase-form').addEventListener('submit', function(e) {
             const nome = document.getElementById('nome').value.trim();
             const endereco = document.getElementById('endereco').value.trim();
-            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'external';
             
+            let errors = [];
+            
+            // Validações básicas
             if (nome.length < 3) {
-                e.preventDefault();
-                alert('Nome deve ter pelo menos 3 caracteres.');
-                return;
+                errors.push('Nome deve ter pelo menos 3 caracteres');
             }
             
             if (endereco.length < 10) {
-                e.preventDefault();
-                alert('Endereço deve ser mais detalhado.');
-                return;
+                errors.push('Endereço deve ser mais detalhado (mínimo 10 caracteres)');
             }
             
+            // Validação de carteira para pagamento externo
             if (selectedMethod === 'external') {
                 const wallet = document.getElementById('btc_wallet').value.trim();
                 const walletRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/;
-                if (!walletRegex.test(wallet)) {
-                    e.preventDefault();
-                    alert('Formato de carteira Bitcoin inválido.\nUse formato: bc1... ou 1... ou 3...');
-                    return;
+                
+                if (!wallet) {
+                    errors.push('Carteira Bitcoin é obrigatória para pagamento externo');
+                } else if (!walletRegex.test(wallet)) {
+                    errors.push('Formato de carteira Bitcoin inválido');
                 }
+            }
+            
+            // Mostrar erros se houver
+            if (errors.length > 0) {
+                e.preventDefault();
+                alert('❌ Erros encontrados:\n\n' + errors.join('\n'));
+                return false;
             }
             
             // Confirmação final
             const paymentText = selectedMethod === 'balance' ? 'saldo da carteira' : 'Bitcoin externo';
-            const confirmMessage = `Confirmar compra?\n\nProduto: <?= htmlspecialchars($produto['nome']) ?>\nValor: ${document.querySelector('#purchase-amount').textContent}\nPagamento: ${paymentText}\n\nO pagamento será processado imediatamente.`;
+            const confirmMessage = `🛒 Confirmar compra?\n\nProduto: ${productData.name}\nValor: ${document.querySelector('#purchase-amount').textContent.trim()}\nPagamento: ${paymentText}\n\n⚠️ O pagamento será processado imediatamente e é irreversível.\n\nDeseja continuar?`;
             
             if (!confirm(confirmMessage)) {
                 e.preventDefault();
+                return false;
             }
+            
+            // Mostrar loading
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando compra...';
+            
+            console.log('✅ Compra sendo processada:', productData.name, selectedMethod);
         });
         
-        // Validação em tempo real da carteira
+        // ✅ VALIDAÇÃO EM TEMPO REAL DA CARTEIRA
         document.getElementById('btc_wallet').addEventListener('input', function(e) {
             const wallet = e.target.value.trim();
             const walletRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/;
@@ -719,13 +872,33 @@ $preco_btc_atual = ($btc_rate > 0) ? ($produto['preco'] / $btc_rate) : 0;
             if (wallet.length > 10) {
                 if (walletRegex.test(wallet)) {
                     e.target.style.borderColor = '#28a745';
+                    e.target.style.boxShadow = '0 0 0 0.2rem rgba(40, 167, 69, 0.25)';
                 } else {
                     e.target.style.borderColor = '#dc3545';
+                    e.target.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
                 }
             } else {
                 e.target.style.borderColor = '#444';
+                e.target.style.boxShadow = 'none';
             }
         });
+        
+        // ✅ PROTEÇÃO CONTRA MANIPULAÇÃO DE DADOS
+        setInterval(() => {
+            const priceElement = document.getElementById('purchase-amount');
+            const expectedPrice = parseFloat(productData.price_btc).toFixed(8) + ' BTC';
+            
+            if (priceElement && priceElement.textContent.trim() !== expectedPrice) {
+                console.warn('⚠️ Tentativa de manipulação de preço detectada');
+                priceElement.textContent = expectedPrice;
+            }
+        }, 1000);
+        
+        // ✅ LOG DE SEGURANÇA
+        console.log('🛡️ Página de compra segura carregada');
+        console.log('✅ Produto:', productData.name);
+        console.log('💰 Preço:', productData.price_btc, 'BTC');
+        console.log('👤 Usuário logado:', userData.logged_in);
     </script>
 </body>
 </html>

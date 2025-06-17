@@ -4,6 +4,9 @@
 
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
+echo "Se você está vendo isso, o problema é outro.";
+die(); 
+
 
 // ✅ DETECÇÃO TOR SIMPLES E SEGURA (apenas para indicador visual)
 $torDetection = checkTorConnection();
@@ -61,15 +64,15 @@ try {
     if (!empty($search_term)) {
         $where_clauses[] = "(p.nome LIKE ? OR p.descricao LIKE ?)";
         $search_param = '%' . $search_term . '%';
-        $params[] = $search_param;
-        $params[] = $search_param;
+        $params[] = &$search_param; // Passar por referência
+        $params[] = &$search_param; // Passar por referência
         $types .= 'ss';
     }
 
-    // Filtro de categoria (se implementado)
+    // Filtro de categoria
     if (!empty($categoria_filter)) {
         $where_clauses[] = "p.categoria = ?";
-        $params[] = $categoria_filter;
+        $params[] = &$categoria_filter; // Passar por referência
         $types .= 's';
     }
 
@@ -95,13 +98,14 @@ try {
         throw new Exception("Erro ao preparar consulta: " . $conn->error);
     }
     
-    // Adicionar parâmetros de paginação
-    $params[] = $produtos_por_pagina;
-    $params[] = $offset;
+    // Adicionar parâmetros de paginação e passar por referência
+    $params[] = &$produtos_por_pagina;
+    $params[] = &$offset;
     $types .= 'ii';
     
-    if (!empty($params)) {
-        $stmt->bind_param($types, ...$params);
+    // ✅ CORREÇÃO: Usar call_user_func_array para compatibilidade
+    if (!empty($types) && !empty($params)) {
+        call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $params));
     }
     
     if (!$stmt->execute()) {
@@ -123,8 +127,9 @@ try {
     $count_params = array_slice($params, 0, -2); // Remove LIMIT e OFFSET
     $count_types = substr($types, 0, -2); // Remove 'ii'
     
-    if (!empty($count_params)) {
-        $count_stmt->bind_param($count_types, ...$count_params);
+    // ✅ CORREÇÃO: Usar call_user_func_array para compatibilidade
+    if (!empty($count_types) && !empty($count_params)) {
+        call_user_func_array([$count_stmt, 'bind_param'], array_merge([$count_types], $count_params));
     }
     
     $count_stmt->execute();
@@ -204,7 +209,6 @@ function buildPaginationUrl($page) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="ZeeMarket - Marketplace Seguro">
         
-        <!-- ✅ CSP HEADER PARA PROTEÇÃO ADICIONAL -->
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; img-src 'self' data: api.qrserver.com; connect-src 'self' api.coingecko.com;">
         
         <link rel="stylesheet" href="assets/css/style.css">
@@ -319,25 +323,21 @@ function buildPaginationUrl($page) {
         </style>
     </head>
     <body>
-        <!-- ✅ INDICADOR DE SEGURANÇA -->
         <div class="secure-indicator">
             🛡️ XSS-PROOF
         </div>
 
-        <!-- ✅ INDICADOR TOR SEGURO (apenas visual) -->
         <div class="tor-indicator <?= $isTorUser ? 'tor-connected' : 'tor-disconnected' ?>">
             <?= $isTorUser ? '🔒 TOR ATIVO' : '⚠️ TOR INATIVO' ?>
         </div>
 
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <!-- Brand/logo -->
             <a class="navbar-brand ms-5" href="#">
                 <span><img src="assets/icons2/zebra_branca.svg" class="zee_icon" alt="ZeeMarket Logo"></span>
                 <span class="title">[Zee-Market]</span><br>
             </a>
             
-            <!-- Navegação -->
-             <ul class="navbar-nav ">
+            <ul class="navbar-nav ">
                 <li class="nav-item">
                     <a class="nav-link gap-2 align-items-center" href="index.php">
                         <span>Home</span>
@@ -368,15 +368,14 @@ function buildPaginationUrl($page) {
                     Categories
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=electronics">Eletrônicos</a></li>
-                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=clothing">Roupas</a></li>
-                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=books">Livros</a></li>
-                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=services">Serviços</a></li>
+                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=mdma">MDMA</a></li>
+                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=cannabis">Cannabis</a></li>
+                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=cocain">Cocain</a></li>
+                    <li><a class="dropdown-item" href="<?= buildPaginationUrl(1) ?>&categoria=others">Others</a></li>
                 </ul>
              </div>
              
-             <!-- ✅ SEARCH BAR SEGURA -->
-            <form id="search-bar" class="d-flex ms-auto me-5 search-secure" method="GET">
+             <form id="search-bar" class="d-flex ms-auto me-5 search-secure" method="GET">
                 <input type="text" 
                        id="search" 
                        name="search" 
@@ -387,7 +386,6 @@ function buildPaginationUrl($page) {
                        pattern="[a-zA-Z0-9\s\-_]+"
                        title="Apenas letras, números, espaços e hífens">
                 
-                <!-- ✅ PRESERVAR FILTROS EXISTENTES -->
                 <?php if (!empty($categoria_filter)): ?>
                     <input type="hidden" name="categoria" value="<?= htmlspecialchars($categoria_filter) ?>">
                 <?php endif; ?>
@@ -398,7 +396,6 @@ function buildPaginationUrl($page) {
             </form>
        </nav>
 
-        <!--  AREA DE PERFIL  -->
         <div id="conteudo-principal">
            <div id="side-bar">
                 <div class="nav-perfil">
@@ -408,7 +405,6 @@ function buildPaginationUrl($page) {
                     </a>
                 </div>
                 <br>
-                <!--  AREA DE NAVEGAÇÃO-LATERAL  -->
                 <div class="nav-item bg-warning">
                     <a href="side-bar/produtos.html">
                         <span class="bi bi-bag-fill"></span>
@@ -447,11 +443,9 @@ function buildPaginationUrl($page) {
                 </div>
         </div>
 
-        <!-- AREA DE PAGINAÇÃO -->
         <div id="paginationProducts">
                 <h2>Bem-Vindo ao Zee-Market, seu marketplace libertário seguro!</h2>
                 
-                <!-- ✅ EXIBIR FILTROS ATIVOS -->
                 <?php if (!empty($search_term) || !empty($categoria_filter)): ?>
                     <div class="alert alert-info">
                         <h6>Filtros ativos:</h6>
@@ -465,15 +459,13 @@ function buildPaginationUrl($page) {
                     </div>
                 <?php endif; ?>
                 
-                <!-- ✅ AVISO SOBRE ERRO DE BANCO -->
                 <?php if ($erro_bd): ?>
                     <div class="alert alert-warning">
-                        <strong>Aviso:</strong> Alguns produtos podem não estar sendo exibidos devido a problemas técnicos temporários.
+                        <strong>Aviso:</strong> Alguns produtos podem não estar sendo exibidos, a sessão de categorias esta em manutenção
                         <button class="btn btn-sm btn-outline-warning ms-2" onclick="location.reload()">Tentar novamente</button>
                     </div>
                 <?php endif; ?>
 
-                <!-- ✅ PRODUTOS ULTRA-SEGUROS -->
                 <div id="cardContainer" class="items">
                     <?php if (!empty($produtos_safe)): ?>
                         <?php foreach ($produtos_safe as $produto): ?> 
@@ -520,7 +512,6 @@ function buildPaginationUrl($page) {
                                         </small>
                                     </div>
                                     
-                                    <!-- ✅ BADGES DE SEGURANÇA -->
                                     <div class="mt-1">
                                         <span class="badge bg-success">✓ Verificado</span>
                                         <?php if ($isTorUser): ?>
@@ -550,11 +541,9 @@ function buildPaginationUrl($page) {
                 </div>
             </div>
 
-            <!-- ✅ PAGINAÇÃO ULTRA-SEGURA -->
             <?php if ($total_paginas > 1): ?>
                 <nav id="pagination-area" class="mt-4">
                     <ul class="pagination justify-content-center pagination-secure">
-                        <!-- Botão Anterior -->
                         <?php if ($pagina_atual > 1): ?>
                             <li class="page-item">
                                 <a class="page-link" href="<?= htmlspecialchars(buildPaginationUrl($pagina_atual - 1)) ?>">
@@ -563,12 +552,10 @@ function buildPaginationUrl($page) {
                             </li>
                         <?php endif; ?>
 
-                        <!-- ✅ LÓGICA INTELIGENTE DE PAGINAÇÃO -->
                         <?php
                         $inicio = max(1, $pagina_atual - 2);
                         $fim = min($total_paginas, $pagina_atual + 2);
                         
-                        // Ajustar se estivermos muito no início ou fim
                         if ($fim - $inicio < 4) {
                             if ($inicio == 1) {
                                 $fim = min($total_paginas, $inicio + 4);
@@ -578,7 +565,6 @@ function buildPaginationUrl($page) {
                         }
                         ?>
 
-                        <!-- Primeira página -->
                         <?php if ($inicio > 1): ?>
                             <li class="page-item">
                                 <a class="page-link" href="<?= htmlspecialchars(buildPaginationUrl(1)) ?>">1</a>
@@ -590,7 +576,6 @@ function buildPaginationUrl($page) {
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <!-- Páginas do meio -->
                         <?php for ($i = $inicio; $i <= $fim; $i++): ?>
                             <li class="page-item <?= $i == $pagina_atual ? 'active' : '' ?>">
                                 <a class="page-link" href="<?= htmlspecialchars(buildPaginationUrl($i)) ?>">
@@ -599,7 +584,6 @@ function buildPaginationUrl($page) {
                             </li>
                         <?php endfor; ?>
 
-                        <!-- Última página -->
                         <?php if ($fim < $total_paginas): ?>
                             <?php if ($fim < $total_paginas - 1): ?>
                                 <li class="page-item disabled">
@@ -613,7 +597,6 @@ function buildPaginationUrl($page) {
                             </li>
                         <?php endif; ?>
 
-                        <!-- Botão Próximo -->
                         <?php if ($pagina_atual < $total_paginas): ?>
                             <li class="page-item">
                                 <a class="page-link" href="<?= htmlspecialchars(buildPaginationUrl($pagina_atual + 1)) ?>">
@@ -623,7 +606,6 @@ function buildPaginationUrl($page) {
                         <?php endif; ?>
                     </ul>
                     
-                    <!-- ✅ INFO DE PAGINAÇÃO SEGURA -->
                     <div class="text-center mt-2">
                         <small class="text-muted">
                             Página <?= htmlspecialchars($pagina_atual) ?> de <?= htmlspecialchars($total_paginas) ?> 
@@ -648,42 +630,23 @@ function buildPaginationUrl($page) {
             const searchForm = document.getElementById('search-bar');
             const searchInput = document.getElementById('search');
             
-            // Validação em tempo real
             searchInput.addEventListener('input', function(e) {
                 let value = e.target.value;
-                
-                // Remover caracteres perigosos
                 value = value.replace(/[<>\"'&]/g, '');
-                
-                // Limitar tamanho
                 if (value.length > 100) {
                     value = value.substring(0, 100);
                 }
-                
                 e.target.value = value;
             });
             
-            // Validação no submit
             searchForm.addEventListener('submit', function(e) {
                 const searchValue = searchInput.value.trim();
-                
-                // Bloquear pesquisas muito curtas ou perigosas
                 if (searchValue.length > 0 && searchValue.length < 2) {
                     e.preventDefault();
                     alert('⚠️ Busca deve ter pelo menos 2 caracteres');
                     return false;
                 }
-                
-                // Bloquear padrões suspeitos
-                const suspiciousPatterns = [
-                    /<script/i,
-                    /javascript:/i,
-                    /on\w+=/i,
-                    /<iframe/i,
-                    /eval\(/i,
-                    /document\./i
-                ];
-                
+                const suspiciousPatterns = [/<script/i, /javascript:/i, /on\w+=/i, /<iframe/i, /eval\(/i, /document\./i];
                 for (let pattern of suspiciousPatterns) {
                     if (pattern.test(searchValue)) {
                         e.preventDefault();
@@ -692,15 +655,6 @@ function buildPaginationUrl($page) {
                         return false;
                     }
                 }
-            });
-            
-            // ✅ PROTEÇÃO CONTRA ATAQUES DE TIMING
-            let searchTimeout;
-            searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    // Auto-busca após 500ms de pausa (opcional)
-                }, 500);
             });
         });
         
@@ -711,10 +665,8 @@ function buildPaginationUrl($page) {
         
         // ✅ ATUALIZAR STATUS TOR PERIODICAMENTE
         setInterval(function() {
-            // Verificação passiva do status Tor
             const torIndicator = document.querySelector('.tor-indicator');
             if (torIndicator) {
-                // Log silencioso para debugging
                 console.log('Tor Status: <?= $isTorUser ? "Connected" : "Disconnected" ?>');
             }
         }, 30000);
@@ -731,7 +683,7 @@ function buildPaginationUrl($page) {
         const originalTitle = document.title;
         setInterval(() => {
             if (document.title !== originalTitle) {
-                document.title = originalTitle; // Restaurar título original
+                document.title = originalTitle;
             }
         }, 1000);
         
@@ -763,7 +715,6 @@ function buildPaginationUrl($page) {
         // ✅ PROTEÇÃO CONTRA KEYLOGGERS BÁSICOS
         let suspiciousKeyCount = 0;
         document.addEventListener('keydown', function(e) {
-            // Detectar padrões suspeitos de keylogging
             if (e.ctrlKey && e.altKey && e.shiftKey) {
                 suspiciousKeyCount++;
                 if (suspiciousKeyCount > 3) {
@@ -777,14 +728,12 @@ function buildPaginationUrl($page) {
         console.log('🔒 Status TOR:', <?= $isTorUser ? 'true' : 'false' ?>);
     </script>
 
-    <!-- ✅ PROTEÇÃO ADICIONAL VIA NOSCRIPT -->
     <noscript>
         <div style="position: fixed; top: 0; left: 0; width: 100%; background: #dc3545; color: white; text-align: center; padding: 10px; z-index: 9999;">
             ⚠️ JavaScript está desabilitado. Algumas funcionalidades podem não funcionar corretamente.
         </div>
     </noscript>
 
-    <!-- ✅ HONEYPOT PARA DETECTAR BOTS -->
     <div style="position: absolute; left: -9999px; opacity: 0;">
         <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
     </div>

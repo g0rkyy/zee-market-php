@@ -5,8 +5,6 @@ require_once 'includes/functions.php';
 // Inicializar sistema de segurança
 ensureSecurityTablesExist();
 
-session_start();
-
 // Se já estiver logado, redirecionar
 if (isLoggedIn()) {
     header("Location: dashboard.php");

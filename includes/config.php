@@ -1,4 +1,44 @@
 <?php
+/*
+* @author Blackcat security Team.
+*
+*/
+if (!headers_sent()) {
+    // CSP corrigido para permitir CDNs necessários
+    if (strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false) {
+        // CSP para desenvolvimento local - mais permissivo
+        $csp = "default-src 'self'; ";
+        $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://code.jquery.com https://ajax.googleapis.com; ";
+        $csp .= "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; ";
+        $csp .= "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; ";
+        $csp .= "img-src 'self' data: https: http:; ";
+        $csp .= "connect-src 'self' https: http: ws: wss:; ";
+        $csp .= "media-src 'self' https: data:; ";
+        $csp .= "object-src 'none'; ";
+        $csp .= "frame-ancestors 'none';";
+        
+        header("Content-Security-Policy: " . $csp);
+    } else {
+        // CSP para produção - seguro mas permitindo CDNs necessários
+        $csp = "default-src 'self'; ";
+        $csp .= "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://code.jquery.com https://ajax.googleapis.com; ";
+        $csp .= "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; ";
+        $csp .= "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; ";
+        $csp .= "img-src 'self' data: https:; ";
+        $csp .= "connect-src 'self' https:; ";
+        $csp .= "media-src 'self' https: data:; ";
+        $csp .= "object-src 'none'; ";
+        $csp .= "frame-ancestors 'none';";
+        
+        header("Content-Security-Policy: " . $csp);
+    }
+    
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: DENY");
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
+    header("Referrer-Policy: no-referrer");
+}
+
 // Configurações de Sessão Segura (DEVE vir ANTES do session_start())
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
@@ -24,18 +64,22 @@ ini_set('error_log', __DIR__ . '/logs/php_errors.log');
 if (!file_exists(__DIR__ . '/logs')) {
     mkdir(__DIR__ . '/logs', 0750, true);
 }
-require_once __DIR__ . '/../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
-
+// Verificar se o arquivo .env existe
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+    
+    if (file_exists(__DIR__ . '/../.env')) {
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+        $dotenv->load();
+    }
+}
 
 // Configurações do Banco de Dados
 $host = $_ENV['DB_HOST'] ?? 'localhost';
 $user = $_ENV['DB_USER'] ?? '';
 $pass = $_ENV['DB_PASS'] ?? '';
 $db   = $_ENV['DB_NAME'] ?? '';
-
 
 // Conexão com MySQL
 try {
@@ -57,21 +101,20 @@ try {
     die("Sistema temporariamente indisponível. Tente novamente em alguns minutos.");
 }
 
-    // =============================================
+// =============================================
 // CONFIGURAÇÕES GERAIS DO SITE
 // =============================================
 define('SITE_NAME', 'Zee-Market');
-define('SITE_URL', 'http://localhost'); // Futuramente, nosso endereço .onion
 define('DEBUG_MODE', true);              // Mudar para false em produção
 
 // CHAVE PÚBLICA MESTRA (XPUB) PARA CARTEIRA DE DEPÓSITOS BTC
-define('MASTER_PUBLIC_KEY', 'zpub6nMVW3iQ5Sq3VNdjEhFcKYXiNZWW7RCiMydEyPMZ82PKnKaCursZUgCwtYQadRtjonR3Vg3uDn2ZuTGZpdNKcWyNPXtvK7P2oSdsaZXDAax'); // <-- COLE SUA XPUB REAL AQUI
+define('MASTER_PUBLIC_KEY', 'zpub6nMVW3iQ5Sq3VNdjEhFcKYXiNZWW7RCiMydEyPMZ82PKnKaCursZUgCwtYQadRtjonR3Vg3uDn2ZuTGZpdNKcWyNPXtvK7P2oSdsaZXDAax');
 
 // Configurações Bitcoin
 $blockchainConfig = [
     // BlockCypher API - Gratuita até 3 requests/segundo
     'blockcypher' => [
-        'api_key' => '1a406e8d527943418bd99f7afaf3d461', // Deixe vazio para usar sem token (limitado)
+        'api_key' => '1a406e8d527943418bd99f7afaf3d461',
         'base_url' => 'https://api.blockcypher.com/v1/btc/main',
         'webhook_url' => 'https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/btc/webhook.php'
     ],
@@ -83,9 +126,9 @@ $blockchainConfig = [
     
     // Etherscan API
     'etherscan' => [
-    'api_key' => '6PA6CHCT9UGWQ2MWFE2UFM94UVFAFKQT8Z',
-    'base_url' => 'https://api.etherscan.io/api'
-],
+        'api_key' => '6PA6CHCT9UGWQ2MWFE2UFM94UVFAFKQT8Z',
+        'base_url' => 'https://api.etherscan.io/api'
+    ],
     
     // CoinGecko API para cotações
     'coingecko' => [
@@ -93,10 +136,10 @@ $blockchainConfig = [
     ],
     
     // Configurações gerais
-    'min_confirmations' => 1, // Mínimo de confirmações para considerar válido
-    'dust_limit' => 0.00000546, // Limite mínimo de transação (546 satoshis)
-    'fee_rate' => 10, // Taxa de rede em sat/byte
-    'network' => 'mainnet', // mainnet ou testnet
+    'min_confirmations' => 1,
+    'dust_limit' => 0.00000546,
+    'fee_rate' => 10,
+    'network' => 'mainnet',
     
     // Limites de saque diário
     'daily_limits' => [
@@ -116,12 +159,13 @@ $blockchainConfig = [
     'webhook_secret' => 'zee_market_webhook_2024_' . md5($_SERVER['HTTP_HOST'] ?? 'localhost'),
     'encryption_key' => 'zee_market_encrypt_2024_' . md5($_SERVER['HTTP_HOST'] ?? 'localhost')
 ];
+
 $torConfig = [
     'proxy' => 'socks5://127.0.0.1:9050',
     'user_agent_rotation' => true,
-    'circuit_renewal' => 300, // Renovar circuito a cada 5min
+    'circuit_renewal' => 300,
     'timeout' => 60,
-    'ssl_verify' => false // Apenas para .onion
+    'ssl_verify' => false
 ];
 
 // Constantes globais
@@ -178,6 +222,7 @@ function isValidCryptoAddress($address, $crypto) {
 
 // Função para gerar hash seguro
 function generateSecureHash($data) {
+    global $blockchainConfig;
     return hash('sha256', $data . $blockchainConfig['encryption_key'] . time());
 }
 
@@ -219,19 +264,6 @@ function jsonResponse($data, $httpCode = 200) {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit;
-}
-
-// Headers de segurança (apenas se não foram enviados ainda)
-if (!headers_sent()) {
-    header('X-Content-Type-Options: nosniff');
-    header('X-Frame-Options: DENY');
-    header('X-XSS-Protection: 1; mode=block');
-    header('Referrer-Policy: strict-origin-when-cross-origin');
-    
-    // CSP para desenvolvimento (relaxado)
-    if (strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false) {
-        header("Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval' data: https:; img-src 'self' data: https:;");
-    }
 }
 
 // Configuração de erro handling
@@ -324,6 +356,7 @@ $_SESSION['last_api_call'] = $_SESSION['last_api_call'] ?? 0;
 if (time() - ($_SESSION['last_api_call'] ?? 0) > 60) {
     $_SESSION['api_calls'] = [];
 }
+
 class TorNetwork {
     private static $userAgents = [
         'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
@@ -372,8 +405,9 @@ class TorNetwork {
         return self::$userAgents[array_rand(self::$userAgents)];
     }
 }
+
 // =============================================
-// CLASSE AdvancedCrypto (Adicionada no final)
+// CLASSE AdvancedCrypto
 // =============================================
 class AdvancedCrypto {
     private static $pepper = 'ZEE_ULTRA_SECRET_2024_RANDOM_STRING';

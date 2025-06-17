@@ -51,7 +51,8 @@ try {
 
 } catch (Exception $e) {
     error_log("Erro na confirmação: " . $e->getMessage());
-    die("Erro ao carregar dados da compra: " . $e->getMessage());
+    // CORRIGIDO: Sanitizar a mensagem de erro antes de exibi-la
+    die("Erro ao carregar dados da compra: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
 }
 ?>
 
@@ -328,7 +329,6 @@ try {
     </style>
 </head>
 <body>
-    <!-- Confetti Animation -->
     <div class="confetti" id="confetti"></div>
     
     <div class="container">
@@ -342,53 +342,51 @@ try {
             </div>
             
             <div class="success-body">
-                <!-- Informações do Produto -->
                 <?php if (!empty($compra['imagem'])): ?>
                 <div class="product-info">
-                    <img src="assets/uploads/<?= htmlspecialchars($compra['imagem']) ?>" 
+                    <img src="assets/uploads/<?= htmlspecialchars($compra['imagem'], ENT_QUOTES, 'UTF-8') ?>" 
                          alt="Produto" class="product-image">
                     <div class="product-details">
-                        <h6><?= htmlspecialchars($compra['produto_nome']) ?></h6>
-                        <p class="text-muted mb-1">Vendedor: <?= htmlspecialchars($compra['vendedor_nome']) ?></p>
+                        <h6><?= htmlspecialchars($compra['produto_nome'], ENT_QUOTES, 'UTF-8') ?></h6>
+                        <p class="text-muted mb-1">Vendedor: <?= htmlspecialchars($compra['vendedor_nome'], ENT_QUOTES, 'UTF-8') ?></p>
                         <p class="text-success mb-0">
-                            <strong><?= number_format($compra['valor_btc'], 8) ?> BTC</strong>
-                            <small>(≈ R$ <?= number_format($compra['preco'], 2, ',', '.') ?>)</small>
+                            <strong><?= htmlspecialchars(number_format($compra['valor_btc'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</strong>
+                            <small>(≈ R$ <?= htmlspecialchars(number_format($compra['preco'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?>)</small>
                         </p>
                     </div>
                 </div>
                 <?php endif; ?>
                 
-                <!-- Detalhes do Pedido -->
                 <div class="order-details">
                     <h5><i class="fas fa-receipt"></i> Detalhes do Pedido</h5>
                     
                     <div class="detail-row">
                         <span class="detail-label">Número do Pedido:</span>
-                        <span class="detail-value">#<?= $compra['id'] ?></span>
+                        <span class="detail-value">#<?= htmlspecialchars($compra['id'], ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Data da Compra:</span>
-                        <span class="detail-value"><?= date('d/m/Y H:i', strtotime($compra['data_compra'])) ?></span>
+                        <span class="detail-value"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($compra['data_compra'])), ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Valor Pago:</span>
-                        <span class="detail-value"><?= number_format($compra['valor_btc'], 8) ?> BTC</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($compra['valor_btc'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Taxa da Plataforma:</span>
-                        <span class="detail-value"><?= number_format($compra['taxa_plataforma'], 8) ?> BTC</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($compra['taxa_plataforma'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     
                     <?php if (!empty($compra['tx_hash'])): ?>
                     <div class="detail-row">
                         <span class="detail-label">Hash da Transação:</span>
                         <span class="detail-value">
-                            <div class="tx-hash"><?= htmlspecialchars($compra['tx_hash']) ?></div>
+                            <div class="tx-hash"><?= htmlspecialchars($compra['tx_hash'], ENT_QUOTES, 'UTF-8') ?></div>
                             <?php if (strpos($compra['tx_hash'], 'internal_') === false): ?>
-                            <a href="https://blockstream.info/tx/<?= htmlspecialchars($compra['tx_hash']) ?>" 
+                            <a href="https://blockstream.info/tx/<?= htmlspecialchars($compra['tx_hash'], ENT_QUOTES, 'UTF-8') ?>" 
                                target="_blank" class="btn btn-sm btn-outline-light mt-2">
                                 <i class="fas fa-external-link-alt"></i> Ver na Blockchain
                             </a>
@@ -399,25 +397,24 @@ try {
                     
                     <div class="detail-row">
                         <span class="detail-label">Entrega para:</span>
-                        <span class="detail-value"><?= htmlspecialchars($compra['nome']) ?></span>
+                        <span class="detail-value"><?= htmlspecialchars($compra['nome'], ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Endereço:</span>
-                        <span class="detail-value"><?= htmlspecialchars($compra['endereco']) ?></span>
+                        <span class="detail-value"><?= htmlspecialchars($compra['endereco'], ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     
                     <?php if ($compra['confirmations'] > 0): ?>
                     <div class="detail-row">
                         <span class="detail-label">Confirmações:</span>
                         <span class="detail-value">
-                            <span class="badge bg-success"><?= $compra['confirmations'] ?> confirmações</span>
+                            <span class="badge bg-success"><?= htmlspecialchars($compra['confirmations'], ENT_QUOTES, 'UTF-8') ?> confirmações</span>
                         </span>
                     </div>
                     <?php endif; ?>
                 </div>
                 
-                <!-- Timeline do Processo -->
                 <div class="timeline">
                     <h5><i class="fas fa-tasks"></i> Status do Pedido</h5>
                     
@@ -452,7 +449,6 @@ try {
                     </div>
                 </div>
                 
-                <!-- Resumo da Carteira (se logado) -->
                 <?php if ($user_balance): ?>
                 <div class="wallet-summary">
                     <h5><i class="fas fa-wallet"></i> Saldo Atual da Carteira</h5>
@@ -462,7 +458,7 @@ try {
                             <i class="fas fa-bitcoin crypto-icon btc"></i>
                             Bitcoin (BTC)
                         </div>
-                        <span class="detail-value"><?= number_format($user_balance['btc_balance'], 8) ?> BTC</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($user_balance['btc_balance'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     
                     <div class="balance-item">
@@ -470,7 +466,7 @@ try {
                             <i class="fab fa-ethereum crypto-icon eth"></i>
                             Ethereum (ETH)
                         </div>
-                        <span class="detail-value"><?= number_format($user_balance['eth_balance'], 6) ?> ETH</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($user_balance['eth_balance'], 6), ENT_QUOTES, 'UTF-8') ?> ETH</span>
                     </div>
                     
                     <div class="balance-item">
@@ -478,12 +474,11 @@ try {
                             <i class="fas fa-coins crypto-icon xmr"></i>
                             Monero (XMR)
                         </div>
-                        <span class="detail-value"><?= number_format($user_balance['xmr_balance'], 6) ?> XMR</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($user_balance['xmr_balance'], 6), ENT_QUOTES, 'UTF-8') ?> XMR</span>
                     </div>
                 </div>
                 <?php endif; ?>
                 
-                <!-- Botões de Ação -->
                 <div class="action-buttons">
                     <?php if (isLoggedIn()): ?>
                     <a href="dashboard.php" class="btn btn-primary">
@@ -501,24 +496,22 @@ try {
                     </button>
                 </div>
                 
-                <!-- Informações Adicionais -->
                 <div class="mt-4 p-3" style="background: rgba(23, 162, 184, 0.1); border-radius: 10px; border: 1px solid rgba(23, 162, 184, 0.3);">
                     <h6 style="color: #17a2b8;"><i class="fas fa-info-circle"></i> Próximos Passos</h6>
                     <ul style="margin: 0; padding-left: 1.5rem;">
                         <li>O vendedor foi notificado sobre sua compra automaticamente</li>
                         <li>Você receberá atualizações sobre o status da entrega</li>
-                        <li>Guarde este número do pedido: <strong>#<?= $compra['id'] ?></strong></li>
+                        <li>Guarde este número do pedido: <strong>#<?= htmlspecialchars($compra['id'], ENT_QUOTES, 'UTF-8') ?></strong></li>
                         <li>Em caso de dúvidas, entre em contato pelo suporte</li>
                         <li>Avalie sua experiência após receber o produto</li>
                     </ul>
                 </div>
 
-                <!-- Informações de Contato -->
                 <div class="mt-3 p-3" style="background: rgba(40, 167, 69, 0.1); border-radius: 10px; border: 1px solid rgba(40, 167, 69, 0.3);">
                     <h6 style="color: var(--success-green);"><i class="fas fa-headset"></i> Suporte</h6>
                     <p class="mb-0">
                         <strong>Email:</strong> z33m4rketofficial@pronton.me<br>
-                        <strong>Pedido:</strong> #<?= $compra['id'] ?><br>
+                        <strong>Pedido:</strong> #<?= htmlspecialchars($compra['id'], ENT_QUOTES, 'UTF-8') ?><br>
                         <small class="text-muted">Inclua sempre o número do pedido ao entrar em contato</small>
                     </p>
                 </div>
@@ -575,15 +568,18 @@ try {
         
         // Função para compartilhar compra
         function compartilharCompra() {
+            const productName = <?= json_encode($compra['produto_nome'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            const orderId = <?= json_encode($compra['id'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            
             if (navigator.share) {
                 navigator.share({
                     title: 'Compra realizada no ZeeMarket!',
-                    text: `Acabei de comprar <?= htmlspecialchars($compra['produto_nome']) ?> no ZeeMarket! Pedido #<?= $compra['id'] ?>`,
+                    text: `Acabei de comprar ${productName} no ZeeMarket! Pedido #${orderId}`,
                     url: window.location.href
                 });
             } else {
                 // Fallback para navegadores que não suportam Web Share API
-                const text = `Acabei de comprar <?= htmlspecialchars($compra['produto_nome']) ?> no ZeeMarket! Pedido #<?= $compra['id'] ?>`;
+                const text = `Acabei de comprar ${productName} no ZeeMarket! Pedido #${orderId}`;
                 navigator.clipboard.writeText(text + ' - ' + window.location.href)
                     .then(() => alert('Link copiado para a área de transferência!'))
                     .catch(() => alert('Não foi possível copiar o link'));
@@ -624,10 +620,12 @@ try {
         // Auto-refresh das confirmações (se for transação real)
         <?php if (!empty($compra['tx_hash']) && strpos($compra['tx_hash'], 'internal_') === false): ?>
         function atualizarConfirmacoes() {
-            fetch(`verificar_pagamento.php?id=<?= $compra_id ?>`)
+            const compraId = <?= json_encode($compra_id, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+            fetch(`verificar_pagamento.php?id=${compraId}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.confirmations && data.confirmations > <?= $compra['confirmations'] ?>) {
+                    const currentConfirmations = <?= json_encode($compra['confirmations'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+                    if (data.confirmations && data.confirmations > currentConfirmations) {
                         location.reload(); // Recarregar se houver novas confirmações
                     }
                 })
@@ -639,7 +637,9 @@ try {
         <?php endif; ?>
         
         console.log('🎉 Compra confirmada com sucesso!');
-        console.log('Pedido #<?= $compra['id'] ?> - <?= htmlspecialchars($compra['produto_nome']) ?>');
+        const finalOrderId = <?= json_encode($compra['id'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        const finalProductName = <?= json_encode($compra['produto_nome'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        console.log(`Pedido #${finalOrderId} - ${finalProductName}`);
     </script>
 </body>
 </html>

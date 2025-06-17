@@ -1,7 +1,7 @@
 <?php
 /**
  * PAINEL DO USUÁRIO CORRIGIDO - ZEEMARKET
- * Corrige erro de QR Code 2FA e implementa geração inline
+ * Corrige erro de QR Code 2FA, implementa geração inline e aplica sanitização XSS completa.
  */
 
 session_start();
@@ -32,8 +32,9 @@ $stmt->execute();
 $userData = $stmt->get_result()->fetch_assoc();
 
 if (!$userData) {
-    $message = "Erro ao carregar dados do usuário";
-    $messageType = 'danger';
+    // Redireciona em caso de erro crítico para não expor um painel vazio
+    header('Location: login.php?error=userdata');
+    exit;
 }
 
 // Processar ações
@@ -118,32 +119,8 @@ function generateQRCodeInline($secret, $issuer, $accountName) {
         urlencode($issuer)
     );
     
-    // Tentar múltiplas APIs de QR Code
-    $qr_apis = [
-        // API do Google Charts (mais confiável)
-        "https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=" . urlencode($otpauth_url),
-        // API alternativa qr-server.com
-        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($otpauth_url),
-        // API alternativa quickchart.io
-        "https://quickchart.io/qr?text=" . urlencode($otpauth_url) . "&size=200"
-    ];
-    
-    return $qr_apis[0]; // Usar primeira opção por padrão
-}
-
-// Função para debug - mostra a URL TOTP
-function getOTPAuthURL($secret, $issuer, $accountName) {
-    $secret = trim($secret);
-    $issuer = trim($issuer);
-    $accountName = trim($accountName);
-    
-    return sprintf(
-        "otpauth://totp/%s:%s?secret=%s&issuer=%s",
-        urlencode($issuer),
-        urlencode($accountName),
-        $secret,
-        urlencode($issuer)
-    );
+    // Usar API do Google Charts (mais confiável)
+    return "https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=" . urlencode($otpauth_url);
 }
 ?>
 
@@ -156,59 +133,16 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: #1a1a1a;
-            color: #e0e0e0;
-        }
-        .card {
-            background: #2d2d2d;
-            border: 1px solid #444;
-        }
-        .card-header {
-            background: #333;
-            border-bottom: 1px solid #444;
-        }
-        .balance-card {
-            background: linear-gradient(135deg, #f7931a, #e67e22);
-            color: white;
-            border: none;
-        }
-        .qr-container {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            display: inline-block;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-        .qr-container img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-        }
-        .backup-codes {
-            background: #333;
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            border: 1px solid #555;
-        }
-        .secret-key {
-            background: #444;
-            padding: 0.5rem;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            word-break: break-all;
-            border: 1px solid #666;
-        }
-        .alert-2fa {
-            border-left: 4px solid #28a745;
-            background: rgba(40, 167, 69, 0.1);
-        }
-        .form-label {
-            color: white;
-        }
+        body { background: #1a1a1a; color: #e0e0e0; }
+        .card { background: #2d2d2d; border: 1px solid #444; }
+        .card-header { background: #333; border-bottom: 1px solid #444; }
+        .balance-card { background: linear-gradient(135deg, #f7931a, #e67e22); color: white; border: none; }
+        .qr-container { background: white; padding: 1rem; border-radius: 8px; display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .qr-container img { display: block; max-width: 100%; height: auto; }
+        .backup-codes { background: #333; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; border: 1px solid #555; }
+        .secret-key { background: #444; padding: 0.5rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; word-break: break-all; border: 1px solid #666; }
+        .alert-2fa { border-left: 4px solid #28a745; background: rgba(40, 167, 69, 0.1); }
+        .form-label { color: white; }
     </style>
 </head>
 <body>
@@ -219,7 +153,7 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
             </a>
             <div class="navbar-nav ms-auto">
                 <span class="navbar-text me-3">
-                    Olá, <?= htmlspecialchars($userData['name']) ?>
+                    Olá, <?= htmlspecialchars($userData['name'], ENT_QUOTES, 'UTF-8') ?>
                 </span>
                 <a href="logout.php" class="btn btn-outline-danger btn-sm">
                     <i class="fas fa-sign-out-alt"></i> Sair
@@ -230,27 +164,26 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
 
     <div class="container mt-4">
         <?php if ($message): ?>
-        <div class="alert alert-<?= $messageType ?> alert-dismissible fade show" role="alert">
-            <?= $message ?>
+        <div class="alert alert-<?= htmlspecialchars($messageType, ENT_QUOTES, 'UTF-8') ?> alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         <?php endif; ?>
 
         <div class="row">
-            <!-- Saldos -->
             <div class="col-md-4 mb-4">
                 <div class="card balance-card">
                     <div class="card-body text-center">
                         <h5><i class="fab fa-bitcoin"></i> Saldos</h5>
                         <hr>
                         <div class="mb-2">
-                            <strong>BTC:</strong> <?= number_format($userData['btc_balance'], 8) ?>
+                            <strong>BTC:</strong> <?= htmlspecialchars(number_format($userData['btc_balance'], 8), ENT_QUOTES, 'UTF-8') ?>
                         </div>
                         <div class="mb-2">
-                            <strong>ETH:</strong> <?= number_format($userData['eth_balance'], 6) ?>
+                            <strong>ETH:</strong> <?= htmlspecialchars(number_format($userData['eth_balance'], 6), ENT_QUOTES, 'UTF-8') ?>
                         </div>
                         <div class="mb-2">
-                            <strong>XMR:</strong> <?= number_format($userData['xmr_balance'], 6) ?>
+                            <strong>XMR:</strong> <?= htmlspecialchars(number_format($userData['xmr_balance'], 6), ENT_QUOTES, 'UTF-8') ?>
                         </div>
                         <hr>
                         <a href="btc/deposit.php" class="btn btn-light btn-sm me-2">
@@ -263,7 +196,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                 </div>
             </div>
 
-            <!-- Configurações 2FA -->
             <div class="col-md-8 mb-4">
                 <div class="card">
                     <div class="card-header">
@@ -272,7 +204,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                     <div class="card-body">
                         <?php if (!$is2FAEnabled): ?>
                             <?php if (!isset($_SESSION['temp_2fa_secret'])): ?>
-                                <!-- Ativar 2FA -->
                                 <div class="alert alert-warning">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     <strong>Recomendado:</strong> Ative o 2FA para proteger sua conta
@@ -288,7 +219,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                                     </button>
                                 </form>
                             <?php else: ?>
-                                <!-- Mostrar QR Code -->
                                 <div class="alert alert-2fa">
                                     <h6><i class="fas fa-info-circle"></i> Configure seu Autenticador</h6>
                                     Siga os passos abaixo para ativar o 2FA na sua conta.
@@ -301,30 +231,24 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                                             <div class="qr-container">
                                                 <?php 
                                                 $qr_url = generateQRCodeInline($_SESSION['temp_2fa_secret'], 'ZeeMarket', $userData['name']);
-                                                $debug_url = getOTPAuthURL($_SESSION['temp_2fa_secret'], 'ZeeMarket', $userData['name']);
                                                 ?>
-                                                <img src="<?= $qr_url ?>" 
+                                                <img src="<?= htmlspecialchars($qr_url, ENT_QUOTES, 'UTF-8') ?>" 
                                                      alt="QR Code 2FA" 
                                                      id="qrcode-img"
-                                                     style="width: 200px; height: 200px;"
-                                                     onerror="tryAlternativeQR(this)">
+                                                     style="width: 200px; height: 200px;">
                                             </div>
-                                            
-                                            <!-- Debug info -->
-                                            
                                         </div>
                                         <p class="text-muted small text-center form-label">
                                             <i class="fas fa-download form-label"></i> 
                                             Use <strong>Google Authenticator</strong>, <strong>Authy</strong> ou app similar
                                         </p>
                                         
-                                        <!-- Chave manual -->
                                         <div class="mb-3">
                                             <label class="form-label small">
                                                 <i class="fas fa-key"></i> Ou insira manualmente:
                                             </label>
                                             <div class="secret-key">
-                                                <?= chunk_split($_SESSION['temp_2fa_secret'], 4, ' ') ?>
+                                                <?= htmlspecialchars(chunk_split($_SESSION['temp_2fa_secret'], 4, ' '), ENT_QUOTES, 'UTF-8') ?>
                                             </div>
                                             <button type="button" class="btn btn-sm btn-outline-secondary mt-1" 
                                                     onclick="copySecret()">
@@ -358,7 +282,9 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                                         <div class="mt-4">
                                             <h6><i class="fas fa-life-ring"></i> 3. Códigos de Backup:</h6>
                                             <div class="backup-codes">
-                                                <?= implode('<br>', $_SESSION['temp_backup_codes']) ?>
+                                                <?php foreach ($_SESSION['temp_backup_codes'] as $backup_code): ?>
+                                                    <?= htmlspecialchars($backup_code, ENT_QUOTES, 'UTF-8') ?><br>
+                                                <?php endforeach; ?>
                                             </div>
                                             <div class="alert alert-warning mt-2 p-2">
                                                 <small>
@@ -377,7 +303,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                                 </div>
                             <?php endif; ?>
                         <?php else: ?>
-                            <!-- 2FA Ativo -->
                             <div class="alert alert-success">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-shield-check fa-2x me-3"></i>
@@ -430,7 +355,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
             </div>
         </div>
 
-        <!-- Transações Recentes -->
         <div class="card">
             <div class="card-header">
                 <h5><i class="fas fa-history"></i> Transações Recentes</h5>
@@ -454,25 +378,26 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
                             <tr>
                                 <td>
                                     <i class="fas fa-<?= $tx['type'] === 'deposit' ? 'arrow-down text-success' : 'arrow-up text-warning' ?>"></i>
-                                    <?= ucfirst($tx['type']) ?>
+                                    <?= htmlspecialchars(ucfirst($tx['type']), ENT_QUOTES, 'UTF-8') ?>
                                 </td>
-                                <td><?= number_format($tx['amount'], 8) ?></td>
+                                <td><?= htmlspecialchars(number_format($tx['amount'], 8), ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
                                     <span class="badge bg-secondary">
-                                        <?= strtoupper($tx['crypto_type']) ?>
+                                        <?= htmlspecialchars(strtoupper($tx['crypto_type']), ENT_QUOTES, 'UTF-8') ?>
                                     </span>
                                 </td>
                                 <td>
                                     <span class="badge bg-<?= $tx['status'] === 'confirmed' ? 'success' : ($tx['status'] === 'pending' ? 'warning' : 'danger') ?>">
-                                        <?= ucfirst($tx['status']) ?>
+                                        <?= htmlspecialchars(ucfirst($tx['status']), ENT_QUOTES, 'UTF-8') ?>
                                     </span>
                                 </td>
-                                <td><?= date('d/m/Y H:i', strtotime($tx['created_at'])) ?></td>
+                                <td><?= htmlspecialchars(date('d/m/Y H:i', strtotime($tx['created_at'])), ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
                                     <?php if ($tx['tx_hash']): ?>
                                     <a href="#" class="text-info" data-bs-toggle="tooltip" 
-                                       title="<?= $tx['tx_hash'] ?>" onclick="copyToClipboard('<?= $tx['tx_hash'] ?>')">
-                                        <?= substr($tx['tx_hash'], 0, 8) ?>...
+                                       title="<?= htmlspecialchars($tx['tx_hash'], ENT_QUOTES, 'UTF-8') ?>" 
+                                       onclick="copyToClipboard(<?= htmlspecialchars(json_encode($tx['tx_hash']), ENT_QUOTES, 'UTF-8') ?>); return false;">
+                                        <?= htmlspecialchars(substr($tx['tx_hash'], 0, 8), ENT_QUOTES, 'UTF-8') ?>...
                                     </a>
                                     <?php else: ?>
                                     <span class="text-muted">-</span>
@@ -492,7 +417,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
             </div>
         </div>
 
-        <!-- Links Rápidos -->
         <div class="row mt-4 mb-4">
             <div class="col-md-3 mb-2">
                 <a href="index.php" class="btn btn-outline-primary w-100">
@@ -519,87 +443,50 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Variaveis PHP seguras para JS
+        const backupCodes = <?= isset($_SESSION['temp_backup_codes']) ? json_encode($_SESSION['temp_backup_codes']) : '[]' ?>;
+        const userName = <?= json_encode($userData['name'] ?? '', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        const twoFASecret = <?= json_encode($_SESSION["temp_2fa_secret"] ?? '', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+
         document.addEventListener('DOMContentLoaded', function() {
-            const qrImg = document.getElementById('qrcode-img');
-            if (qrImg) {
-                // Verificar se QR carregou corretamente após 3 segundos
-                setTimeout(() => {
-                    if (qrImg.naturalWidth === 0 || qrImg.complete === false) {
-                        console.log('QR Code não carregou, tentando alternativas...');
-                        tryAlternativeQR(qrImg);
-                    }
-                }, 3000);
-            }
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
 
-       
-
-        // Inicializar tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-
-        // Função para copiar chave secreta
         function copySecret() {
             const secretText = document.querySelector('.secret-key').textContent.replace(/\s/g, '');
-            navigator.clipboard.writeText(secretText).then(function() {
-                showToast('Chave copiada para a área de transferência!', 'success');
-            }).catch(function() {
-                showToast('Erro ao copiar chave', 'error');
-            });
+            navigator.clipboard.writeText(secretText).then(() => showToast('Chave copiada!', 'success'), () => showToast('Erro ao copiar', 'error'));
         }
 
-        // Função para copiar hash de transação
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                showToast('Hash copiado!', 'success');
-            }).catch(function() {
-                showToast('Erro ao copiar hash', 'error');
-            });
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => showToast('Hash copiado!', 'success'), () => showToast('Erro ao copiar', 'error'));
         }
 
-        // Função para baixar códigos de backup
         function downloadBackupCodes() {
-            const codes = <?= isset($_SESSION['temp_backup_codes']) ? json_encode($_SESSION['temp_backup_codes']) : '[]' ?>;
-            const content = 'ZeeMarket - Códigos de Backup 2FA\n' +
-                           'Data: ' + new Date().toLocaleDateString('pt-BR') + '\n' +
-                           'Usuário: <?= htmlspecialchars($userData['name']) ?>\n\n' +
-                           'CÓDIGOS DE BACKUP:\n' +
-                           codes.join('\n') + '\n\n' +
-                           'IMPORTANTE: Guarde estes códigos em local seguro!\n' +
-                           'Eles podem ser usados se você perder acesso ao seu celular.';
-            
+            if (!backupCodes.length) return;
+            const content = `ZeeMarket - Códigos de Backup 2FA\nData: ${new Date().toLocaleDateString('pt-BR')}\nUsuário: ${userName}\n\nCÓDIGOS DE BACKUP:\n${backupCodes.join('\n')}\n\nIMPORTANTE: Guarde estes códigos!`;
             const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
-            element.setAttribute('download', 'zeemarket-backup-codes-' + Date.now() + '.txt');
-            element.style.display = 'none';
+            element.setAttribute('download', `zeemarket-backup-codes-${Date.now()}.txt`);
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
-            
             showToast('Códigos de backup baixados!', 'success');
         }
 
-        // Sistema de toast notifications
         function showToast(message, type = 'info') {
             const toastContainer = document.querySelector('.toast-container') || createToastContainer();
             const toast = document.createElement('div');
             toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : (type === 'error' ? 'danger' : 'info')} border-0`;
             toast.setAttribute('role', 'alert');
-            toast.innerHTML = `
-                <div class="d-flex">
-                    <div class="toast-body">${message}</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            `;
+            toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
             toastContainer.appendChild(toast);
             const bsToast = new bootstrap.Toast(toast);
             bsToast.show();
-            
-            toast.addEventListener('hidden.bs.toast', function() {
-                toast.remove();
-            });
+            toast.addEventListener('hidden.bs.toast', () => toast.remove());
         }
 
         function createToastContainer() {
@@ -608,113 +495,6 @@ function getOTPAuthURL($secret, $issuer, $accountName) {
             document.body.appendChild(container);
             return container;
         }
-
-        // Auto-format código 2FA
-        document.addEventListener('DOMContentLoaded', function() {
-            const codeInput = document.querySelector('input[name="verification_code"]');
-            if (codeInput) {
-                codeInput.addEventListener('input', function(e) {
-                    // Remove caracteres não numéricos
-                    e.target.value = e.target.value.replace(/\D/g, '');
-                });
-                
-                codeInput.addEventListener('paste', function(e) {
-                    setTimeout(() => {
-                        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 6);
-                    }, 10);
-                });
-            }
-        });
-
-        // Função para tentar APIs alternativas de QR Code
-        function tryAlternativeQR(imgElement) {
-            const qrAPIs = [
-                'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=',
-                'https://quickchart.io/qr?text=',
-                'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl='
-            ];
-            
-            // Extrair a URL TOTP do atributo data ou recriar
-            const secret = '<?= isset($_SESSION["temp_2fa_secret"]) ? $_SESSION["temp_2fa_secret"] : "" ?>';
-            const issuer = 'ZeeMarket';
-            const account = '<?= htmlspecialchars($userData["name"] ?? "") ?>';
-            
-            if (!secret) return;
-            
-            const otpauthURL = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(account)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
-            
-            let currentAPI = 0;
-            const tryNextAPI = () => {
-                if (currentAPI < qrAPIs.length) {
-                    console.log(`Tentando API ${currentAPI + 1}: ${qrAPIs[currentAPI]}`);
-                    imgElement.src = qrAPIs[currentAPI] + encodeURIComponent(otpauthURL);
-                    currentAPI++;
-                } else {
-                    // Se todas as APIs falharam, mostrar QR Code manual
-                    showManualQR(otpauthURL);
-                }
-            };
-            
-            // Remover event listener anterior e adicionar novo
-            imgElement.onerror = null;
-            imgElement.addEventListener('error', tryNextAPI, { once: true });
-            
-            // Tentar próxima API
-            tryNextAPI();
-        }
-
-        // Função para mostrar QR Code manual (ASCII ou link)
-        function showManualQR(otpauthURL) {
-            const qrContainer = document.querySelector('.qr-container');
-            if (qrContainer) {
-                qrContainer.innerHTML = `
-                    <div class="alert alert-warning">
-                        <h6><i class="fas fa-exclamation-triangle"></i> QR Code indisponível</h6>
-                        <p class="mb-2">Use uma das opções abaixo:</p>
-                        <div class="mb-2">
-                            <button class="btn btn-sm btn-primary" onclick="openQRGenerator()">
-                                <i class="fas fa-external-link-alt"></i> Gerar QR Online
-                            </button>
-                        </div>
-                        <div class="mb-2">
-                            <button class="btn btn-sm btn-secondary" onclick="copyOTPAuthURL()">
-                                <i class="fas fa-copy"></i> Copiar URL TOTP
-                            </button>
-                        </div>
-                        <small class="text-muted">
-                            Configure manualmente no seu app usando a chave secreta acima.
-                        </small>
-                    </div>
-                `;
-            }
-        }
-
-        // Função para abrir gerador de QR online
-        function openQRGenerator() {
-            const secret = '<?= isset($_SESSION["temp_2fa_secret"]) ? $_SESSION["temp_2fa_secret"] : "" ?>';
-            const issuer = 'ZeeMarket';
-            const account = '<?= htmlspecialchars($userData["name"] ?? "") ?>';
-            
-            const otpauthURL = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(account)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
-            const qrURL = `https://www.qr-code-generator.com/a1/?data=${encodeURIComponent(otpauthURL)}`;
-            
-            window.open(qrURL, '_blank');
-        }
-
-        // Função para copiar URL TOTP
-        function copyOTPAuthURL() {
-            const secret = '<?= isset($_SESSION["temp_2fa_secret"]) ? $_SESSION["temp_2fa_secret"] : "" ?>';
-            const issuer = 'ZeeMarket';
-            const account = '<?= htmlspecialchars($userData["name"] ?? "") ?>';
-            
-            const otpauthURL = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(account)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
-            
-            navigator.clipboard.writeText(otpauthURL).then(function() {
-                showToast('URL TOTP copiada! Cole no seu app autenticador.', 'success');
-            }).catch(function() {
-                showToast('Erro ao copiar URL', 'error');
-            });
-        }
     </script>
 </body>
-</html><?php
+</html>
