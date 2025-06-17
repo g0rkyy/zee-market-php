@@ -4,8 +4,6 @@
 
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
-echo "Se você está vendo isso, o problema é outro.";
-die(); 
 
 
 // ✅ DETECÇÃO TOR SIMPLES E SEGURA (apenas para indicador visual)
