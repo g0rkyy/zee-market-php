@@ -116,339 +116,470 @@ $torStatus = checkTorConnection();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Seguro - ZeeMarket</title>
+    <title>ZeeMarket - Secure Access</title>
     
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        body {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d30 100%);
-            min-height: 100vh;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .login-container {
+        body {
+            font-family: 'Courier Prime', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Matrix-like background effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 0, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 0, 0.02) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .terminal-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .login-card {
-            background: rgba(40, 40, 40, 0.95);
-            border: 1px solid #555;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            max-width: 450px;
-            width: 100%;
+            padding: 20px;
             position: relative;
         }
         
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
-            border-radius: 15px 15px 0 0;
+        .terminal-window {
+            background: #111111;
+            border: 2px solid #00ff00;
+            border-radius: 0;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 0, 0.3),
+                inset 0 0 20px rgba(0, 255, 0, 0.05);
+            position: relative;
+            animation: terminalGlow 2s ease-in-out infinite alternate;
         }
         
-        .login-header {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 15px 15px 0 0;
+        @keyframes terminalGlow {
+            from { box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.05); }
+            to { box-shadow: 0 0 30px rgba(0, 255, 0, 0.5), inset 0 0 30px rgba(0, 255, 0, 0.1); }
+        }
+        
+        .terminal-header {
+            background: #000;
+            padding: 10px 15px;
+            border-bottom: 1px solid #00ff00;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .terminal-dots {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #333;
+        }
+        
+        .dot.red { background: #ff0000; }
+        .dot.yellow { background: #ffff00; }
+        .dot.green { background: #00ff00; }
+        
+        .terminal-title {
+            flex: 1;
             text-align: center;
-            padding: 2rem;
-        }
-        
-        .security-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(40, 167, 69, 0.9);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
+            color: #00ff00;
             font-weight: bold;
         }
         
-        .login-body {
-            padding: 2rem;
+        .terminal-body {
+            padding: 20px;
+            background: #000;
         }
         
-        .form-control {
-            background: rgba(60, 60, 60, 0.8);
-            border: 1px solid #555;
-            color: #fff;
-            border-radius: 8px;
-            padding: 12px;
+        .ascii-logo {
+            text-align: center;
+            font-size: 10px;
+            line-height: 1;
+            margin-bottom: 20px;
+            color: #00ff00;
+            font-weight: bold;
         }
         
-        .form-control:focus {
-            background: rgba(70, 70, 70, 0.9);
-            border-color: #6366f1;
-            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
-            color: #fff;
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #666;
         }
         
-        .form-control::placeholder {
-            color: #aaa;
+        .status-indicator {
+            color: #00ff00;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .tab-btn {
+            background: none;
             border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-weight: 600;
+            color: #666;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: 'Courier Prime', monospace;
+            border-bottom: 2px solid transparent;
             transition: all 0.3s ease;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        .tab-btn.active {
+            color: #00ff00;
+            border-bottom-color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
         }
         
-        .nav-tabs {
-            border-bottom: 2px solid #444;
+        .tab-btn:hover {
+            color: #00ff00;
         }
         
-        .nav-tabs .nav-link {
-            color: #aaa;
-            border: none;
-            border-bottom: 2px solid transparent;
+        .tab-content {
+            display: none;
         }
         
-        .nav-tabs .nav-link.active {
-            color: #6366f1;
-            background: none;
-            border-bottom-color: #6366f1;
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ff00;
+            font-size: 12px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #333;
+            color: #00ff00;
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            text-shadow: 0 0 5px #00ff00;
+        }
+        
+        .form-input::placeholder {
+            color: #444;
+        }
+        
+        .btn {
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 12px 20px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            text-shadow: none;
         }
         
         .alert {
-            border-radius: 8px;
-            border: none;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid;
+            font-size: 12px;
         }
         
         .alert-success {
-            background: rgba(25, 135, 84, 0.2);
-            color: #28a745;
-            border: 1px solid #28a745;
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
         }
         
         .alert-danger {
-            background: rgba(220, 53, 69, 0.2);
-            color: #dc3545;
-            border: 1px solid #dc3545;
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
         }
         
         .alert-warning {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
-            border: 1px solid #ffc107;
+            border-color: #ffff00;
+            background: rgba(255, 255, 0, 0.1);
+            color: #ffff00;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .checkbox {
+            width: 15px;
+            height: 15px;
+            background: #000;
+            border: 1px solid #00ff00;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .checkbox input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .checkbox input:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: #00ff00;
+            font-size: 12px;
+        }
+        
+        .footer-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10px;
+            color: #444;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+        }
+        
+        .blinking {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .terminal-window {
+                margin: 10px;
+            }
+            
+            .ascii-logo {
+                font-size: 8px;
+            }
+            
+            .tab-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
     
-    <div class="login-container">
-        <div class="login-card">
-            <div class="security-badge">
-                🛡️ ULTRA-SEGURO
+    <div class="terminal-container">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="terminal-title">root@zeemarket:~$</div>
             </div>
             
-            <div class="login-header">
-                <h2><i class="fas fa-shield-alt"></i> ZeeMarket</h2>
-                <p class="mb-0">Sistema de Autenticação Blindado</p>
-            </div>
-            
-            <div class="login-body">
+            <div class="terminal-body">
+                <div class="ascii-logo">
+                                [ZEE-MARKET]
+                         [SECURE AUTHENTICATION TERMINAL]
+                </div>
+                
+                <div class="status-line">
+                    <span>STATUS: <span class="status-indicator">ONLINE</span></span>
+                    <span>SECURITY: <span class="status-indicator">MAX</span></span>
+                    <span>TOR: <span class="status-indicator"><?= $torStatus['connected'] ? 'ACTIVE' : 'INACTIVE' ?></span></span>
+                </div>
                 
                 <?php if ($torStatus['connected']): ?>
                     <div class="alert alert-success">
-                        <i class="fas fa-shield-alt"></i> 
-                        <strong>Conexão Tor Detectada</strong><br>
-                        <small>Confiança: <?= htmlspecialchars($torStatus['confidence']) ?>% | Navegação anônima ativa</small>
+                        [TOR] Conexão anônima detectada - Confiança: <?= htmlspecialchars($torStatus['confidence']) ?>%
                     </div>
                 <?php else: ?>
                     <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle"></i> 
-                        <strong>Tor não detectado</strong><br>
-                        <small>Recomendamos usar Tor Browser para máxima privacidade</small>
+                        [WARNING] Tor Browser recomendado para máxima privacidade
                     </div>
                 <?php endif; ?>
                 
                 <?php if ($erro): ?>
                     <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($erro) ?>
+                        [ERROR] <?= htmlspecialchars($erro) ?>
                     </div>
                 <?php endif; ?>
                 
                 <?php if ($sucesso): ?>
                     <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i> <?= htmlspecialchars($sucesso) ?>
+                        [SUCCESS] <?= htmlspecialchars($sucesso) ?>
                     </div>
                 <?php endif; ?>
                 
-                <ul class="nav nav-tabs mb-4" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button">
-                            <i class="fas fa-user-plus"></i> Cadastrar
-                        </button>
-                    </li>
-                </ul>
-                
-                <div class="tab-content">
-                    <!-- LOGIN -->
-                    <div class="tab-pane fade show active" id="login" role="tabpanel">
-                        <form method="POST" id="loginForm">
-                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-envelope"></i> Email
-                                </label>
-                                <input type="email" 
-                                       name="email" 
-                                       class="form-control" 
-                                       placeholder="seu@email.com" 
-                                       required
-                                       maxlength="255"
-                                       value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-lock"></i> Senha
-                                </label>
-                                <input type="password" 
-                                       name="senha" 
-                                       class="form-control" 
-                                       placeholder="Sua senha" 
-                                       required
-                                       maxlength="255">
-                            </div>
-                            
-                            <button type="submit" name="login" class="btn btn-primary w-100 mb-3">
-                                <i class="fas fa-sign-in-alt"></i> Entrar com Segurança
-                            </button>
-                            
-                            <div class="text-center">
-                                <small class="text-muted">
-                                    <i class="fas fa-shield-check"></i> 
-                                    Conexão criptografada | Rate limiting ativo | Proteção CSRF
-                                </small>
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <!-- CADASTRO -->
-                    <div class="tab-pane fade" id="register" role="tabpanel">
-                        <form method="POST" id="registerForm">
-                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-user"></i> Nome Completo
-                                </label>
-                                <input type="text" 
-                                       name="nome" 
-                                       class="form-control" 
-                                       placeholder="Seu nome" 
-                                       required
-                                       minlength="2"
-                                       maxlength="100"
-                                       value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-envelope"></i> Email
-                                </label>
-                                <input type="email" 
-                                       name="email_cadastro" 
-                                       class="form-control" 
-                                       placeholder="seu@email.com" 
-                                       required
-                                       maxlength="255"
-                                       value="<?= htmlspecialchars($_POST['email_cadastro'] ?? '') ?>">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-lock"></i> Senha
-                                </label>
-                                <input type="password" 
-                                       name="senha_cadastro" 
-                                       class="form-control" 
-                                       placeholder="Mínimo 8 caracteres" 
-                                       required
-                                       minlength="8"
-                                       maxlength="255">
-                                <small class="text-muted">
-                                    Deve conter: letra minúscula, maiúscula e número
-                                </small>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="fas fa-lock"></i> Confirmar Senha
-                                </label>
-                                <input type="password" 
-                                       name="confirmar_senha" 
-                                       class="form-control" 
-                                       placeholder="Confirme sua senha" 
-                                       required
-                                       maxlength="255">
-                            </div>
-                            
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="acceptTerms" required>
-                                <label class="form-check-label" for="acceptTerms">
-                                    Aceito os termos de uso e política de privacidade
-                                </label>
-                            </div>
-                            
-                            <button type="submit" name="cadastrar" class="btn btn-primary w-100 mb-3">
-                                <i class="fas fa-user-plus"></i> Criar Conta Segura
-                            </button>
-                            
-                            <div class="text-center">
-                                <small class="text-muted">
-                                    <i class="fas fa-user-shield"></i> 
-                                    Seus dados são criptografados | Hash Argon2ID | Proteção total
-                                </small>
-                            </div>
-                        </form>
-                    </div>
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
+                    <button class="tab-btn" onclick="switchTab('register')">REGISTER</button>
                 </div>
                 
-                <div class="text-center mt-4">
-                    <small class="text-muted">
-                        <i class="fas fa-server text-success"></i> Sistema Online | 
-                        <i class="fas fa-shield-alt text-success"></i> Conexão Segura |
-                        <i class="fas fa-clock"></i> Rate Limiting Ativo
-                    </small>
+                <!-- LOGIN TAB -->
+                <div id="login-tab" class="tab-content active">
+                    <form method="POST" id="loginForm">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                        
+                        <div class="form-group">
+                            <label class="form-label">root@email:</label>
+                            <input type="email" 
+                                   name="email" 
+                                   class="form-input" 
+                                   placeholder="user@domain.onion" 
+                                   required
+                                   maxlength="255"
+                                   value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">root@password:</label>
+                            <input type="password" 
+                                   name="senha" 
+                                   class="form-input" 
+                                   placeholder="Enter secure passphrase" 
+                                   required
+                                   maxlength="255">
+                        </div>
+                        
+                        <button type="submit" name="login" class="btn">
+                            [AUTHENTICATE] <span class="blinking">_</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- REGISTER TAB -->
+                <div id="register-tab" class="tab-content">
+                    <form method="POST" id="registerForm">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                        
+                        <div class="form-group">
+                            <label class="form-label">username:</label>
+                            <input type="text" 
+                                   name="nome" 
+                                   class="form-input" 
+                                   placeholder="Enter alias" 
+                                   required
+                                   minlength="2"
+                                   maxlength="100"
+                                   value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">email:</label>
+                            <input type="email" 
+                                   name="email_cadastro" 
+                                   class="form-input" 
+                                   placeholder="user@secure.onion" 
+                                   required
+                                   maxlength="255"
+                                   value="<?= htmlspecialchars($_POST['email_cadastro'] ?? '') ?>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">password:</label>
+                            <input type="password" 
+                                   name="senha_cadastro" 
+                                   class="form-input" 
+                                   placeholder="Strong passphrase (min 8 chars)" 
+                                   required
+                                   minlength="8"
+                                   maxlength="255">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">confirm:</label>
+                            <input type="password" 
+                                   name="confirmar_senha" 
+                                   class="form-input" 
+                                   placeholder="Repeat passphrase" 
+                                   required
+                                   maxlength="255">
+                        </div>
+                        
+                        <div class="checkbox-container">
+                            <label class="checkbox">
+                                <input type="checkbox" id="acceptTerms" required>
+                                <span class="checkmark"></span>
+                            </label>
+                            <label for="acceptTerms" style="color: #666; font-size: 12px;">
+                                I accept the terms and conditions
+                            </label>
+                        </div>
+                        
+                        <button type="submit" name="cadastrar" class="btn">
+                            [CREATE ACCOUNT] <span class="blinking">_</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="footer-info">
+                    <div>ENCRYPTION: AES-256 | HASH: Argon2ID | RATE-LIMIT: 5/15min</div>
+                    <div>CSRF PROTECTION: ACTIVE | SESSION: SECURE | XSS: BLOCKED</div>
+                    <div style="margin-top: 10px;">
+                        <span class="blinking">█</span> SYSTEM SECURED <span class="blinking">█</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
         // Proteção contra clickjacking
@@ -456,8 +587,23 @@ $torStatus = checkTorConnection();
             window.top.location = window.self.location;
         }
         
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // Validação de formulários
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             
@@ -468,13 +614,13 @@ $torStatus = checkTorConnection();
                     
                     if (!email || !senha) {
                         e.preventDefault();
-                        alert('❌ Email e senha são obrigatórios!');
+                        alert('[ERROR] Email and password required!');
                         return false;
                     }
                     
                     if (!isValidEmail(email)) {
                         e.preventDefault();
-                        alert('❌ Email inválido!');
+                        alert('[ERROR] Invalid email format!');
                         return false;
                     }
                 });
@@ -490,44 +636,43 @@ $torStatus = checkTorConnection();
                     
                     if (!nome || !email || !senha || !confirmarSenha) {
                         e.preventDefault();
-                        alert('❌ Todos os campos são obrigatórios!');
+                        alert('[ERROR] All fields required!');
                         return false;
                     }
                     
                     if (nome.length < 2 || nome.length > 100) {
                         e.preventDefault();
-                        alert('❌ Nome deve ter entre 2 e 100 caracteres!');
+                        alert('[ERROR] Username must be 2-100 characters!');
                         return false;
                     }
                     
                     if (!isValidEmail(email)) {
                         e.preventDefault();
-                        alert('❌ Email inválido!');
+                        alert('[ERROR] Invalid email format!');
                         return false;
                     }
                     
                     if (senha.length < 8) {
                         e.preventDefault();
-                        alert('❌ Senha deve ter pelo menos 8 caracteres!');
+                        alert('[ERROR] Password must be at least 8 characters!');
                         return false;
                     }
                     
                     if (senha !== confirmarSenha) {
                         e.preventDefault();
-                        alert('❌ Senhas não coincidem!');
+                        alert('[ERROR] Passwords do not match!');
                         return false;
                     }
                     
                     if (!acceptTerms) {
                         e.preventDefault();
-                        alert('❌ Você deve aceitar os termos de uso!');
+                        alert('[ERROR] You must accept the terms!');
                         return false;
                     }
                     
-                    // Verificar força da senha
                     if (!checkPasswordStrength(senha)) {
                         e.preventDefault();
-                        alert('❌ Senha muito fraca! Use letras maiúsculas, minúsculas e números.');
+                        alert('[ERROR] Password too weak! Use uppercase, lowercase and numbers.');
                         return false;
                     }
                 });
@@ -546,9 +691,12 @@ $torStatus = checkTorConnection();
                    password.length >= 8;
         }
         
-        console.log('✅ ZeeMarket Login - Sistema de segurança carregado!');
-        console.log('🛡️ Proteções: Rate Limiting, CSRF, XSS, Timing Attack, Session Fixation');
-        console.log('🔒 Hash: Argon2ID | Rate Limit: 5/15min | CSRF: Token único');
+        // Terminal startup effect
+        console.log('████████████████████████████████████████████████████████████████████████████████');
+        console.log('█ ZeeMarket Security Terminal v2.0 - Authentication Module Loaded               █');
+        console.log('█ Security Level: MAXIMUM | Encryption: Active | Tor Support: Ready            █');
+        console.log('█ Rate Limiting: 5/15min | CSRF: Protected | Session: Hardened                █');
+        console.log('████████████████████████████████████████████████████████████████████████████████');
     </script>
 </body>
 </html>

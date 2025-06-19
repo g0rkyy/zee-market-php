@@ -513,11 +513,24 @@ $user_data_safe = [
                         <?= $user_data_safe['btc_deposit_address'] ?>
                     </div>
                     
-                    <div class="crypto-actions">
-                        <a href="deposit.php?crypto=BTC" class="btn btn-deposit">DEPOSIT</a>
-                        <a href="withdraw.php?crypto=BTC" class="btn btn-withdraw">WITHDRAW</a>
-                    </div>
-                <?php else: ?>
+                    <form action="withdraw_real.php" method="post" class="withdraw-form">
+    
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+
+    <input type="hidden" name="crypto" value="BTC"> 
+
+    <div class="form-group">
+        <label for="btc_amount">Valor do Saque (BTC):</label>
+        <input type="text" id="btc_amount" name="amount" class="form-control" placeholder="Ex: 0.01" required>
+    </div>
+
+    <div class="form-group">
+        <label for="btc_address">Endereço de Saque (BTC):</label>
+        <input type="text" id="btc_address" name="address" class="form-control" placeholder="Endereço da sua carteira Bitcoin" required>
+    </div>
+
+    <button type="submit" class="btn btn-withdraw">SOLICITAR SAQUE</button>
+</form>
                     <div class="crypto-actions">
                         <form method="POST" action="generate_wallet.php" style="display: inline;">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
