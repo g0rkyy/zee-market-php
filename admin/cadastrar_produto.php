@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     $diretorioUploads = '../assets/uploads/';
                     if (!is_dir($diretorioUploads)) {
-                        if (!mkdir($diretorioUploads, 0755, true)) {
+                        if (!mkdir($diretorioUploads, 0777, true)) {
                             $erro = "Erro ao criar diretório de uploads!";
                         }
                     }

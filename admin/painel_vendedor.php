@@ -512,9 +512,7 @@ $active_tab = isset($_GET['tab']) && in_array($_GET['tab'], $abas_validas) ? $_G
                     <a href="cadastrar_produto.php" class="btn btn-primary btn-sm btn-enhanced">
                         <i class="bi bi-plus-circle"></i> Novo
                     </a>
-                    <a href="isvendor.php" class="btn btn-primary btn-sm btn-enhanced">
-                        <i class="bi bi-plus-circle"></i> Seja Vendedor
-                    </a>
+    
                     <a href="../logout.php" class="btn btn-danger btn-sm btn-enhanced" onclick="return confirm('Tem certeza que deseja sair?')">
                         <i class="bi bi-box-arrow-right"></i> Sair
                     </a>

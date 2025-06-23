@@ -1,156 +1,176 @@
 <?php
 /**
- * SCRIPT DE DIAGNÓSTICO E CORREÇÃO DE PERMISSÕES
- * Salvar como: check_permissions.php na raiz do projeto
- * Executar via navegador: http://seusite.com/check_permissions.php
+ * DIAGNÓSTICO ESPECÍFICO - Criar como: admin/debug_upload_change.php
+ * Execute via navegador para descobrir o que mudou
  */
 
-echo "<h2>🔍 Diagnóstico de Permissões - ZeeMarket</h2>";
+echo "<h2>🔍 Diagnóstico: O que Mudou no Upload?</h2>";
 
-// Configurações
-$uploadsDir = './assets/uploads/';
-$relativeUploadsDir = '../assets/uploads/'; // Como usado no cadastrar_produto.php
+// 1. Verificar estrutura atual vs esperada
+echo "<h3>📁 1. Verificação de Estrutura de Diretórios</h3>";
 
-echo "<h3>📁 Verificação de Diretórios</h3>";
+echo "<strong>Diretório atual do script:</strong> " . __DIR__ . "<br>";
+echo "<strong>Diretório pai:</strong> " . dirname(__DIR__) . "<br>";
 
-// Verificar diretório atual
-echo "<strong>Diretório atual:</strong> " . getcwd() . "<br>";
-echo "<strong>Usuario PHP:</strong> " . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'desconhecido') . "<br>";
-echo "<strong>Grupo PHP:</strong> " . (function_exists('posix_getgrgid') ? posix_getgrgid(posix_getegid())['name'] : 'desconhecido') . "<br><br>";
+$expected_uploads = '../assets/uploads/';
+$current_working_dir = getcwd();
+echo "<strong>Working directory:</strong> $current_working_dir<br>";
+echo "<strong>Caminho relativo esperado:</strong> $expected_uploads<br>";
+echo "<strong>Caminho absoluto esperado:</strong> " . realpath(dirname(__DIR__)) . "/assets/uploads/<br>";
 
-// Verificar ambos os caminhos
-$caminhos = [
-    'Relativo (usado no admin/)' => $relativeUploadsDir,
-    'Absoluto (a partir da raiz)' => $uploadsDir
+// 2. Verificar se o caminho mudou
+echo "<h3>🗂️ 2. Teste de Caminhos Relativos</h3>";
+
+$test_paths = [
+    '../assets/uploads/',
+    './assets/uploads/',
+    '../../assets/uploads/',
+    'assets/uploads/',
+    dirname(__DIR__) . '/assets/uploads/'
 ];
 
-foreach ($caminhos as $desc => $caminho) {
-    echo "<h4>$desc: <code>$caminho</code></h4>";
+foreach ($test_paths as $path) {
+    $real_path = realpath($path);
+    $exists = is_dir($path);
+    $writable = $exists ? is_writable($path) : false;
     
-    $caminhoReal = realpath($caminho);
-    echo "Caminho real: " . ($caminhoReal ?: 'NÃO EXISTE') . "<br>";
-    
-    if (!is_dir($caminho)) {
-        echo "❌ <strong>Diretório NÃO EXISTE</strong><br>";
-        
-        if (mkdir($caminho, 0775, true)) {
-            echo "✅ Diretório CRIADO com sucesso<br>";
-        } else {
-            echo "❌ FALHA ao criar diretório<br>";
-        }
-    } else {
-        echo "✅ Diretório existe<br>";
-    }
-    
-    if (is_dir($caminho)) {
-        $perms = substr(sprintf('%o', fileperms($caminho)), -4);
-        $writable = is_writable($caminho) ? '✅ SIM' : '❌ NÃO';
-        $readable = is_readable($caminho) ? '✅ SIM' : '❌ NÃO';
-        
-        echo "Permissões: $perms<br>";
-        echo "Gravável: $writable<br>";
-        echo "Legível: $readable<br>";
-        
-        if (function_exists('fileowner')) {
-            $owner = posix_getpwuid(fileowner($caminho))['name'] ?? 'unknown';
-            $group = posix_getgrgid(filegroup($caminho))['name'] ?? 'unknown';
-            echo "Proprietário: $owner:$group<br>";
-        }
-    }
-    
-    echo "<br>";
+    echo "<div style='margin: 5px 0; padding: 5px; background: " . ($exists && $writable ? '#d4edda' : '#f8d7da') . "'>";
+    echo "<strong>$path</strong><br>";
+    echo "• Existe: " . ($exists ? '✅' : '❌') . "<br>";
+    echo "• Gravável: " . ($writable ? '✅' : '❌') . "<br>";
+    echo "• Caminho real: " . ($real_path ?: 'não existe') . "<br>";
+    echo "</div>";
 }
 
-// Teste de escrita
-echo "<h3>✍️ Teste de Escrita</h3>";
+// 3. Verificar se o caminho mudou por causa do include/require
+echo "<h3>🔗 3. Análise de Includes</h3>";
 
-$testFile = $uploadsDir . 'test_permissions_' . time() . '.txt';
-$testContent = "Teste de permissões: " . date('Y-m-d H:i:s');
+echo "<strong>Script atual:</strong> " . __FILE__ . "<br>";
+echo "<strong>Diretório do script:</strong> " . dirname(__FILE__) . "<br>";
 
-if (file_put_contents($testFile, $testContent)) {
-    echo "✅ <strong>Sucesso!</strong> Arquivo de teste criado: $testFile<br>";
+// Verificar se config.php e functions.php estão no lugar certo
+$config_path = '../includes/config.php';
+$functions_path = '../includes/functions.php';
+
+echo "<strong>Config.php existe?</strong> " . (file_exists($config_path) ? '✅' : '❌') . "<br>";
+echo "<strong>Functions.php existe?</strong> " . (file_exists($functions_path) ? '✅' : '❌') . "<br>";
+
+// 4. Simulação exata do código de upload
+echo "<h3>💾 4. Simulação do Código de Upload</h3>";
+
+// Reproduzir exatamente o que o código faz
+$extensao = 'jpeg'; // Simular
+$nomeImagem = 'test_' . time() . '.' . $extensao;
+$diretorioUploads = '../assets/uploads/';
+$caminhoImagem = $diretorioUploads . $nomeImagem;
+
+echo "<strong>Diretório de uploads:</strong> $diretorioUploads<br>";
+echo "<strong>Nome da imagem:</strong> $nomeImagem<br>";
+echo "<strong>Caminho completo:</strong> $caminhoImagem<br>";
+echo "<strong>Caminho absoluto:</strong> " . realpath(dirname($caminhoImagem)) . "<br>";
+
+// Verificar se pode criar diretório
+if (!is_dir($diretorioUploads)) {
+    echo "<div style='background: #fff3cd; padding: 10px; margin: 10px 0;'>";
+    echo "⚠️ <strong>Diretório não existe!</strong><br>";
+    echo "Tentando criar: $diretorioUploads<br>";
     
-    if (unlink($testFile)) {
-        echo "✅ Arquivo de teste removido com sucesso<br>";
+    if (mkdir($diretorioUploads, 0775, true)) {
+        echo "✅ Diretório criado com sucesso!<br>";
+        chown($diretorioUploads, 'www-data');
     } else {
-        echo "⚠️ Arquivo criado mas não pôde ser removido<br>";
+        echo "❌ Falha ao criar diretório!<br>";
+        $error = error_get_last();
+        echo "Erro: " . ($error['message'] ?? 'desconhecido') . "<br>";
+    }
+    echo "</div>";
+}
+
+// 5. Teste real de escrita
+echo "<h3>✍️ 5. Teste Real de Escrita</h3>";
+
+$test_file = $diretorioUploads . 'test_write_' . time() . '.txt';
+$test_content = "Teste de escrita: " . date('Y-m-d H:i:s');
+
+echo "<strong>Tentando criar:</strong> $test_file<br>";
+
+if (file_put_contents($test_file, $test_content)) {
+    echo "✅ <strong>Sucesso!</strong> Arquivo criado com sucesso!<br>";
+    echo "Conteúdo: " . file_get_contents($test_file) . "<br>";
+    
+    // Tentar simular move_uploaded_file (que é o que falha)
+    $temp_file = tempnam(sys_get_temp_dir(), 'upload_test_');
+    file_put_contents($temp_file, $test_content);
+    
+    $test_move_target = $diretorioUploads . 'test_move_' . time() . '.txt';
+    
+    echo "<strong>Simulando move_uploaded_file:</strong><br>";
+    echo "• Origem: $temp_file<br>";
+    echo "• Destino: $test_move_target<br>";
+    
+    // ATENÇÃO: move_uploaded_file só funciona com uploads reais
+    // Vamos usar copy para simular
+    if (copy($temp_file, $test_move_target)) {
+        echo "✅ Simulação de move bem-sucedida!<br>";
+        unlink($test_move_target);
+    } else {
+        echo "❌ Falha na simulação de move!<br>";
+    }
+    
+    unlink($temp_file);
+    unlink($test_file);
+    
+} else {
+    echo "❌ <strong>Falha!</strong> Não foi possível criar arquivo de teste!<br>";
+    $error = error_get_last();
+    echo "Erro: " . ($error['message'] ?? 'desconhecido') . "<br>";
+}
+
+// 6. Verificar mudanças no servidor
+echo "<h3>🖥️ 6. Informações do Servidor</h3>";
+
+echo "<strong>Usuário do processo PHP:</strong> " . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'desconhecido') . "<br>";
+echo "<strong>Grupo do processo PHP:</strong> " . (function_exists('posix_getgrgid') ? posix_getgrgid(posix_getegid())['name'] : 'desconhecido') . "<br>";
+echo "<strong>Umask atual:</strong> " . sprintf('%04o', umask()) . "<br>";
+echo "<strong>Diretório temp:</strong> " . sys_get_temp_dir() . "<br>";
+echo "<strong>Upload tmp dir:</strong> " . (ini_get('upload_tmp_dir') ?: 'padrão do sistema') . "<br>";
+
+// 7. Verificar se mudou algo na configuração
+echo "<h3>⚙️ 7. Configurações que Podem Ter Mudado</h3>";
+
+$configs = [
+    'upload_max_filesize' => ini_get('upload_max_filesize'),
+    'post_max_size' => ini_get('post_max_size'),
+    'file_uploads' => ini_get('file_uploads') ? 'Habilitado' : 'Desabilitado',
+    'upload_tmp_dir' => ini_get('upload_tmp_dir') ?: 'padrão',
+    'open_basedir' => ini_get('open_basedir') ?: 'não definido'
+];
+
+foreach ($configs as $key => $value) {
+    echo "<strong>$key:</strong> $value<br>";
+}
+
+// 8. Verificar logs recentes
+echo "<h3>📋 8. Logs de Erro Recentes</h3>";
+
+$error_log = '/var/log/apache2/error.log';
+if (file_exists($error_log) && is_readable($error_log)) {
+    $recent_errors = shell_exec("tail -20 $error_log | grep -i 'upload\\|permission\\|denied' | tail -5");
+    if ($recent_errors) {
+        echo "<pre style='background: #f8f9fa; padding: 10px;'>$recent_errors</pre>";
+    } else {
+        echo "Nenhum erro relacionado a upload encontrado nos logs recentes.<br>";
     }
 } else {
-    echo "❌ <strong>FALHA!</strong> Não foi possível criar arquivo de teste<br>";
-    
-    $error = error_get_last();
-    if ($error) {
-        echo "Erro PHP: " . $error['message'] . "<br>";
-    }
-}
-
-// Informações do sistema
-echo "<h3>🖥️ Informações do Sistema</h3>";
-echo "PHP Version: " . PHP_VERSION . "<br>";
-echo "OS: " . PHP_OS . "<br>";
-echo "Server Software: " . ($_SERVER['SERVER_SOFTWARE'] ?? 'desconhecido') . "<br>";
-echo "Document Root: " . ($_SERVER['DOCUMENT_ROOT'] ?? 'desconhecido') . "<br>";
-
-// Verificar configurações de upload
-echo "<h3>📤 Configurações de Upload</h3>";
-echo "upload_max_filesize: " . ini_get('upload_max_filesize') . "<br>";
-echo "post_max_size: " . ini_get('post_max_size') . "<br>";
-echo "max_file_uploads: " . ini_get('max_file_uploads') . "<br>";
-echo "file_uploads: " . (ini_get('file_uploads') ? 'Habilitado' : 'Desabilitado') . "<br>";
-echo "upload_tmp_dir: " . (ini_get('upload_tmp_dir') ?: 'padrão do sistema') . "<br>";
-
-// Verificar espaço em disco
-$freeSpace = disk_free_space('.');
-$totalSpace = disk_total_space('.');
-if ($freeSpace !== false && $totalSpace !== false) {
-    echo "<h3>💾 Espaço em Disco</h3>";
-    echo "Espaço livre: " . round($freeSpace / 1024 / 1024, 2) . " MB<br>";
-    echo "Espaço total: " . round($totalSpace / 1024 / 1024, 2) . " MB<br>";
-    echo "Uso: " . round((($totalSpace - $freeSpace) / $totalSpace) * 100, 1) . "%<br>";
-}
-
-// Sugestões de correção
-echo "<h3>🔧 Comandos para Correção</h3>";
-echo "<pre>";
-echo "# Execute no terminal do servidor:\n";
-echo "cd " . getcwd() . "\n";
-echo "mkdir -p assets/uploads\n";
-echo "chmod 755 assets/\n";
-echo "chmod 775 assets/uploads/\n";
-echo "chown -R www-data:www-data assets/  # Para Apache\n";
-echo "# ou\n";
-echo "chown -R nginx:nginx assets/  # Para Nginx\n\n";
-
-echo "# Verificar usuário do servidor web:\n";
-echo "ps aux | grep -E '(apache|nginx|httpd)'\n";
-echo "</pre>";
-
-// Listar arquivos existentes
-if (is_dir($uploadsDir)) {
-    $files = scandir($uploadsDir);
-    $files = array_filter($files, function($file) { return $file !== '.' && $file !== '..'; });
-    
-    echo "<h3>📁 Arquivos Existentes</h3>";
-    if (empty($files)) {
-        echo "Nenhum arquivo encontrado.<br>";
-    } else {
-        echo "<ul>";
-        foreach ($files as $file) {
-            $filePath = $uploadsDir . $file;
-            $size = filesize($filePath);
-            $perms = substr(sprintf('%o', fileperms($filePath)), -4);
-            echo "<li><code>$file</code> - $size bytes - permissões: $perms</li>";
-        }
-        echo "</ul>";
-    }
+    echo "Log de erro do Apache não acessível.<br>";
 }
 
 echo "<hr>";
-echo "<p><strong>💡 Dica:</strong> Se as permissões estiverem corretas mas ainda não funcionar, verifique:</p>";
-echo "<ul>";
-echo "<li>🔥 Firewall/SELinux (se estiver ativo)</li>";
-echo "<li>🐳 Se está usando Docker, verifique os volumes</li>";
-echo "<li>☁️ Se está em hosting compartilhado, contate o suporte</li>";
-echo "<li>🔒 Políticas de segurança específicas do servidor</li>";
-echo "</ul>";
+echo "<h3>🎯 Conclusão</h3>";
+echo "Se todos os testes passaram mas o cadastro de produto ainda falha, o problema pode ser:<br>";
+echo "• <strong>Timing:</strong> O diretório é recriado entre os testes<br>";
+echo "• <strong>Contexto específico:</strong> Algo diferente quando executado via formulário<br>";
+echo "• <strong>Mudança no código:</strong> Alguma alteração no cadastrar_produto.php<br>";
+echo "• <strong>Permissões específicas:</strong> Apache vs linha de comando<br>";
+
 ?>
