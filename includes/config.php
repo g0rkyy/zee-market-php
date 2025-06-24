@@ -45,6 +45,14 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.gc_maxlifetime', 3600);
 }
 
+$pagina_atual = basename($_SERVER['PHP_SELF']);
+if ($pagina_atual !== 'gate.php' && $pagina_atual !== 'captcha.php') {
+    if (!isset($_SESSION['captcha_verified']) || $_SESSION['captcha_verified'] !== true) {
+        header('Location: gate.php');
+        exit();
+    }
+}
+
 // --- CONFIGURAÇÕES GERAIS ---
 date_default_timezone_set('America/Sao_Paulo');
 define('SITE_NAME', 'Zee-Market');
