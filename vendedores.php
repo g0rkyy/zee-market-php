@@ -20,18 +20,6 @@ $erro = "";
 $sucesso = "";
 
 // ✅ CRIAR TABELA DE VENDEDORES SE NÃO EXISTIR (CORRIGIDA PARA COINCIDIR COM PAINEL)
-try {
-    $createTable = "CREATE TABLE IF NOT EXISTS vendedores (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome VARCHAR(255) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        senha VARCHAR(255) NOT NULL,
-        btc_wallet VARCHAR(255) DEFAULT NULL,
-        status ENUM('ativo', 'inativo', 'pendente') DEFAULT 'ativo',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    )";
-    $conn->query($createTable);
     
     // ✅ VERIFICAR SE PRECISA ADICIONAR COLUNAS (PARA TABELAS EXISTENTES)
     $checkColumns = "DESCRIBE vendedores";
@@ -43,22 +31,18 @@ try {
     
     // Adicionar colunas que podem estar faltando
     if (!in_array('btc_wallet', $columns)) {
-        $conn->query("ALTER TABLE vendedores ADD COLUMN btc_wallet VARCHAR(255) DEFAULT NULL");
+        $conn->query("ALTER TABLE users ADD COLUMN btc_wallet VARCHAR(255) DEFAULT NULL");
     }
     if (!in_array('status', $columns)) {
-        $conn->query("ALTER TABLE vendedores ADD COLUMN status ENUM('ativo', 'inativo', 'pendente') DEFAULT 'ativo'");
+        $conn->query("ALTER TABLE users ADD COLUMN status ENUM('ativo', 'inativo', 'pendente') DEFAULT 'ativo'");
     }
     if (!in_array('created_at', $columns)) {
-        $conn->query("ALTER TABLE vendedores ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
+        $conn->query("ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
     }
     if (!in_array('updated_at', $columns)) {
-        $conn->query("ALTER TABLE vendedores ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+        $conn->query("ALTER TABLE users ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
     }
     
-} catch (Exception $e) {
-    error_log("Erro ao criar/atualizar tabela vendedores: " . $e->getMessage());
-}
-
 // ✅ PROCESSAR LOGIN
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = trim($_POST['email'] ?? '');
@@ -68,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         $erro = "Preencha e-mail e senha!";
     } else {
         try {
-            $stmt = $conn->prepare("SELECT id, senha, nome, status FROM vendedores WHERE email = ?");
+            $stmt = $conn->prepare("SELECT id, senha, nome, status FROM users WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -126,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
         } else {
             try {
                 // Verificar se e-mail já existe
-                $stmt = $conn->prepare("SELECT id FROM vendedores WHERE email = ?");
+                $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
                 $stmt->bind_param("s", $email);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -135,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
                     $erro = "E-mail já cadastrado!";
                 } else {
                     // Verificar se carteira já existe
-                    $stmt_wallet = $conn->prepare("SELECT id FROM vendedores WHERE btc_wallet = ?");
+                    $stmt_wallet = $conn->prepare("SELECT id FROM users WHERE btc_wallet = ?");
                     $stmt_wallet->bind_param("s", $btc_wallet);
                     $stmt_wallet->execute();
                     $result_wallet = $stmt_wallet->get_result();
@@ -146,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
                         // ✅ CADASTRAR VENDEDOR (CORRIGIDO)
                         $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
                         
-                        $stmt_insert = $conn->prepare("INSERT INTO vendedores (nome, email, senha, btc_wallet, status) VALUES (?, ?, ?, ?, 'ativo')");
+                        $stmt_insert = $conn->prepare("INSERT INTO users (nome, email, senha, btc_wallet, status) VALUES (?, ?, ?, ?, 'ativo')");
                         $stmt_insert->bind_param("ssss", $nome, $email, $senha_hash, $btc_wallet);
                         
                         if ($stmt_insert->execute()) {

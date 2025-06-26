@@ -34,7 +34,7 @@ $vendedor_id = (int)$_SESSION['vendedor_id'];
 
 // ✅ BUSCAR DADOS DO VENDEDOR COM PREPARED STATEMENT
 try {
-    $stmt = $conn->prepare("SELECT id, nome, email, btc_wallet, status, created_at FROM vendedores WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, nome, email, btc_wallet, status, created_at FROM users WHERE id = ?");
     if (!$stmt) {
         throw new Exception("Erro na preparação da query: " . $conn->error);
     }
@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     try {
                         // Verificar se endereço não está sendo usado por outro vendedor
-                        $stmt_check = $conn->prepare("SELECT id FROM vendedores WHERE btc_wallet = ? AND id != ?");
+                        $stmt_check = $conn->prepare("SELECT id FROM users WHERE btc_wallet = ? AND id != ?");
                         $stmt_check->bind_param("si", $nova_carteira, $vendedor_id);
                         $stmt_check->execute();
                         $endereco_existe = $stmt_check->get_result()->fetch_assoc();
@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         } else {
                             
                             // Atualizar carteira
-                            $stmt = $conn->prepare("UPDATE vendedores SET btc_wallet = ?, updated_at = NOW() WHERE id = ?");
+                            $stmt = $conn->prepare("UPDATE users SET btc_wallet = ?, updated_at = NOW() WHERE id = ?");
                             if (!$stmt) {
                                 throw new Exception("Erro na preparação da query: " . $conn->error);
                             }

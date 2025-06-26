@@ -43,7 +43,7 @@ try {
 }
 
 // ✅ VERIFICAÇÃO COMPLETA DE STATUS DE VENDEDOR
-$stmt = $conn->prepare("SELECT id FROM vendedores WHERE id = ?");
+$stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $vendor_exists = $stmt->get_result()->fetch_assoc();
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['virar_vendedor'])) {
     error_log("🔥 RECEBIDO POST para virar vendedor - user_id: $user_id");
     
     // ✅ VERIFICAÇÃO DUPLA ANTES DE PROCESSAR
-    $stmt = $conn->prepare("SELECT id FROM vendedores WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $already_vendor = $stmt->get_result()->fetch_assoc();
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['virar_vendedor'])) {
             $current_user = $stmt->get_result()->fetch_assoc();
             $stmt->close();
             
-            $stmt = $conn->prepare("SELECT id FROM vendedores WHERE id = ?");
+            $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
             $current_vendor = $stmt->get_result()->fetch_assoc();
@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['virar_vendedor'])) {
             }
             
             // ✅ PASSO 3: VERIFICAÇÃO TRIPLA antes de inserir na tabela vendedores
-            $stmt = $conn->prepare("SELECT id FROM vendedores WHERE id = ?");
+            $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
             $triple_check = $stmt->get_result()->fetch_assoc();
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['virar_vendedor'])) {
             $carteira_value = $user['btc_wallet'] ?? '';
             
             // Usar INSERT IGNORE para evitar duplicate entry
-            $stmt = $conn->prepare("INSERT IGNORE INTO vendedores (id, nome, email, senha, btc_wallet, carteira, status, created_at, produtos_cadastrados, criptomoeda) VALUES (?, ?, ?, ?, ?, ?, 'ativo', NOW(), 0, 'BTC')");
+            $stmt = $conn->prepare("INSERT IGNORE INTO users (id, nome, email, senha, btc_wallet, carteira, status, created_at, produtos_cadastrados, criptomoeda) VALUES (?, ?, ?, ?, ?, ?, 'ativo', NOW(), 0, 'BTC')");
             $stmt->bind_param("isssss", 
                 $user_id, $nome, $email, $senha_vazia, $btc_wallet_value, $carteira_value
             );
@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['virar_vendedor'])) {
             $check_result = $stmt->get_result()->fetch_assoc();
             $stmt->close();
             
-            $stmt = $conn->prepare("SELECT id FROM vendedores WHERE id = ?");
+            $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
             $vendor_check = $stmt->get_result()->fetch_assoc();
@@ -290,7 +290,7 @@ function verificarIntegridadeVendedor($conn, $user_id) {
         $user_data = $stmt->get_result()->fetch_assoc();
         $stmt->close();
         
-        $stmt = $conn->prepare("SELECT id FROM vendedores WHERE id = ?");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $vendor_data = $stmt->get_result()->fetch_assoc();
