@@ -216,7 +216,6 @@ function buildPaginationUrl($page) {
         <link rel="stylesheet" href="assets/icons2">
         
         <script src="assets/js/my_script.js" defer></script>
-        <script src="assets/js/item.js" defer></script>
         
         <style>
             svg {
@@ -255,7 +254,7 @@ function buildPaginationUrl($page) {
                 color: white;
             }
             
-            /* ✅ PROTEÇÃO CONTRA CLICKJACKING */
+            
             .secure-indicator {
                 position: fixed;
                 top: 10px;
@@ -309,7 +308,7 @@ function buildPaginationUrl($page) {
                 position: relative;
             }
             
-            /* ✅ PREVENÇÃO DE ATAQUES CSS */
+            
             * {
                 max-width: 100vw;
                 max-height: 100vh;
@@ -321,13 +320,7 @@ function buildPaginationUrl($page) {
         </style>
     </head>
     <body>
-        <div class="secure-indicator">
-            🛡️ XSS-PROOF
-        </div>
 
-        <div class="tor-indicator <?= $isTorUser ? 'tor-connected' : 'tor-disconnected' ?>">
-            <?= $isTorUser ? '🔒 TOR ATIVO' : '⚠️ TOR INATIVO' ?>
-        </div>
 
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <a class="navbar-brand ms-5" href="#">
@@ -351,12 +344,6 @@ function buildPaginationUrl($page) {
                     <a class="nav-link" href="feedback.php">
                         <span class="bi bi-chat-left-text"></span>
                         <span>Feedback</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="security.php">
-                        <span class="bi bi-shield-lock"></span>
-                        <span>Segurança</span>
                     </a>
                 </li>
              </ul>
@@ -513,7 +500,7 @@ function buildPaginationUrl($page) {
                                     <div class="mt-1">
                                         <span class="badge bg-success">✓ Verificado</span>
                                         <?php if ($isTorUser): ?>
-                                            <span class="badge bg-info">🔒 TOR Seguro</span>
+                                            
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -721,9 +708,6 @@ function buildPaginationUrl($page) {
             }
         });
         
-        console.log('✅ ZeeMarket Index - Sistema de segurança carregado com sucesso!');
-        console.log('🛡️ Proteções ativas: XSS, CSRF, Clickjacking, SQL Injection, Input Validation');
-        console.log('🔒 Status TOR:', <?= $isTorUser ? 'true' : 'false' ?>);
     </script>
 
     <noscript>

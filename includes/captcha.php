@@ -42,6 +42,7 @@ try {
     $image = @imagecreatetruecolor($width, $height);
     if (!$image) throw new Exception('imagecreatetruecolor() falhou.');
 
+    
     $bg_color = imagecolorallocate($image, 10, 10, 10);
     $text_color = imagecolorallocate($image, 150, 255, 150);
     $noise_color = imagecolorallocate($image, 50, 50, 50);

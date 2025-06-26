@@ -303,3 +303,14 @@ Stack trace:
 [16-Jun-2025 21:17:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
 [16-Jun-2025 21:17:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
 [16-Jun-2025 21:17:39 America/Sao_Paulo] PHP Fatal error:  Cannot redeclare isValidCryptoAddress() (previously declared in /var/www/html/zee-market-php/includes/config.php:212) in /var/www/html/zee-market-php/includes/functions.php on line 497
+[24-Jun-2025 21:52:38 America/Sao_Paulo] PHP Warning:  Undefined property: mysqli::$inTransaction in /var/www/html/zee-market-php/feedback.php on line 175
+[24-Jun-2025 21:52:38 America/Sao_Paulo] ❌ ERRO AO INSERIR FEEDBACK - IP: 127.0.0.1 - Erro: Erro na preparação da query: Unknown column 'ip_address' in 'field list'
+[24-Jun-2025 21:56:24 America/Sao_Paulo] ❌ ERRO AO INSERIR FEEDBACK - IP: 127.0.0.1 - Erro: Erro na preparação da query: Unknown column 'ip_address' in 'field list'
+[24-Jun-2025 21:56:38 America/Sao_Paulo] ❌ ERRO AO INSERIR FEEDBACK - IP: 127.0.0.1 - Erro: Erro na preparação da query: Unknown column 'ip_address' in 'field list'
+[24-Jun-2025 21:59:40 America/Sao_Paulo] ❌ ERRO AO INSERIR FEEDBACK - IP: 127.0.0.1 - Erro: Erro na preparação da query: Unknown column 'ip_address' in 'field list'
+[24-Jun-2025 22:02:24 America/Sao_Paulo] FEEDBACK ERROR COMPLETO: Erro na preparação da query: Unknown column 'ip_address' in 'field list' | Trace: #0 {main}
+[24-Jun-2025 22:05:16 America/Sao_Paulo] ✅ Colunas ip_address e user_agent adicionadas à tabela feedback
+[24-Jun-2025 22:05:17 America/Sao_Paulo] ✅ Coluna email expandida para VARCHAR(255)
+[24-Jun-2025 22:05:17 America/Sao_Paulo] ✅ FEEDBACK ENVIADO - Nome: anonymous - Email: anon@protonmail.com - Rating: 5 - IP: 127.0.0.1
+[25-Jun-2025 23:18:54 UTC] ✅ Produto encontrado - ID: 31 - Nome: COCAIN TESTE 200MG
+[25-Jun-2025 23:18:54 UTC] ✅ Página de compra carregada - Produto: COCAIN TESTE 200MG - Preço BTC: 9.3994679901118E-6

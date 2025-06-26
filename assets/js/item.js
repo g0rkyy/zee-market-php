@@ -1,4 +1,4 @@
-const searchInput = document.getElementById('search');
+let searchInput = document.getElementById('search');
 searchInput.addEventListener('input', (event) => {
     const value = formString(event.target.value);
 

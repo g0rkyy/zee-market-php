@@ -5,6 +5,21 @@
  * @author Blackcat & Whitecat Security Team
  */
 
+// --- CONFIGURAÇÕES DE SESSÃO SEGURA (ANTES DE session_start()) ---
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.entropy_length', 32);
+    ini_set('session.hash_function', 'sha256');
+    ini_set('session.cookie_lifetime', 0);
+    ini_set('session.gc_maxlifetime', 3600);
+    
+    // ✅ INICIAR SESSÃO
+    session_start();
+}
+
 // --- HEADERS E POLÍTICAS DE SEGURANÇA ---
 if (!headers_sent()) {
     $is_local = (strpos($_SERVER['HTTP_HOST'] ?? '', 'localhost') !== false);
@@ -33,28 +48,27 @@ if (!headers_sent()) {
     header("Referrer-Policy: no-referrer");
 }
 
-// --- CONFIGURAÇÕES DE SESSÃO SEGURA (ANTES DE session_start()) ---
-if (session_status() === PHP_SESSION_NONE) {
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
-    ini_set('session.use_strict_mode', 1);
-    ini_set('session.cookie_samesite', 'Strict');
-    ini_set('session.entropy_length', 32);
-    ini_set('session.hash_function', 'sha256');
-    ini_set('session.cookie_lifetime', 0);
-    ini_set('session.gc_maxlifetime', 3600);
+// VERIFICAÇÃO DE CAPTCHA MELHORADA
+$pagina_atual = basename($_SERVER['PHP_SELF']);
+$paginas_livres = ['gate.php', 'captcha.php', 'login.php', 'register.php']; // Páginas que não precisam de captcha
+
+//  DEBUG: Log da verificação
+if (defined('DEBUG_MODE') && DEBUG_MODE) {
+    error_log("CONFIG DEBUG - Página: $pagina_atual, Session ID: " . session_id());
+    error_log("CONFIG DEBUG - CAPTCHA verificado: " . (isset($_SESSION['captcha_verified']) ? ($_SESSION['captcha_verified'] ? 'SIM' : 'NÃO') : 'NÃO DEFINIDO'));
+    error_log("CONFIG DEBUG - Session data: " . json_encode($_SESSION));
 }
 
-$pagina_atual = basename($_SERVER['PHP_SELF']);
-if ($pagina_atual !== 'gate.php' && $pagina_atual !== 'captcha.php') {
+// Só verificar captcha se não estiver em páginas livres
+if (!in_array($pagina_atual, $paginas_livres)) {
     if (!isset($_SESSION['captcha_verified']) || $_SESSION['captcha_verified'] !== true) {
+        error_log("CONFIG: Redirecionando $pagina_atual para gate.php - CAPTCHA não verificado");
         header('Location: gate.php');
         exit();
     }
 }
 
 // --- CONFIGURAÇÕES GERAIS ---
-date_default_timezone_set('America/Sao_Paulo');
 define('SITE_NAME', 'Zee-Market');
 define('DEBUG_MODE', true); // Mudar para false em produção
 
@@ -77,7 +91,7 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 }
 
 $host = $_ENV['DB_HOST'] ?? 'localhost';
-$user = $_ENV['DB_USER'] ?? 'root'; // Padrão para dev
+$user = $_ENV['DB_USER'] ?? 'root';
 $pass = $_ENV['DB_PASS'] ?? '';
 $db   = $_ENV['DB_NAME'] ?? 'zee_market';
 
