@@ -81,16 +81,15 @@ try {
     }
 
     // ✅ QUERY PRINCIPAL COM PREPARED STATEMENT
-    $sql = "
-        SELECT p.id, p.nome, p.descricao, p.preco, p.preco_btc, p.preco_eth, p.imagem, p.aceita_cripto,
-               v.nome as vendedor_nome
-        FROM produtos p 
-        LEFT JOIN vendedores v ON p.vendedor_id = v.id 
-        {$where_sql}
-        ORDER BY p.id DESC
-        LIMIT ? OFFSET ?
-    ";
-    
+$sql = "
+    SELECT p.id, p.nome, p.descricao, p.preco, p.preco_btc, p.preco_eth, p.imagem, p.aceita_cripto,
+           u.name as vendedor_nome -- CORRIGIDO: Busca 'name' da tabela 'users'
+    FROM produtos p 
+    LEFT JOIN users u ON p.vendedor_id = u.id -- CORRIGIDO: Junta com a tabela 'users'
+    {$where_sql}
+    ORDER BY p.id DESC
+    LIMIT ? OFFSET ?
+";
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         throw new Exception("Erro ao preparar consulta: " . $conn->error);
@@ -114,7 +113,7 @@ try {
     $stmt->close();
 
     // ✅ CONTAR TOTAL DE PRODUTOS COM MESMOS FILTROS
-    $count_sql = "SELECT COUNT(*) as total FROM produtos p LEFT JOIN vendedores v ON p.vendedor_id = v.id {$where_sql}";
+    $count_sql = "SELECT COUNT(*) as total FROM produtos p LEFT JOIN users v ON p.vendedor_id = v.id {$where_sql}";
     $count_stmt = $conn->prepare($count_sql);
     
     if ($count_stmt === false) {

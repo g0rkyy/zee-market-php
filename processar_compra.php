@@ -1,4 +1,11 @@
 <?php
+/**
+ * PROCESSADOR DE COMPRAS - VERSÃO RECALIBRADA
+ * ✅ SINCRONIZADO COM NOVA ARQUITETURA DA BASE DE DADOS
+ * ✅ purchases TABLE (NÃO MAIS compras)
+ * ✅ users TABLE (NÃO MAIS vendedores)
+ */
+
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 
@@ -52,17 +59,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Busca o produto e vendedor
-    $stmt = $conn->prepare("SELECT p.*, v.id as vendedor_id, v.nome as vendedor_nome 
+    // ✅ CORRIGIDO: Buscar produto e vendedor na tabela USERS
+    $stmt = $conn->prepare("SELECT p.*, u.id as vendedor_id, u.name as vendedor_nome 
                            FROM produtos p 
-                           JOIN vendedores v ON p.vendedor_id = v.id 
-                           WHERE p.id = ?");
+                           JOIN users u ON p.vendedor_id = u.id 
+                           WHERE p.id = ? AND u.is_vendor = 1");
     $stmt->bind_param("i", $produto_id);
     $stmt->execute();
     $produto = $stmt->get_result()->fetch_assoc();
 
     if (!$produto) {
-        die("Erro: Produto não encontrado!");
+        die("Erro: Produto não encontrado ou vendedor inativo!");
     }
 
     // ========== CONFIGURAÇÕES DE TAXAS E CARTEIRAS ========== //
@@ -75,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obter cotação atual do Bitcoin
     $btc_price_usd = getBitcoinPrice();
     
-    // Recalcular preço BTC com cotação atual
+    // Calcular preços em BTC
     $valor_total_btc = $produto['preco'] / $btc_price_usd;
-    $taxa_plataforma = $valor_total_btc * $taxa_percentual;
-    $valor_vendedor = $valor_total_btc - $taxa_plataforma;
+    $taxa_plataforma_btc = $valor_total_btc * $taxa_percentual;
+    $valor_vendedor_btc = $valor_total_btc - $taxa_plataforma_btc;
     
     // Validações de segurança
-    if ($valor_vendedor <= 0) {
+    if ($valor_vendedor_btc <= 0) {
         die("Erro: Valor do produto muito baixo para cobrir taxas!");
     }
     
@@ -128,13 +135,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Dados para inserção
         $vendedor_id = $produto['vendedor_id'];
-        $is_paid = ($payment_method === 'balance') ? 1 : 0; // Definir se está pago imediatamente
+        $is_paid = ($payment_method === 'balance'); // Definir se está pago imediatamente
         
-        // 1. Inserir compra no banco
-        $sql = "INSERT INTO compras 
-                (produto_id, vendedor_id, nome, endereco, btc_wallet_comprador, 
-                 valor_btc, taxa_plataforma, wallet_plataforma, data_compra, pago) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
+        // ✅ CORRIGIDO: Inserir na tabela PURCHASES com estrutura correta
+        $sql = "INSERT INTO purchases 
+                (produto_id, vendedor_id, user_id, nome, endereco, btc_wallet_comprador, 
+                 payment_method, preco_usd, preco_btc_cotacao, valor_btc_total, 
+                 taxa_plataforma_percent, taxa_plataforma_btc, valor_vendedor_btc,
+                 payment_address, ip_address, user_agent, status, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
         
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
@@ -142,17 +151,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Erro no sistema de compras. Tente novamente.");
         }
         
+        // Dados para inserção
+        $status = $is_paid ? 'paid' : 'pending';
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
+        
         $stmt->bind_param(
-            "iissdsdsi",
+            "iiissssddddddssss",
             $produto_id,
             $vendedor_id,
+            $user_id,
             $nome_comprador,
             $endereco_comprador,
             $btc_wallet_comprador,
+            $payment_method,
+            $produto['preco'],
+            $btc_price_usd,
             $valor_total_btc,
-            $taxa_plataforma,
+            $taxa_percentual,
+            $taxa_plataforma_btc,
+            $valor_vendedor_btc,
             $platform_wallet,
-            $is_paid
+            $ip_address,
+            $user_agent,
+            $status
         );
         
         if (!$stmt->execute()) {
@@ -167,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $tx_hash_interno = null;
         
-        if ($payment_method === 'balance') {
+        if ($payment_method === 'balance' && $user_id) {
             // Deduzir saldo do usuário
             $stmt = $conn->prepare("UPDATE users SET btc_balance = btc_balance - ? WHERE id = ?");
             $stmt->bind_param("di", $valor_total_btc, $user_id);
@@ -205,8 +227,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Erro ao registrar histórico de saldo: " . $conn->error);
             }
             
-            // Marcar compra como paga com hash interno
-            $stmt = $conn->prepare("UPDATE compras SET tx_hash = ?, confirmations = 999 WHERE id = ?");
+            // ✅ CORRIGIDO: Atualizar na tabela PURCHASES
+            $stmt = $conn->prepare("UPDATE purchases SET tx_hash = ?, confirmations = 999, status = 'confirmed' WHERE id = ?");
             $stmt->bind_param("si", $tx_hash_interno, $compra_id);
             
             if (!$stmt->execute()) {
@@ -214,7 +236,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Atualizar saldo na sessão
-            $_SESSION['btc_balance'] = floatval($novo_saldo);
+            if (isset($_SESSION['btc_balance'])) {
+                $_SESSION['btc_balance'] = floatval($novo_saldo);
+            }
         }
         
         // Atualizar preço BTC do produto com cotação atual
@@ -230,15 +254,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'compra_id' => $compra_id,
             'produto_id' => $produto_id,
             'valor_btc' => $valor_total_btc,
-            'taxa_plataforma' => $taxa_plataforma,
+            'taxa_plataforma' => $taxa_plataforma_btc,
             'btc_price_usd' => $btc_price_usd,
             'payment_method' => $payment_method,
             'paid_immediately' => $is_paid,
             'tx_hash' => $tx_hash_interno
         ]);
-        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
-        $log_user_id = ($payment_method === 'balance') ? $user_id : 0;
+        $log_user_id = $user_id ?? 0;
         
         $stmt->bind_param("isss", $log_user_id, $details, $ip_address, $user_agent);
         $stmt->execute();
@@ -248,10 +270,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Log de sucesso
         $status_msg = ($payment_method === 'balance') ? 'PAGO COM SALDO' : 'AGUARDANDO PAGAMENTO';
-        error_log("Compra #{$compra_id} criada - Total: {$valor_total_btc} BTC - Taxa: {$taxa_plataforma} BTC - Vendedor: {$valor_vendedor} BTC - Status: {$status_msg}");
+        error_log("Compra #{$compra_id} criada - Total: {$valor_total_btc} BTC - Taxa: {$taxa_plataforma_btc} BTC - Vendedor: {$valor_vendedor_btc} BTC - Status: {$status_msg}");
         
         // Redirecionar baseado no método de pagamento
-        if ($payment_method === 'balance') {
+        if ($payment_method === 'balance' && $is_paid) {
             // Compra paga - redirecionar para confirmação
             header("Location: compra_confirmada.php?id=" . $compra_id);
         } else {

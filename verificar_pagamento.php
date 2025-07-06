@@ -1,10 +1,14 @@
 <?php
 /**
- * VERIFICADOR DE PAGAMENTO REAL
- * Substitui verificar_pagamento.php
+ * VERIFICADOR DE PAGAMENTO - VERSÃO RECALIBRADA
+ * ✅ SINCRONIZADO COM NOVA ARQUITETURA DA BASE DE DADOS
+ * ✅ purchases TABLE (NÃO MAIS compras)
+ * ✅ users TABLE (NÃO MAIS vendedores)
  */
 
 require_once 'includes/config.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 // Headers para AJAX
 header('Content-Type: application/json');
@@ -20,15 +24,15 @@ if (!isset($_GET['id'])) {
 $compra_id = (int)$_GET['id'];
 
 try {
-    // Buscar dados da compra
+    // ✅ CORRIGIDO: Buscar na tabela PURCHASES
     $stmt = $conn->prepare("
         SELECT 
-            c.id, c.pago, c.tx_hash, c.confirmations, c.valor_btc, c.wallet_plataforma,
-            c.data_compra, c.valor_recebido,
-            p.nome as produto_nome
-        FROM compras c
-        JOIN produtos p ON c.produto_id = p.id
-        WHERE c.id = ?
+            p.id, p.status, p.tx_hash, p.confirmations, p.valor_btc_total, p.payment_address,
+            p.created_at, p.preco_usd,
+            pr.nome as produto_nome
+        FROM purchases p
+        JOIN produtos pr ON p.produto_id = pr.id
+        WHERE p.id = ?
     ");
     $stmt->bind_param("i", $compra_id);
     $stmt->execute();
@@ -41,21 +45,21 @@ try {
     }
     
     // Se já está pago, retornar status
-    if ($compra['pago']) {
+    $status_pago = in_array($compra['status'], ['paid', 'confirmed']);
+    if ($status_pago) {
         echo json_encode([
             'pago' => true,
             'tx_hash' => $compra['tx_hash'],
-            'confirmations' => (int)$compra['confirmations'],
-            'valor_recebido' => (float)$compra['valor_recebido'],
-            'status' => 'confirmed',
+            'confirmations' => (int)($compra['confirmations'] ?? 0),
+            'status' => $compra['status'],
             'message' => 'Pagamento confirmado!'
         ]);
         exit();
     }
     
     // Se não está pago, verificar na blockchain (modo real)
-    $wallet_address = $compra['wallet_plataforma'];
-    $valor_esperado = (float)$compra['valor_btc'];
+    $wallet_address = $compra['payment_address'];
+    $valor_esperado = (float)$compra['valor_btc_total'];
     
     // Verificar transações recentes no endereço
     $transacoes_encontradas = verificarTransacoesBlockchain($wallet_address, $valor_esperado);
@@ -67,19 +71,17 @@ try {
         $conn->begin_transaction();
         
         try {
-            // Marcar como pago
+            // ✅ CORRIGIDO: Atualizar na tabela PURCHASES
             $stmt = $conn->prepare("
-                UPDATE compras SET 
-                    pago = 1, 
+                UPDATE purchases SET 
+                    status = 'confirmed', 
                     tx_hash = ?, 
-                    confirmations = ?,
-                    valor_recebido = ?
+                    confirmations = ?
                 WHERE id = ?
             ");
-            $stmt->bind_param("sidi", 
+            $stmt->bind_param("sii", 
                 $transacao['txid'], 
-                $transacao['confirmations'], 
-                $transacao['amount'],
+                $transacao['confirmations'],
                 $compra_id
             );
             $stmt->execute();
@@ -93,7 +95,6 @@ try {
                 'pago' => true,
                 'tx_hash' => $transacao['txid'],
                 'confirmations' => $transacao['confirmations'],
-                'valor_recebido' => $transacao['amount'],
                 'status' => 'newly_confirmed',
                 'message' => 'Pagamento detectado e confirmado!'
             ]);
@@ -213,7 +214,7 @@ function verificarBlockstream($address, $valorEsperado) {
  * Verificar via BlockCypher API (backup)
  */
 function verificarBlockCypher($address, $valorEsperado) {
-    $token = '1a406e8d527943418bd99f7afaf3d461'; // Sua API key
+    $token = 'BLOCKCYPHER_API_KEY'; // Sua API key
     $url = "https://api.blockcypher.com/v1/btc/main/addrs/{$address}";
     
     if (!empty($token)) {

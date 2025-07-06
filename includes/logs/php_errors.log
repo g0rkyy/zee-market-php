@@ -314,3 +314,27 @@ Stack trace:
 [24-Jun-2025 22:05:17 America/Sao_Paulo] ✅ FEEDBACK ENVIADO - Nome: anonymous - Email: anon@protonmail.com - Rating: 5 - IP: 127.0.0.1
 [25-Jun-2025 23:18:54 UTC] ✅ Produto encontrado - ID: 31 - Nome: COCAIN TESTE 200MG
 [25-Jun-2025 23:18:54 UTC] ✅ Página de compra carregada - Produto: COCAIN TESTE 200MG - Preço BTC: 9.3994679901118E-6
+[27-Jun-2025 01:10:01 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Table 'zee_market.vendedores' doesn't exist
+[27-Jun-2025 01:10:07 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Table 'zee_market.vendedores' doesn't exist
+[27-Jun-2025 01:10:26 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on false in /var/www/html/zee-market-php/vendedores.php:28
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/zee-market-php/vendedores.php on line 28
+[27-Jun-2025 01:23:50 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Table 'zee_market.vendedores' doesn't exist
+[27-Jun-2025 01:30:49 UTC] PHP Fatal error:  Uncaught Error: Call to a member function bind_param() on false in /var/www/html/zee-market-php/vendedores.php:32
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/zee-market-php/vendedores.php on line 32
+[27-Jun-2025 01:45:12 UTC] PHP Warning:  Undefined array key "status" in /var/www/html/zee-market-php/vendedores.php on line 47
+[27-Jun-2025 01:45:57 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Table 'zee_market.vendedores' doesn't exist
+[27-Jun-2025 01:46:14 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Table 'zee_market.vendedores' doesn't exist
+[27-Jun-2025 01:49:39 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Table 'zee_market.vendedores' doesn't exist
+[27-Jun-2025 01:53:53 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Unknown column 'p.categoria' in 'where clause'
+[27-Jun-2025 01:53:55 UTC] Erro no sistema de listagem: Erro ao preparar consulta: Unknown column 'p.categoria' in 'where clause'
+[27-Jun-2025 01:53:58 UTC] ✅ Produto encontrado - ID: 32 - Nome: CANNABIS
+[27-Jun-2025 01:53:58 UTC] ✅ Página de compra carregada - Produto: CANNABIS - Preço BTC: 9.3994679901118E-5
+[27-Jun-2025 01:55:39 UTC] ✅ PRODUTO CADASTRADO - ID: 33 - Vendedor: 26 - Nome: SEXO
+[27-Jun-2025 01:59:10 UTC] PHP Warning:  Undefined array key "status" in /var/www/html/zee-market-php/vendedores.php on line 47
+[27-Jun-2025 02:00:37 UTC] LOGIN VENDEDOR - ID: 26 - Email: danilo@gmail.com
+[27-Jun-2025 02:01:52 UTC] ✅ PRODUTO CADASTRADO - ID: 34 - Vendedor: 26 - Nome: ORGIA
+[27-Jun-2025 02:02:57 UTC] ✅ PRODUTO CADASTRADO - ID: 35 - Vendedor: 26 - Nome: teste

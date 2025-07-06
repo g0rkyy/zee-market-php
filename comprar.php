@@ -1,7 +1,7 @@
 <?php
 /**
- * PÁGINA DE COMPRA - VERSÃO CORRIGIDA
- * ✅ Correção de erros 500 e melhorias de segurança
+ * PÁGINA DE COMPRA - VERSÃO RECALIBRADA
+ * ✅ SINCRONIZADO COM NOVA ARQUITETURA DA BASE DE DADOS
  */
 
 error_reporting(E_ALL);
@@ -35,18 +35,18 @@ if (!$conn || $conn->connect_error) {
     die("❌ Erro de conexão com o banco de dados!");
 }
 
-// ✅ BUSCAR PRODUTO COM VERIFICAÇÃO ROBUSTA
+// ✅ BUSCAR PRODUTO COM JOIN PARA USERS (NÃO MAIS VENDEDORES)
 $produto = null;
 try {
-    // Corrigir JOIN - usar LEFT JOIN para evitar problemas se vendedor não existir
+    // CORRIGIDO: JOIN com users ao invés de vendedores
     $stmt = $conn->prepare("
         SELECT p.*, 
-               COALESCE(v.nome, u.name, 'Vendedor Anônimo') as vendedor_nome, 
-               COALESCE(v.created_at, u.created_at, NOW()) as data_cadastro 
+               u.name as vendedor_nome, 
+               u.email as vendedor_email,
+               u.created_at as data_cadastro 
         FROM produtos p 
-        LEFT JOIN vendedores v ON p.vendedor_id = v.id 
-        LEFT JOIN users u ON p.vendedor_id = u.id 
-        WHERE p.id = ?
+        JOIN users u ON p.vendedor_id = u.id 
+        WHERE p.id = ? AND u.is_vendor = 1
     ");
     
     if (!$stmt) {
@@ -63,8 +63,8 @@ try {
     $stmt->close();
     
     if (!$produto) {
-        error_log("❌ Produto não encontrado - ID: $id");
-        die("❌ Produto não encontrado!");
+        error_log("❌ Produto não encontrado ou vendedor inativo - ID: $id");
+        die("❌ Produto não encontrado ou vendedor inativo!");
     }
     
     error_log("✅ Produto encontrado - ID: $id - Nome: " . $produto['nome']);

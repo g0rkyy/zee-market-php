@@ -1,7 +1,9 @@
 <?php
 /**
- * SISTEMA DE VENDEDOR - CORREÇÃO FINAL DUPLICATE ENTRY
- * ✅ VERIFICAÇÃO COMPLETA antes de inserir na tabela vendedores
+ * SISTEMA DE VENDEDOR - OTIMIZADO E SIMPLIFICADO
+ * ✅ ARQUITETURA LIMPA - USA APENAS users.is_vendor
+ * ✅ LÓGICA SIMPLIFICADA E EFICIENTE
+ * ✅ PROTEÇÃO CSRF E VALIDAÇÕES COMPLETAS
  */
 
 error_reporting(E_ALL);
@@ -36,279 +38,114 @@ try {
         die("❌ Usuário não encontrado!");
     }
     
-    error_log("🔍 DEBUG INICIAL: user_id=$user_id, is_vendor=" . ($user['is_vendor'] ?? 'null'));
-    
 } catch (Exception $e) {
     die("❌ Erro no sistema: " . $e->getMessage());
 }
 
-// ✅ VERIFICAÇÃO COMPLETA DE STATUS DE VENDEDOR
-$stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$vendor_exists = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
-error_log("🔍 VERIFICAÇÃO VENDEDOR - user_id: $user_id, is_vendor: " . ($user['is_vendor'] ?? 'null') . ", exists_in_vendedores: " . ($vendor_exists ? 'SIM' : 'NÃO'));
-
-// ✅ SE JÁ É VENDEDOR OU JÁ EXISTE NA TABELA VENDEDORES
-if ($user['is_vendor'] == 1 || $vendor_exists) {
-    
-    // Se is_vendor = 1 mas não existe na tabela vendedores, criar registro
-    if ($user['is_vendor'] == 1 && !$vendor_exists) {
-        error_log("🔧 SINCRONIZAÇÃO: Usuário é vendedor mas não existe na tabela vendedores - criando registro");
-        
-        try {
-            $nome = $user['name'];
-            $email = $user['email'];
-            $senha_vazia = '';
-            $btc_wallet_value = $user['btc_wallet'] ?? '';
-            $carteira_value = $user['btc_wallet'] ?? '';
-            $created_at = $user['created_at'];
-            
-            $stmt = $conn->prepare("INSERT INTO vendedores (id, nome, email, senha, btc_wallet, carteira, status, created_at, produtos_cadastrados, criptomoeda) VALUES (?, ?, ?, ?, ?, ?, 'ativo', ?, 0, 'BTC')");
-            $stmt->bind_param("issssss", 
-                $user_id, $nome, $email, $senha_vazia, $btc_wallet_value, $carteira_value, $created_at
-            );
-            $stmt->execute();
-            $stmt->close();
-            
-            error_log("✅ SINCRONIZAÇÃO CONCLUÍDA - Registro de vendedor criado");
-        } catch (Exception $e) {
-            error_log("❌ ERRO NA SINCRONIZAÇÃO: " . $e->getMessage());
-        }
-    }
-    
-    // Se existe na tabela vendedores mas is_vendor = 0, atualizar user
-    if ($vendor_exists && $user['is_vendor'] != 1) {
-        error_log("🔧 SINCRONIZAÇÃO: Registro de vendedor existe mas is_vendor = 0 - atualizando user");
-        
-        try {
-            $stmt = $conn->prepare("UPDATE users SET is_vendor = 1 WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $stmt->close();
-            
-            error_log("✅ SINCRONIZAÇÃO CONCLUÍDA - is_vendor atualizado para 1");
-        } catch (Exception $e) {
-            error_log("❌ ERRO NA SINCRONIZAÇÃO: " . $e->getMessage());
-        }
-    }
-    
+// ✅ SE JÁ É VENDEDOR, REDIRECIONAR
+if ($user['is_vendor'] == 1) {
     $_SESSION['is_vendor'] = 1;
     header("Location: ../dashboard.php?sucesso=" . urlencode("✅ Você já é um vendedor autorizado!"));
     exit();
 }
 
-// ✅ PROCESSAR FORMULÁRIO DE VIRAR VENDEDOR
+// ✅ GERAR TOKEN CSRF
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// ✅ PROCESSAR FORMULÁRIO DE APROVAÇÃO VENDEDOR
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['virar_vendedor'])) {
     
-    error_log("🔥 RECEBIDO POST para virar vendedor - user_id: $user_id");
-    
-    // ✅ VERIFICAÇÃO DUPLA ANTES DE PROCESSAR
-    $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $already_vendor = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-    
-    if ($already_vendor) {
-        error_log("⚠️ TENTATIVA DE CRIAR VENDEDOR DUPLICADO - user_id: $user_id já existe na tabela");
-        $_SESSION['is_vendor'] = 1;
-        header("Location: ../dashboard.php?sucesso=" . urlencode("✅ Você já é um vendedor autorizado!"));
-        exit();
-    }
-    
-    // ✅ VALIDAR CHECKBOXES
-    $termos_aceitos = isset($_POST['aceitar_termos']) && $_POST['aceitar_termos'] == '1';
-    $maior_idade = isset($_POST['maior_idade']) && $_POST['maior_idade'] == '1';
-    $dados_verdadeiros = isset($_POST['dados_verdadeiros']) && $_POST['dados_verdadeiros'] == '1';
-    
-    error_log("🔍 Checkboxes - Termos: " . ($termos_aceitos ? 'SIM' : 'NÃO') . 
-              ", Idade: " . ($maior_idade ? 'SIM' : 'NÃO') . 
-              ", Dados: " . ($dados_verdadeiros ? 'SIM' : 'NÃO'));
-    
-    if (!$termos_aceitos || !$maior_idade || !$dados_verdadeiros) {
-        $error = "❌ Você deve aceitar TODOS os termos para se tornar vendedor!";
-        error_log("❌ ERRO: Nem todos os termos foram aceitos");
+    // ✅ VALIDAR CSRF
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = "❌ Token de segurança inválido!";
+        error_log("🚨 CSRF ATTACK - isvendor.php - User: $user_id - IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
     } else {
         
-        try {
-            error_log("🔄 INICIANDO PROCESSO DE CRIAÇÃO DE VENDEDOR - user_id: $user_id");
+        // ✅ VALIDAR CHECKBOXES
+        $termos_aceitos = isset($_POST['aceitar_termos']) && $_POST['aceitar_termos'] == '1';
+        $maior_idade = isset($_POST['maior_idade']) && $_POST['maior_idade'] == '1';
+        $dados_verdadeiros = isset($_POST['dados_verdadeiros']) && $_POST['dados_verdadeiros'] == '1';
+        
+        if (!$termos_aceitos || !$maior_idade || !$dados_verdadeiros) {
+            $error = "❌ Você deve aceitar TODOS os termos para se tornar vendedor!";
+        } else {
             
-            // ✅ PASSO 1: VERIFICAÇÃO FINAL antes de qualquer alteração
-            $stmt = $conn->prepare("SELECT is_vendor FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $current_user = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-            
-            $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $current_vendor = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-            
-            if ($current_user['is_vendor'] == 1 || $current_vendor) {
-                error_log("⚠️ RACE CONDITION DETECTADA - usuário já é vendedor, abortando");
-                $_SESSION['is_vendor'] = 1;
-                header("Location: ../dashboard.php?sucesso=" . urlencode("✅ Você já é um vendedor autorizado!"));
-                exit();
-            }
-            
-            // ✅ PASSO 2: ATUALIZAR USUÁRIO PARA VENDEDOR
-            error_log("🔄 STEP 1: Atualizando is_vendor=1 para user_id: $user_id");
-            
-            $stmt = $conn->prepare("UPDATE users SET is_vendor = 1, updated_at = NOW() WHERE id = ? AND is_vendor = 0");
-            $stmt->bind_param("i", $user_id);
-            $success = $stmt->execute();
-            $affected_rows = $stmt->affected_rows;
-            $stmt->close();
-            
-            error_log("✅ UPDATE users executado - Success: " . ($success ? 'SIM' : 'NÃO') . ", Affected rows: $affected_rows");
-            
-            if (!$success || $affected_rows == 0) {
-                throw new Exception("Falha ao atualizar usuário para vendedor - possivelmente já é vendedor");
-            }
-            
-            // ✅ PASSO 3: VERIFICAÇÃO TRIPLA antes de inserir na tabela vendedores
-            $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $triple_check = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-            
-            if ($triple_check) {
-                error_log("⚠️ VENDEDOR JÁ EXISTE NA TABELA - abortando INSERT");
-                $_SESSION['is_vendor'] = 1;
-                header("Location: ../dashboard.php?sucesso=" . urlencode("✅ Você já é um vendedor autorizado!"));
-                exit();
-            }
-            
-            // ✅ PASSO 4: INSERIR NA TABELA VENDEDORES com proteção contra duplicate
-            error_log("🔄 STEP 2: Inserindo na tabela vendedores - user_id: $user_id");
-            
-            $nome = $user['name'];
-            $email = $user['email'];
-            $senha_vazia = '';
-            $btc_wallet_value = $user['btc_wallet'] ?? '';
-            $carteira_value = $user['btc_wallet'] ?? '';
-            
-            // Usar INSERT IGNORE para evitar duplicate entry
-            $stmt = $conn->prepare("INSERT IGNORE INTO users (id, nome, email, senha, btc_wallet, carteira, status, created_at, produtos_cadastrados, criptomoeda) VALUES (?, ?, ?, ?, ?, ?, 'ativo', NOW(), 0, 'BTC')");
-            $stmt->bind_param("isssss", 
-                $user_id, $nome, $email, $senha_vazia, $btc_wallet_value, $carteira_value
-            );
-            
-            $vendor_success = $stmt->execute();
-            $vendor_affected = $stmt->affected_rows;
-            $stmt->close();
-            
-            error_log("✅ INSERT IGNORE vendedores executado - Success: " . ($vendor_success ? 'SIM' : 'NÃO') . ", Affected rows: $vendor_affected");
-            
-            // ✅ PASSO 5: VERIFICAÇÃO FINAL
-            $stmt = $conn->prepare("SELECT is_vendor FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $check_result = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-            
-            $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $vendor_check = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-            
-            if ($check_result['is_vendor'] != 1 || !$vendor_check) {
-                throw new Exception("Verificação final falhou - estado inconsistente");
-            }
-            
-            error_log("✅ VERIFICAÇÃO FINAL OK - is_vendor: " . $check_result['is_vendor'] . ", vendedor_id: " . $vendor_check['id']);
-            
-            // ✅ LOG DE AUDITORIA (opcional)
             try {
-                $details = json_encode([
-                    'user_id' => $user_id, 
-                    'name' => $user['name'], 
-                    'email' => $user['email'],
-                    'timestamp' => date('Y-m-d H:i:s'),
-                    'vendor_created' => true,
-                    'method' => 'duplicate_protected'
-                ]);
-                $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-                
-                $stmt = $conn->prepare("INSERT INTO admin_logs (user_id, action, details, ip_address, created_at) VALUES (?, 'became_vendor', ?, ?, NOW())");
-                $stmt->bind_param("iss", $user_id, $details, $ip);
+                // ✅ VERIFICAÇÃO DE RACE CONDITION
+                $stmt = $conn->prepare("SELECT is_vendor FROM users WHERE id = ?");
+                $stmt->bind_param("i", $user_id);
                 $stmt->execute();
+                $current_user = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
-            } catch (Exception $log_error) {
-                error_log("⚠️ Erro no log de auditoria (não crítico): " . $log_error->getMessage());
-            }
-            
-            // ✅ ATUALIZAR SESSÃO
-            $_SESSION['is_vendor'] = 1;
-            $_SESSION['user_type'] = 'vendor';
-            
-            session_write_close();
-            session_start();
-            $_SESSION['is_vendor'] = 1;
-            
-            error_log("🎉 SUCESSO TOTAL! Usuário $user_id agora é vendedor (protegido contra duplicates)");
-            
-            // ✅ REDIRECIONAR
-            header("Location: ../dashboard.php?sucesso=" . urlencode("🎉 PARABÉNS! Você agora é um VENDEDOR autorizado! Pode cadastrar produtos."));
-            exit();
-            
-        } catch (Exception $e) {
-            $error_msg = $e->getMessage();
-            error_log("❌ ERRO ao tornar vendedor user_id $user_id: $error_msg");
-            
-            // ✅ TENTAR REVERTER APENAS SE NECESSÁRIO
-            if (strpos($error_msg, 'Duplicate entry') === false) {
+                
+                if ($current_user['is_vendor'] == 1) {
+                    $_SESSION['is_vendor'] = 1;
+                    header("Location: ../dashboard.php?sucesso=" . urlencode("✅ Você já é um vendedor autorizado!"));
+                    exit();
+                }
+                
+                // ✅ ATUALIZAR PARA VENDEDOR - QUERY SIMPLES E EFICIENTE
+                $stmt = $conn->prepare("UPDATE users SET is_vendor = 1, updated_at = NOW() WHERE id = ? AND is_vendor = 0");
+                $stmt->bind_param("i", $user_id);
+                $success = $stmt->execute();
+                $affected_rows = $stmt->affected_rows;
+                $stmt->close();
+                
+                if (!$success || $affected_rows == 0) {
+                    throw new Exception("Falha ao atualizar usuário para vendedor");
+                }
+                
+                // ✅ VERIFICAÇÃO FINAL
+                $stmt = $conn->prepare("SELECT is_vendor FROM users WHERE id = ?");
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $check_result = $stmt->get_result()->fetch_assoc();
+                $stmt->close();
+                
+                if ($check_result['is_vendor'] != 1) {
+                    throw new Exception("Verificação final falhou");
+                }
+                
+                // ✅ LOG DE AUDITORIA SIMPLIFICADO
                 try {
-                    $stmt = $conn->prepare("UPDATE users SET is_vendor = 0 WHERE id = ?");
-                    $stmt->bind_param("i", $user_id);
+                    $details = json_encode([
+                        'user_id' => $user_id, 
+                        'name' => $user['name'], 
+                        'email' => $user['email'],
+                        'timestamp' => date('Y-m-d H:i:s'),
+                        'action' => 'became_vendor_simplified'
+                    ]);
+                    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+                    
+                    $stmt = $conn->prepare("INSERT INTO admin_logs (user_id, action, details, ip_address, created_at) VALUES (?, 'became_vendor', ?, ?, NOW())");
+                    $stmt->bind_param("iss", $user_id, $details, $ip);
                     $stmt->execute();
                     $stmt->close();
-                    error_log("🔄 Reversão de is_vendor concluída");
-                } catch (Exception $revert_error) {
-                    error_log("⚠️ Erro na reversão: " . $revert_error->getMessage());
+                } catch (Exception $log_error) {
+                    error_log("⚠️ Erro no log (não crítico): " . $log_error->getMessage());
                 }
+                
+                // ✅ ATUALIZAR SESSÃO
+                $_SESSION['is_vendor'] = 1;
+                
+                error_log("🎉 VENDEDOR CRIADO COM SUCESSO! User: $user_id");
+                
+                // ✅ REDIRECIONAR COM SUCESSO
+                header("Location: ../dashboard.php?sucesso=" . urlencode("🎉 PARABÉNS! Você agora é um VENDEDOR autorizado! Pode cadastrar produtos imediatamente."));
+                exit();
+                
+            } catch (Exception $e) {
+                error_log("❌ ERRO ao tornar vendedor - User: $user_id - Erro: " . $e->getMessage());
+                $error = "❌ Erro interno do sistema. Tente novamente em alguns minutos.";
             }
-            
-            $error = "❌ Erro interno do sistema. Contate o suporte. (Código: VND004) - " . $error_msg;
         }
     }
+    
+    // ✅ REGENERAR TOKEN CSRF
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
-// ✅ FUNÇÃO AUXILIAR PARA VERIFICAR INTEGRIDADE
-function verificarIntegridadeVendedor($conn, $user_id) {
-    try {
-        $stmt = $conn->prepare("SELECT is_vendor FROM users WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $user_data = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-        
-        $stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $vendor_data = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-        
-        return [
-            'is_vendor_user' => $user_data['is_vendor'] ?? 0,
-            'exists_vendor_table' => !empty($vendor_data),
-            'synchronized' => ($user_data['is_vendor'] == 1) && !empty($vendor_data)
-        ];
-        
-    } catch (Exception $e) {
-        error_log("❌ Erro na verificação de integridade: " . $e->getMessage());
-        return ['error' => $e->getMessage()];
-    }
-}
-
-$integridade = verificarIntegridadeVendedor($conn, $user_id);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -415,15 +252,6 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
             50% { opacity: 0.7; }
             100% { opacity: 1; }
         }
-        .debug-info {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
         .breadcrumb-nav {
             background: linear-gradient(135deg, #6c757d, #495057);
             color: white;
@@ -438,7 +266,7 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
         .breadcrumb-nav a:hover {
             color: white;
         }
-        .duplicate-fix-notice {
+        .fix-notice {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
             padding: 0.75rem 1rem;
@@ -465,10 +293,10 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
                     </div>
                 </nav>
 
-                <!-- ✅ AVISO DE CORREÇÃO DUPLICATE -->
-                <div class="duplicate-fix-notice">
+                <!-- ✅ AVISO DE OTIMIZAÇÃO -->
+                <div class="fix-notice">
                     <i class="bi bi-shield-check-fill"></i> 
-                    <strong>Duplicate Entry Corrigido:</strong> Múltiplas verificações implementadas + INSERT IGNORE para evitar entradas duplicadas
+                    <strong>Sistema Otimizado:</strong> Processo simplificado e mais eficiente. Aprovação instantânea garantida.
                 </div>
             </div>
 
@@ -498,17 +326,6 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
             </div>
 
             <div class="form-section">
-                <!-- DEBUG INFO -->
-                <?php if (isset($integridade) && !isset($integridade['error'])): ?>
-                    <div class="debug-info">
-                        <strong>🔍 Status de Integridade:</strong><br>
-                        • Is Vendor (users): <?= $integridade['is_vendor_user'] ? '✅ SIM' : '❌ NÃO' ?><br>
-                        • Existe na tabela vendedores: <?= $integridade['exists_vendor_table'] ? '✅ SIM' : '❌ NÃO' ?><br>
-                        • Sincronizado: <?= $integridade['synchronized'] ? '✅ SIM' : '❌ NÃO' ?><br>
-                        • <strong>Proteção:</strong> ✅ Múltiplas verificações + INSERT IGNORE
-                    </div>
-                <?php endif; ?>
-
                 <!-- ALERTAS -->
                 <?php if ($error): ?>
                     <div class="alert alert-danger alert-enhanced" style="border-left-color: #dc3545;">
@@ -541,15 +358,16 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
                     </div>
                 </div>
 
-                <!-- FORMULÁRIO PRINCIPAL -->
+                <!-- FORMULÁRIO OTIMIZADO -->
                 <form method="POST" id="vendorForm" novalidate>
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                     <input type="hidden" name="virar_vendedor" value="1">
                     
                     <h4 class="text-center mb-4">
                         <i class="bi bi-clipboard-check"></i> Aceite os Termos para Continuar
                     </h4>
 
-                    <!-- TERMO 1 -->
+                    <!-- TERMOS SIMPLIFICADOS -->
                     <div class="terms-card">
                         <div class="form-check">
                             <input class="form-check-input custom-checkbox" 
@@ -568,7 +386,6 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
                         </small>
                     </div>
 
-                    <!-- TERMO 2 -->
                     <div class="terms-card">
                         <div class="form-check">
                             <input class="form-check-input custom-checkbox" 
@@ -587,7 +404,6 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
                         </small>
                     </div>
 
-                    <!-- TERMO 3 -->
                     <div class="terms-card">
                         <div class="form-check">
                             <input class="form-check-input custom-checkbox" 
@@ -613,11 +429,11 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
                     </div>
 
                     <!-- AVISO IMPORTANTE -->
-                    <div class="alert alert-warning alert-enhanced" style="border-left-color: #ffc107;">
-                        <h6><i class="bi bi-exclamation-triangle"></i> Importante:</h6>
+                    <div class="alert alert-info alert-enhanced" style="border-left-color: #17a2b8;">
+                        <h6><i class="bi bi-info-circle"></i> Processo Otimizado:</h6>
                         <p class="mb-0">
-                            Ao se tornar vendedor, você concorda em seguir todas as regras da plataforma. 
-                            <strong>Violações podem resultar em suspensão da conta.</strong>
+                            <strong>✅ Aprovação instantânea garantida!</strong><br>
+                            Assim que aceitar os termos, você se tornará vendedor imediatamente e poderá cadastrar produtos.
                         </p>
                     </div>
 
@@ -650,7 +466,7 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
         const submitBtn = document.getElementById('submitBtn');
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         
-        // ✅ FUNÇÃO PARA VERIFICAR SE TODOS OS CHECKBOXES ESTÃO MARCADOS
+        // ✅ VERIFICAR SE TODOS OS CHECKBOXES ESTÃO MARCADOS
         function verificarCheckboxes() {
             let todosChecados = true;
             
@@ -682,7 +498,7 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
             }
         }
         
-        // ✅ ADICIONAR EVENT LISTENERS
+        // ✅ EVENT LISTENERS
         checkboxes.forEach(function(checkbox) {
             checkbox.addEventListener('change', verificarCheckboxes);
         });
@@ -692,14 +508,12 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
         
         // ✅ VALIDAÇÃO NO SUBMIT
         form.addEventListener('submit', function(e) {
-            console.log('🚀 Formulário sendo enviado (duplicate entry protegido)...');
+            console.log('🚀 Formulário sendo enviado (sistema otimizado)...');
             
-            // Verificar checkboxes novamente
+            // Verificar checkboxes
             let todosChecados = true;
-            const valores = {};
             
             checkboxes.forEach(function(checkbox) {
-                valores[checkbox.name] = checkbox.checked;
                 if (!checkbox.checked) {
                     todosChecados = false;
                 }
@@ -711,19 +525,19 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
                 return false;
             }
             
-            // Confirmação final
-            if (!confirm('🚀 CONFIRMAÇÃO FINAL:\n\nDeseja realmente se tornar um VENDEDOR na ZeeMarket?\n\n✅ Sistema protegido contra entradas duplicadas.\n\nEsta ação é irreversível!')) {
+            // Confirmação final otimizada
+            if (!confirm('🚀 CONFIRMAÇÃO FINAL:\n\nDeseja realmente se tornar um VENDEDOR na ZeeMarket?\n\n✅ Aprovação será INSTANTÂNEA!\n✅ Poderá cadastrar produtos imediatamente!\n\nContinuar?')) {
                 e.preventDefault();
                 return false;
             }
             
-            // Desabilitar botão e mostrar loading
+            // Loading state
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Processando com proteção anti-duplicate...';
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Processando aprovação...';
             
-            console.log('✅ Formulário validado - proteção duplicate ativa');
+            console.log('✅ Formulário validado - sistema otimizado');
             
-            // Auto-reabilitar em caso de falha de rede
+            // Auto-reabilitar em caso de erro
             setTimeout(() => {
                 if (submitBtn.disabled) {
                     submitBtn.disabled = false;
@@ -732,8 +546,8 @@ $integridade = verificarIntegridadeVendedor($conn, $user_id);
             }, 15000);
         });
         
-        console.log('✅ Sistema de vendedor inicializado - Proteção duplicate entry ativa!');
-        console.log('🛡️ Proteções: Múltiplas verificações + INSERT IGNORE + Race condition detection');
+        console.log('✅ Sistema de vendedor otimizado inicializado!');
+        console.log('🎯 Arquitetura simplificada - apenas users.is_vendor');
     });
     </script>
 </body>

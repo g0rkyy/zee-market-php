@@ -1,17 +1,25 @@
 <?php
+/**
+ * PÁGINA DE PAGAMENTO BITCOIN - VERSÃO RECALIBRADA
+ * ✅ SINCRONIZADO COM NOVA ARQUITETURA DA BASE DE DADOS
+ * ✅ purchases TABLE (NÃO MAIS compras)
+ * ✅ users TABLE (NÃO MAIS vendedores)
+ */
+
 require_once 'includes/config.php';
 
 $compra_id = (int)$_GET['id'];
 
-// CORREÇÃO CRÍTICA: Busca os dados da compra com prepared statement
+// ✅ CORRIGIDO: Buscar na tabela PURCHASES com JOIN para USERS
 $stmt = $conn->prepare("SELECT 
-        c.id, c.valor_btc, c.taxa_plataforma, c.wallet_plataforma, c.pago, c.tx_hash, c.confirmations, c.data_compra,
-        p.nome as produto_nome, p.preco, p.imagem,
-        v.nome as vendedor_nome
-    FROM compras c
-    JOIN produtos p ON c.produto_id = p.id
-    JOIN vendedores v ON c.vendedor_id = v.id
-    WHERE c.id = ?");
+        p.id, p.valor_btc_total, p.taxa_plataforma_btc, p.payment_address, 
+        p.status, p.tx_hash, p.confirmations, p.created_at, p.preco_usd,
+        pr.nome as produto_nome, pr.preco, pr.imagem,
+        u.name as vendedor_nome
+    FROM purchases p
+    JOIN produtos pr ON p.produto_id = pr.id
+    JOIN users u ON p.vendedor_id = u.id
+    WHERE p.id = ?");
 
 if ($stmt === false) {
     die("Erro no sistema de pagamento. Tente novamente.");
@@ -29,10 +37,10 @@ if (!$compra) {
 }
 
 // Define valores
-$valor_total_btc = floatval($compra['valor_btc']);
-$taxa_plataforma = floatval($compra['taxa_plataforma']);
+$valor_total_btc = floatval($compra['valor_btc_total']);
+$taxa_plataforma = floatval($compra['taxa_plataforma_btc']);
 $valor_vendedor = $valor_total_btc - $taxa_plataforma;
-$wallet_pagamento = $compra['wallet_plataforma']; // Carteira da plataforma
+$wallet_pagamento = $compra['payment_address']; // Carteira para pagamento
 
 // Formata os valores
 $valor_btc_formatado = number_format($valor_total_btc, 8, '.', '');
@@ -40,8 +48,8 @@ $taxa_formatada = number_format($taxa_plataforma, 8, '.', '');
 $vendedor_formatado = number_format($valor_vendedor, 8, '.', '');
 
 // Status da compra
-$status_pago = (bool)$compra['pago'];
-$confirmacoes = (int)$compra['confirmations'];
+$status_pago = in_array($compra['status'], ['paid', 'confirmed']);
+$confirmacoes = (int)($compra['confirmations'] ?? 0);
 
 // URL segura para o QR Code
 $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bitcoin:" . urlencode($wallet_pagamento) . "?amount=" . urlencode($valor_total_btc);
@@ -357,7 +365,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bi
                     <img src="assets/uploads/<?= htmlspecialchars($compra['imagem'], ENT_QUOTES, 'UTF-8') ?>" alt="Produto">
                     <div>
                         <h6><?= htmlspecialchars($compra['produto_nome'], ENT_QUOTES, 'UTF-8') ?></h6>
-                        <small class="text-muted">R$ <?= htmlspecialchars(number_format($compra['preco'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></small>
+                        <small class="text-muted">R$ <?= htmlspecialchars(number_format($compra['preco_usd'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></small>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -365,7 +373,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bi
                 <div class="crypto-amount">
                     <h5>Total a Pagar:</h5>
                     <h2><?= htmlspecialchars($valor_btc_formatado, ENT_QUOTES, 'UTF-8') ?> BTC</h2>
-                    <p class="mb-0">≈ R$ <?= htmlspecialchars(number_format($compra['preco'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></p>
+                    <p class="mb-0">≈ R$ <?= htmlspecialchars(number_format($compra['preco_usd'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
                 
                 <div class="breakdown">
@@ -470,7 +478,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bi
         
         // Variaveis PHP seguras para JS
         const compraId = <?= json_encode($compra_id, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
-        const creationDate = <?= json_encode(date("d/m/Y H:i", strtotime($compra["data_compra"] ?? "now")), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        const creationDate = <?= json_encode(date("d/m/Y H:i", strtotime($compra["created_at"] ?? "now")), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 
         // Verificar status do pagamento via AJAX
         function verificarStatus() {
@@ -482,7 +490,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bi
             fetch(`verificar_pagamento.php?id=${compraId}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.pago) {
+                    if (data.pago || data.status === 'confirmed') {
                         // Recarregar a página para mostrar status atualizado
                         window.location.reload();
                     } else {

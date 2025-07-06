@@ -483,7 +483,7 @@ $user_data_safe = [
         <!-- Navigation -->
         <div class="nav-grid">
             <a href="index.php" class="nav-btn">MARKETPLACE</a>
-            <a href="vendedores.php" class="nav-btn">VENDOR AREA</a>
+            <a href="admin/painel_vendedor.php" class="nav-btn">VENDOR AREA</a>
             <a href="privacy_settings.php" class="nav-btn">PRIVACY CONFIG</a>
             <a href="painel_usuario.php" class="nav-btn">2FA SECURITY</a>
             <a href="alterar_senha.php" class="nav-btn">CHANGE PASSWORD</a>

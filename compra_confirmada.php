@@ -1,4 +1,11 @@
 <?php
+/**
+ * PÁGINA DE CONFIRMAÇÃO DE COMPRA - VERSÃO RECALIBRADA
+ * ✅ SINCRONIZADO COM NOVA ARQUITETURA DA BASE DE DADOS
+ * ✅ purchases TABLE (NÃO MAIS compras)
+ * ✅ users TABLE (NÃO MAIS vendedores)
+ */
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -14,16 +21,16 @@ if (!isset($_GET['id'])) {
 $compra_id = (int)$_GET['id'];
 
 try {
-    // Buscar dados completos da compra
+    // ✅ CORRIGIDO: Buscar na tabela PURCHASES e JOIN com USERS
     $stmt = $conn->prepare("SELECT 
-            c.id, c.valor_btc, c.taxa_plataforma, c.pago, c.tx_hash, c.data_compra,
-            c.nome, c.endereco, c.btc_wallet_comprador, c.valor_recebido, c.confirmations,
-            p.nome as produto_nome, p.preco, p.imagem, p.descricao,
-            v.nome as vendedor_nome, v.email as vendedor_email
-        FROM compras c
-        JOIN produtos p ON c.produto_id = p.id
-        JOIN vendedores v ON c.vendedor_id = v.id
-        WHERE c.id = ? AND c.pago = 1");
+            p.id, p.valor_btc_total, p.taxa_plataforma_btc, p.status, p.tx_hash, p.created_at,
+            p.nome, p.endereco, p.btc_wallet_comprador, p.confirmations, p.preco_usd,
+            pr.nome as produto_nome, pr.preco, pr.imagem, pr.descricao,
+            u.name as vendedor_nome, u.email as vendedor_email
+        FROM purchases p
+        JOIN produtos pr ON p.produto_id = pr.id
+        JOIN users u ON p.vendedor_id = u.id
+        WHERE p.id = ? AND (p.status = 'paid' OR p.status = 'confirmed')");
     $stmt->bind_param("i", $compra_id);
     $stmt->execute();
     $compra = $stmt->get_result()->fetch_assoc();
@@ -41,7 +48,7 @@ try {
         $user_balance = $stmt->get_result()->fetch_assoc();
     }
 
-    // CORREÇÃO: Buscar cotação atual com prepared statement
+    // Buscar cotação atual com prepared statement
     $rate_stmt = $conn->prepare("SELECT btc_usd FROM crypto_rates ORDER BY created_at DESC LIMIT 1");
     $rate_stmt->execute();
     $rate_result = $rate_stmt->get_result();
@@ -51,7 +58,6 @@ try {
 
 } catch (Exception $e) {
     error_log("Erro na confirmação: " . $e->getMessage());
-    // CORRIGIDO: Sanitizar a mensagem de erro antes de exibi-la
     die("Erro ao carregar dados da compra: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
 }
 ?>
@@ -350,8 +356,8 @@ try {
                         <h6><?= htmlspecialchars($compra['produto_nome'], ENT_QUOTES, 'UTF-8') ?></h6>
                         <p class="text-muted mb-1">Vendedor: <?= htmlspecialchars($compra['vendedor_nome'], ENT_QUOTES, 'UTF-8') ?></p>
                         <p class="text-success mb-0">
-                            <strong><?= htmlspecialchars(number_format($compra['valor_btc'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</strong>
-                            <small>(≈ R$ <?= htmlspecialchars(number_format($compra['preco'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?>)</small>
+                            <strong><?= htmlspecialchars(number_format($compra['valor_btc_total'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</strong>
+                            <small>(≈ R$ <?= htmlspecialchars(number_format($compra['preco_usd'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?>)</small>
                         </p>
                     </div>
                 </div>
@@ -367,17 +373,17 @@ try {
                     
                     <div class="detail-row">
                         <span class="detail-label">Data da Compra:</span>
-                        <span class="detail-value"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($compra['data_compra'])), ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="detail-value"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($compra['created_at'])), ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Valor Pago:</span>
-                        <span class="detail-value"><?= htmlspecialchars(number_format($compra['valor_btc'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($compra['valor_btc_total'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     
                     <div class="detail-row">
                         <span class="detail-label">Taxa da Plataforma:</span>
-                        <span class="detail-value"><?= htmlspecialchars(number_format($compra['taxa_plataforma'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
+                        <span class="detail-value"><?= htmlspecialchars(number_format($compra['taxa_plataforma_btc'], 8), ENT_QUOTES, 'UTF-8') ?> BTC</span>
                     </div>
                     
                     <?php if (!empty($compra['tx_hash'])): ?>
@@ -405,7 +411,7 @@ try {
                         <span class="detail-value"><?= htmlspecialchars($compra['endereco'], ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                     
-                    <?php if ($compra['confirmations'] > 0): ?>
+                    <?php if (isset($compra['confirmations']) && $compra['confirmations'] > 0): ?>
                     <div class="detail-row">
                         <span class="detail-label">Confirmações:</span>
                         <span class="detail-value">
@@ -624,7 +630,7 @@ try {
             fetch(`verificar_pagamento.php?id=${compraId}`)
                 .then(response => response.json())
                 .then(data => {
-                    const currentConfirmations = <?= json_encode($compra['confirmations'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+                    const currentConfirmations = <?= json_encode($compra['confirmations'] ?? 0, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
                     if (data.confirmations && data.confirmations > currentConfirmations) {
                         location.reload(); // Recarregar se houver novas confirmações
                     }
